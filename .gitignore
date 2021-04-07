@@ -1,1 +1,6 @@
+# test folder
 tests/
+
+# sublime tex files
+*.sublime-*
+
