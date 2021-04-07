@@ -3,5 +3,5 @@
 ## How to compile the gui ?
 
 ```bash
-$> puic5 main.ui > MainUI.py
+$> pyuic5 main.ui > MainUI.py
 ```
