@@ -1,1 +1,1 @@
-# HAL
+# HAL : the Helium Atom Locator
