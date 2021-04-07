@@ -1,0 +1,4 @@
+[data]
+root = ~/gus_data
+day folder = %Y/%m/%d
+
