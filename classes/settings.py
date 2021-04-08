@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-04-07 16:15:32
+Modified : 2021-04-08 09:43:59
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -18,7 +18,12 @@ import HAL
 
 
 # %% GLOBAL VARIABLES
-DATA_DEFAULTS = {"root": "~/gus_data", "day folder": "%Y/%m/%d"}
+DATA_DEFAULTS = {
+    "root": "~/gus_data",
+    "day folder": "%d",
+    "month folder": "%m",
+    "year folder": "%Y",
+}
 
 
 # %% CLASS DEFINITION
@@ -67,10 +72,10 @@ class Settings(object):
 if __name__ == "__main__":
     set = Settings()
     set.load()
-    '''
+    """
     print(set.config.sections())
     for k in set.config["data"]:
         print("%s : %s" % (k, set.config["data"][k]))
 
-    '''
+    """
     set.save()

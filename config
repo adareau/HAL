@@ -1,4 +1,6 @@
 [data]
 root = ~/gus_data
-day folder = %Y/%m/%d
+day folder = %d
+month folder = %m
+year folder = %Y
 

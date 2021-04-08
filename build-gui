@@ -1,0 +1,1 @@
+pyuic5 gui/main.ui > gui/MainUI.py
