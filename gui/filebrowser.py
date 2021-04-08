@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-08 11:19:11
+Modified : 2021-04-08 11:23:48
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -83,6 +83,8 @@ def setupFileListBrowser(self):
     # NB : no need to initialize ListView widget here
     self.dayListView.setModel(self.dayListViewModel)
 
+    # -- file list
+    self.fileList.addItems(['A', 'B', 'C'])
 
 # %%  CALLBACKS
 

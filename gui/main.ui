@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="testButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>440</y>
+      <x>330</x>
+      <y>100</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -54,6 +54,16 @@
       <y>10</y>
       <width>31</width>
       <height>211</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="fileList">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>141</width>
+      <height>321</height>
      </rect>
     </property>
    </widget>
