@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-08 11:23:48
+Modified : 2021-04-08 11:58:20
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -10,6 +10,7 @@ Comments : Functions related to file browsing, i.e. select the right year,
 
 # %% IMPORTS
 import os
+from datetime import date
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt
@@ -86,6 +87,10 @@ def setupFileListBrowser(self):
     # -- file list
     self.fileList.addItems(['A', 'B', 'C'])
 
+    # -- calendar
+    self.dateEdit.setCalendarPopup(True)
+    self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
+
 # %%  CALLBACKS
 
 
@@ -98,7 +103,6 @@ def yearListViewClicked(self, index):
     self.monthListView.setModel(self.monthListViewModel)
     idx = self.monthListViewModel.index(yearPath)
     self.monthListView.setRootIndex(idx)
-
 
 def monthListViewClicked(self, index):
     # get selected month
@@ -116,3 +120,42 @@ def dayListViewClicked(self, index):
     indexItem = self.dayListViewModel.index(index.row(), 0, index.parent())
     dayPath = self.dayListViewModel.filePath(indexItem)
     print(dayPath)
+
+
+def dateEditClicked(self):
+    # -- get selected date
+    selected_date = self.dateEdit.date()  # QDate format
+    selected_date = selected_date.toPyDate()  # datetime.date format
+
+    # -- update file browser
+    # get config
+    conf = self.settings.config
+    root_str = os.path.expanduser(conf["data"]["root"])
+    root = Path(root_str)
+
+    # year
+    year_fmt = conf['data']['year folder']
+    year_folder = selected_date.strftime(year_fmt)
+    year_path = root / year_folder
+
+    self.monthListViewModel.setRootPath(str(year_path))
+    self.monthListView.setModel(self.monthListViewModel)
+    idx = self.monthListViewModel.index(str(year_path))
+    self.monthListView.setRootIndex(idx)
+
+    # month
+    month_fmt = conf['data']['month folder']
+    month_folder = selected_date.strftime(month_fmt)
+    month_path = year_path / month_folder
+
+    self.dayListViewModel.setRootPath(str(month_path))
+    self.dayListView.setModel(self.dayListViewModel)
+    idx = self.dayListViewModel.index(str(month_path))
+    self.dayListView.setRootIndex(idx)
+
+    # day
+    day_fmt = conf['data']['day folder']
+    day_folder = selected_date.strftime(day_fmt)
+    day_path = month_path / day_folder
+
+    print(day_path)

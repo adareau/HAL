@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>958</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>10</y>
+      <y>60</y>
       <width>61</width>
       <height>211</height>
      </rect>
@@ -41,7 +41,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>10</y>
+      <y>60</y>
       <width>31</width>
       <height>211</height>
      </rect>
@@ -51,7 +51,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>10</y>
+      <y>60</y>
       <width>31</width>
       <height>211</height>
      </rect>
@@ -61,9 +61,19 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>230</y>
+      <y>280</y>
       <width>141</width>
       <height>321</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDateEdit" name="dateEdit">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>141</width>
+      <height>24</height>
      </rect>
     </property>
    </widget>
@@ -73,7 +83,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>958</width>
      <height>20</height>
     </rect>
    </property>

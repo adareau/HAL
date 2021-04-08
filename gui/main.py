@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-08 11:19:14
+Modified : 2021-04-08 11:58:07
 
 Comments :
 """
@@ -62,6 +62,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dayListView.clicked.connect(self._dayListViewClicked)
         model = self.dayListView.selectionModel()
         model.currentChanged.connect(self._dayListViewClicked)
+        # calendar
+        self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
         # -- GUI
         self.testButton.clicked.connect(self.printText)
@@ -79,6 +81,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _dayListViewClicked(self, index):
         filebrowser.dayListViewClicked(self, index)
 
+    def _dateEditClicked(self):
+        filebrowser.dateEditClicked(self)
+
+    # -- GUI
     def printText(self, event, msg="lol"):
         print(self.dummy.name)
 
