@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-08 11:58:20
+Modified : 2021-04-20 18:03:34
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -13,7 +13,9 @@ import os
 from datetime import date
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QFont, QColor, QIcon
+from PyQt5.QtWidgets import QListWidgetItem, QStyle
 
 # %% TOOLS
 
@@ -85,8 +87,21 @@ def setupFileListBrowser(self):
     self.dayListView.setModel(self.dayListViewModel)
 
     # -- file list
-    self.fileList.addItems(['A', 'B', 'C'])
 
+    self.fileList.setIconSize(QSize(15, 15))
+    self.fileList.addItems(['A', 'B', 'C'])
+    # - custom item
+    item = QListWidgetItem()
+    item.setText('lol')
+    item.setData(QtCore.Qt.UserRole, 'a path maybe ?')
+    #item.setFont(QFont('Verdana', QFont.bold))
+    item.setBackground(QColor(0, 0, 255))
+    item.setForeground(QColor(255, 255, 255))
+    # https://joekuan.files.wordpress.com/2015/09/screen3.png
+    item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
+    self.fileList.addItem(item)
+    # - otehr test
+    self.fileList.addItems(['├─ hum', '└─ lol.png'])
     # -- calendar
     self.dateEdit.setCalendarPopup(True)
     self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
@@ -104,6 +119,7 @@ def yearListViewClicked(self, index):
     idx = self.monthListViewModel.index(yearPath)
     self.monthListView.setRootIndex(idx)
 
+
 def monthListViewClicked(self, index):
     # get selected month
     indexItem = self.monthListViewModel.index(index.row(), 0, index.parent())
@@ -119,7 +135,9 @@ def dayListViewClicked(self, index):
     # get selected month
     indexItem = self.dayListViewModel.index(index.row(), 0, index.parent())
     dayPath = self.dayListViewModel.filePath(indexItem)
-    print(dayPath)
+
+    # change current folder
+    changeCurrentFolder(self, Path(dayPath))
 
 
 def dateEditClicked(self):
@@ -158,4 +176,17 @@ def dateEditClicked(self):
     day_folder = selected_date.strftime(day_fmt)
     day_path = month_path / day_folder
 
-    print(day_path)
+    # --
+    changeCurrentFolder(self, day_path)
+
+
+def changeCurrentFolder(self, new_folder):
+    # -- update gui file browser
+    self.current_folder = new_folder
+
+    # -- check that the folder exists
+    if not new_folder.is_dir():
+        self.fileList.clear()
+        self.fileList.addItems(['Folder does not exists'])
+        return
+

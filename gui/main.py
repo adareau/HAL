@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-08 11:58:07
+Modified : 2021-04-20 16:53:30
 
 Comments :
 """
@@ -43,6 +43,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- Other initializations
         self.dummy = Dummy()
+        self.current_folder = None
 
     def setupElements(self):
         # -- File Browser
@@ -87,6 +88,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # -- GUI
     def printText(self, event, msg="lol"):
         print(self.dummy.name)
+        print(self.current_folder)
 
     # == MAIN
 

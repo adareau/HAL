@@ -1,5 +1,5 @@
 [data]
-root = ~/gus_data
+root = ~/gus_data_dummy
 day folder = %d
 month folder = %m
 year folder = %Y
