@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 15:08:38
+Modified : 2021-04-21 15:14:31
 
 Comments :
 """
@@ -116,8 +116,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 return
             im_data = image.imread(path)
             im_data = np.asarray(im_data)
-            print(path)
-            print(im_data.shape)
             self.mainScreen.clear()
             img = pg.ImageItem()
             p = self.mainScreen.addPlot(0, 0)
