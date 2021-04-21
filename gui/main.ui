@@ -86,7 +86,7 @@
       <x>10</x>
       <y>310</y>
       <width>311</width>
-      <height>361</height>
+      <height>391</height>
      </rect>
     </property>
     <property name="title">
@@ -110,6 +110,19 @@
        <width>141</width>
        <height>321</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="refreshRunListButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>360</y>
+       <width>80</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
      </property>
     </widget>
    </widget>

@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 11:10:28
+Modified : 2021-04-21 14:23:02
 
 Comments :
 """
@@ -63,6 +63,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dayList.itemSelectionChanged.connect(
             self._dayListSelectionChanged
         )
+        self.seqList.itemSelectionChanged.connect(
+            self._seqListSelectionChanged
+        )
+        # buttons
+        self.refreshRunListButton.clicked.connect(
+            self._refreshRunListButtonClicked
+        )
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
@@ -82,8 +89,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _dayListSelectionChanged(self):
         filebrowser.dayListSelectionChanged(self)
 
+    def _seqListSelectionChanged(self):
+        filebrowser.refreshCurrentFolder(self)
+
     def _dateEditClicked(self):
         filebrowser.dateEditClicked(self)
+
+    def _refreshRunListButtonClicked(self):
+        filebrowser.refreshCurrentFolder(self)
 
     # -- GUI
     def printText(self, event, msg="lol"):

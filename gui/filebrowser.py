@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 12:22:46
+Modified : 2021-04-21 14:25:08
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -99,22 +99,23 @@ def exploreDayFolder(folder):
     # get subdirs content
     dir_content = []
     # include current dir
-    dir_content.append({'name': '.', 'path': folder, 'file_list': file_list})
+    dir_content.append({"name": ".", "path": folder, "file_list": file_list})
     # loop on subdirs
     for subdir in subdir_list:
-        content = {'name': subdir.name, 'path': subdir}
+        content = {"name": subdir.name, "path": subdir}
         file_list = []
         for file in subdir.iterdir():
             if file.is_file():
                 # TODO : implement filer per type here !!
                 # right now, only dummy filtering
-                if file.suffix in ['.png', '.atoms']:
+                if file.suffix in [".png", ".atoms"]:
                     file_list.append(file)
         file_list.sort()
-        content['file_list'] = file_list
+        content["file_list"] = file_list
         dir_content.append(content)
 
     return dir_content
+
 
 # %% SETUP FUNCTIONS
 
@@ -146,9 +147,10 @@ def setupFileListBrowser(self):
     self.dayList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     self.dayList.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-    # -- file list
+    # -- run & seq list
     # selection mode
     self.runList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+    self.seqList.setSelectionMode(QAbstractItemView.ExtendedSelection)
     # icon size
     self.runList.setIconSize(QSize(15, 15))
 
@@ -276,46 +278,93 @@ def dateEditClicked(self):
         self.dayList.setCurrentItem(day_items[0])
         self.dayList.blockSignals(False)
 
-#@pysnooper.snoop()
-def refreshCurrentFolder(self, new_folder):
+
+# @pysnooper.snoop()
+def refreshCurrentFolder(self, new_folder=None):
     # -- set new current folder
-    self.current_folder = new_folder
+    if new_folder is not None:
+        self.current_folder = new_folder
+    if self.current_folder is None:
+        return
+
+    # -- get selected sequences and runs
+    selected_sequences = [item.text() for item in self.seqList.selectedItems()]
+    selected_runs = [
+        item.data(QtCore.Qt.UserRole) for item in self.runList.selectedItems()
+    ]
+    # handle case where "all" is selected
+    if '[all]' in selected_sequences:
+        selected_sequences = []
+
+    # -- reset lists
+    # block callbacks
+    self.seqList.blockSignals(True)
+    # clear
     self.runList.clear()
     self.seqList.clear()
+    # add "all" to seqlist
+    item = QListWidgetItem()
+    item.setText("[all]")
+    item.setData(QtCore.Qt.UserRole, None)
+    self.seqList.addItem(item)
+    # unblock
+    self.seqList.blockSignals(False)
+
     # -- check that the folder exists
-    if not new_folder.is_dir():
+    if not self.current_folder.is_dir():
         self.runList.addItems(["Folder does not exists"])
         return
 
     # -- get content and update list
     dir_content = exploreDayFolder(self.current_folder)
+
     for content in dir_content:
+        # - skip if empty
+        if not content["file_list"]:
+            continue
+
         # - add subdir item
         # normal formatting > for seqList
         item = QListWidgetItem()
-        item.setText(content['name'])
-        item.setData(QtCore.Qt.UserRole, content['path'])
+        item.setText(content["name"])
+        item.setData(QtCore.Qt.UserRole, content["path"])
         self.seqList.addItem(item)
+
+        # stop here if not selected
+        if selected_sequences and content['name'] not in selected_sequences:
+            continue
+
         # special formatting > for runList
         item = QListWidgetItem()
-        item.setText(content['name'])
-        item.setData(QtCore.Qt.UserRole, content['path'])
+        item.setText(content["name"])
+        item.setData(QtCore.Qt.UserRole, content["path"])
         item.setForeground(QColor(0, 0, 255))
         # https://joekuan.files.wordpress.com/2015/09/screen3.png
         item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
         self.runList.addItem(item)
 
         # - add files items
-        n_files = len(['file_list'])
-        for i, file in enumerate(content['file_list']):
+        n_files = len(content["file_list"])
+        for i, file in enumerate(content["file_list"]):
             # good prefix
             if i == n_files - 1:
-                prefix = '└─ '
+                prefix = "└─ "
             else:
-                prefix = '├─ '
+                prefix = "├─ "
             # add item
             item = QListWidgetItem()
             item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
             item.setData(QtCore.Qt.UserRole, file)
             self.runList.addItem(item)
 
+    # -- restore selections
+    for i in range(self.runList.count()):
+        data = self.runList.item(i).data(QtCore.Qt.UserRole)
+        if data in selected_runs:
+            self.runList.item(i).setSelected(True)
+    self.seqList.blockSignals(True)
+    for i in range(self.seqList.count()):
+        name = self.seqList.item(i).text()
+        if name in selected_sequences:
+            self.seqList.item(i).setSelected(True)
+    self.seqList.blockSignals(False)
