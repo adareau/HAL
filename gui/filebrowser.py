@@ -2,20 +2,19 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 14:40:02
+Modified : 2021-04-21 14:43:00
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
 """
 
 # %% IMPORTS
-import os
 import pysnooper
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
-from PyQt5.QtGui import QFont, QColor, QIcon
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
 
 # %% TOOLS
@@ -225,11 +224,11 @@ def dayListSelectionChanged(self):
 
 
 def runListSelectionChanged(self):
-    '''
+    """
     ATTENTION : this is just to handle the case where a sequence is selected,
     so that the whole sequence is then selected. File content should be handled
     by another function !
-    '''
+    """
     # get selected
     selection = self.runList.selectedItems()
     # find dirs
@@ -247,6 +246,7 @@ def runListSelectionChanged(self):
         data = item.data(QtCore.Qt.UserRole)
         if data.parent in subdir_list:
             item.setSelected(True)
+
 
 def dateEditClicked(self):
     # -- get selected date
@@ -316,7 +316,7 @@ def refreshCurrentFolder(self, new_folder=None):
         item.data(QtCore.Qt.UserRole) for item in self.runList.selectedItems()
     ]
     # handle case where "all" is selected
-    if '[all]' in selected_sequences:
+    if "[all]" in selected_sequences:
         selected_sequences = []
 
     # -- reset lists
@@ -354,7 +354,7 @@ def refreshCurrentFolder(self, new_folder=None):
         self.seqList.addItem(item)
 
         # stop here if not selected
-        if selected_sequences and content['name'] not in selected_sequences:
+        if selected_sequences and content["name"] not in selected_sequences:
             continue
 
         # special formatting > for runList
