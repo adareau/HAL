@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-20 18:03:34
+Modified : 2021-04-21 10:35:56
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -10,7 +10,7 @@ Comments : Functions related to file browsing, i.e. select the right year,
 
 # %% IMPORTS
 import os
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize
@@ -25,119 +25,150 @@ class EmptyIconProvider(QtWidgets.QFileIconProvider):
         return QtGui.QIcon()
 
 
+def validateDateFormat(date_string, date_format):
+    try:
+        # if this fails, then format is bad
+        date_object = datetime.strptime(date_string, date_format)
+        # this is to ensuire zero paddings
+        if date_string != date_object.strftime(date_format):
+            raise ValueError
+        return True
+    except ValueError:
+        return False
+
+
+# %% LOW LEVEL FUNCTIONS
+
+
+def getSubfolders(folder_path, date_format):
+    """
+    analyzes folder, looking for subfolders with the right date format
+    folder_path needs to be a pathlib.Path() object
+    """
+    # if the path does no correspond to a directory : return
+    if not folder_path.is_dir():
+        return []
+
+    # browse folder content
+    selected_content = []
+    for content in folder_path.iterdir():
+        if content.is_dir() and validateDateFormat(content.name, date_format):
+            selected_content.append(content)
+
+    return selected_content
+
+
+def refreshListContent(list, folder, date_format):
+    """
+    Low-level function to refresh the content of the
+    year / month / day lists
+    """
+    # clear current content
+    list.clear()
+
+    # analyze folder
+    subdir_list = getSubfolders(folder, date_format)
+    subdir_list.sort(reverse=False)
+
+    # populate list
+    for subdir in subdir_list:
+        item = QListWidgetItem()
+        item.setText(subdir.name)
+        item.setData(QtCore.Qt.UserRole, subdir)
+        list.addItem(item)
+
+
 # %% SETUP FUNCTIONS
 
 
 def setupFileListBrowser(self):
     """Setup the file list browser (year, month, day)"""
 
-    # -- definitions
+    # -- definitions : setup root
     conf = self.settings.config
-    root_str = os.path.expanduser(conf["data"]["root"])
-    root = Path(root_str)
-    qdir = QtCore.QDir
+    root = Path(conf["data"]["root"])
+    root = root.expanduser()
 
     # -- year
-    # setup ListViewModel
-    year_dir = root
-    self.yearListViewModel = QtWidgets.QFileSystemModel()
-    self.yearListViewModel.setRootPath(str(year_dir))
-    self.yearListViewModel.setIconProvider(EmptyIconProvider())
-    self.yearListViewModel.sort(0, QtCore.Qt.DescendingOrder)
-    self.yearListViewModel.setFilter(
-        qdir.Dirs | qdir.Drives | qdir.NoDotAndDotDot | qdir.AllDirs
-    )
-    # initialize ListView widget
-    self.yearListView.setModel(self.yearListViewModel)
-    idx = self.yearListViewModel.index(str(year_dir))
-    self.yearListView.setRootIndex(idx)
+    # initialize year list
+    year_fmt = conf["data"]["year folder"]
+    refreshListContent(self.yearList, root, year_fmt)
+
     # scrollbar
-    self.yearListView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    self.yearListView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    #
+    self.yearList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    self.yearList.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     # -- month
-    # setup ListViewModel
-    self.monthListViewModel = QtWidgets.QFileSystemModel()
-    self.monthListViewModel.setRootPath("")
-    self.monthListViewModel.setIconProvider(EmptyIconProvider())
-    self.monthListViewModel.sort(0, QtCore.Qt.AscendingOrder)
-    self.monthListViewModel.setFilter(
-        qdir.Dirs | qdir.Drives | qdir.NoDotAndDotDot | qdir.AllDirs
-    )
     # scrollbar
-    self.monthListView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    self.monthListView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    # NB : no need to initialize ListView widget here
-    self.monthListView.setModel(self.monthListViewModel)
+    self.monthList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    self.monthList.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     # -- day
-    # setup ListViewModel
-    self.dayListViewModel = QtWidgets.QFileSystemModel()
-    self.dayListViewModel.setRootPath("")
-    self.dayListViewModel.setIconProvider(EmptyIconProvider())
-    self.dayListViewModel.sort(0, QtCore.Qt.AscendingOrder)
-    self.dayListViewModel.setFilter(
-        qdir.Dirs | qdir.Drives | qdir.NoDotAndDotDot | qdir.AllDirs
-    )
     # scrollbar
-    self.dayListView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    self.dayListView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    # NB : no need to initialize ListView widget here
-    self.dayListView.setModel(self.dayListViewModel)
+    self.dayList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    self.dayList.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     # -- file list
-
     self.fileList.setIconSize(QSize(15, 15))
-    self.fileList.addItems(['A', 'B', 'C'])
+    self.fileList.addItems(["A", "B", "C"])
     # - custom item
     item = QListWidgetItem()
-    item.setText('lol')
-    item.setData(QtCore.Qt.UserRole, 'a path maybe ?')
-    #item.setFont(QFont('Verdana', QFont.bold))
+    item.setText("lol")
+    item.setData(QtCore.Qt.UserRole, "a path maybe ?")
+    # item.setFont(QFont('Verdana', QFont.bold))
     item.setBackground(QColor(0, 0, 255))
     item.setForeground(QColor(255, 255, 255))
     # https://joekuan.files.wordpress.com/2015/09/screen3.png
     item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
     self.fileList.addItem(item)
     # - otehr test
-    self.fileList.addItems(['├─ hum', '└─ lol.png'])
+    self.fileList.addItems(["├─ hum", "└─ lol.png"])
     # -- calendar
     self.dateEdit.setCalendarPopup(True)
     self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
 
+
 # %%  CALLBACKS
 
 
-def yearListViewClicked(self, index):
+def yearListSelectionChanged(self):
+    # if nothing seleted, return
+    if not self.yearList.selectedItems():
+        return
     # get selected year
-    indexItem = self.yearListViewModel.index(index.row(), 0, index.parent())
-    yearPath = self.yearListViewModel.filePath(indexItem)
-    # set month listview index
-    self.monthListViewModel.setRootPath(yearPath)
-    self.monthListView.setModel(self.monthListViewModel)
-    idx = self.monthListViewModel.index(yearPath)
-    self.monthListView.setRootIndex(idx)
+    year = self.yearList.selectedItems()[0]
+    year_dir = year.data(QtCore.Qt.UserRole)
+    # get month formatting
+    conf = self.settings.config
+    month_fmt = conf["data"]["month folder"]
+    # refresh month list
+    refreshListContent(self.monthList, year_dir, month_fmt)
+    # clear day list
+    self.dayList.clear()
 
 
-def monthListViewClicked(self, index):
+def monthListSelectionChanged(self):
+    # if nothing seleted, return
+    if not self.monthList.selectedItems():
+        return
     # get selected month
-    indexItem = self.monthListViewModel.index(index.row(), 0, index.parent())
-    monthPath = self.monthListViewModel.filePath(indexItem)
-    # set month listview index
-    self.dayListViewModel.setRootPath(monthPath)
-    self.dayListView.setModel(self.dayListViewModel)
-    idx = self.dayListViewModel.index(monthPath)
-    self.dayListView.setRootIndex(idx)
+    month = self.monthList.selectedItems()[0]
+    month_dir = month.data(QtCore.Qt.UserRole)
+    # get day formatting
+    conf = self.settings.config
+    day_fmt = conf["data"]["day folder"]
+    # refresh day list
+    refreshListContent(self.dayList, month_dir, day_fmt)
 
 
-def dayListViewClicked(self, index):
-    # get selected month
-    indexItem = self.dayListViewModel.index(index.row(), 0, index.parent())
-    dayPath = self.dayListViewModel.filePath(indexItem)
-
-    # change current folder
-    changeCurrentFolder(self, Path(dayPath))
+def dayListSelectionChanged(self):
+    # if nothing seleted, return
+    if not self.dayList.selectedItems():
+        return
+    # get selected day
+    day = self.dayList.selectedItems()[0]
+    day_dir = day.data(QtCore.Qt.UserRole)
+    print(day_dir)
 
 
 def dateEditClicked(self):
@@ -152,7 +183,7 @@ def dateEditClicked(self):
     root = Path(root_str)
 
     # year
-    year_fmt = conf['data']['year folder']
+    year_fmt = conf["data"]["year folder"]
     year_folder = selected_date.strftime(year_fmt)
     year_path = root / year_folder
 
@@ -162,7 +193,7 @@ def dateEditClicked(self):
     self.monthListView.setRootIndex(idx)
 
     # month
-    month_fmt = conf['data']['month folder']
+    month_fmt = conf["data"]["month folder"]
     month_folder = selected_date.strftime(month_fmt)
     month_path = year_path / month_folder
 
@@ -172,7 +203,7 @@ def dateEditClicked(self):
     self.dayListView.setRootIndex(idx)
 
     # day
-    day_fmt = conf['data']['day folder']
+    day_fmt = conf["data"]["day folder"]
     day_folder = selected_date.strftime(day_fmt)
     day_path = month_path / day_folder
 
@@ -187,6 +218,5 @@ def changeCurrentFolder(self, new_folder):
     # -- check that the folder exists
     if not new_folder.is_dir():
         self.fileList.clear()
-        self.fileList.addItems(['Folder does not exists'])
+        self.fileList.addItems(["Folder does not exists"])
         return
-

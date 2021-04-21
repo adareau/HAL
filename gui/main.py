@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-20 16:53:30
+Modified : 2021-04-21 10:16:58
 
 Comments :
 """
@@ -52,17 +52,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def connectActions(self):
         # -- File Browser
         # year
-        self.yearListView.clicked.connect(self._yearListViewClicked)
-        model = self.yearListView.selectionModel()
-        model.currentChanged.connect(self._yearListViewClicked)
+        self.yearList.itemSelectionChanged.connect(
+            self._yearListSelectionChanged
+        )
         # month
-        self.monthListView.clicked.connect(self._monthListViewClicked)
-        model = self.monthListView.selectionModel()
-        model.currentChanged.connect(self._monthListViewClicked)
+        self.monthList.itemSelectionChanged.connect(
+            self._monthListSelectionChanged
+        )
         # day
-        self.dayListView.clicked.connect(self._dayListViewClicked)
-        model = self.dayListView.selectionModel()
-        model.currentChanged.connect(self._dayListViewClicked)
+        self.dayList.itemSelectionChanged.connect(
+            self._dayListSelectionChanged
+        )
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
@@ -73,14 +73,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # -- FILE BROWSER (defined in gui.filebrowser)
 
-    def _yearListViewClicked(self, index):
-        filebrowser.yearListViewClicked(self, index)
+    def _yearListSelectionChanged(self):
+        filebrowser.yearListSelectionChanged(self)
 
-    def _monthListViewClicked(self, index):
-        filebrowser.monthListViewClicked(self, index)
+    def _monthListSelectionChanged(self):
+        filebrowser.monthListSelectionChanged(self)
 
-    def _dayListViewClicked(self, index):
-        filebrowser.dayListViewClicked(self, index)
+    def _dayListSelectionChanged(self):
+        filebrowser.dayListSelectionChanged(self)
 
     def _dateEditClicked(self):
         filebrowser.dateEditClicked(self)

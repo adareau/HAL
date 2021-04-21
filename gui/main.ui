@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>958</width>
-    <height>648</height>
+    <width>1348</width>
+    <height>797</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="testButton">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>100</y>
+      <x>840</x>
+      <y>550</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -27,55 +27,68 @@
      <string>Test</string>
     </property>
    </widget>
-   <widget class="QListView" name="yearListView">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>60</y>
-      <width>61</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListView" name="monthListView">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>60</y>
-      <width>31</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListView" name="dayListView">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>60</y>
-      <width>31</width>
-      <height>211</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QListWidget" name="fileList">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>280</y>
+      <y>330</y>
       <width>141</width>
       <height>321</height>
      </rect>
     </property>
    </widget>
-   <widget class="QDateEdit" name="dateEdit">
+   <widget class="QGroupBox" name="dayBrowserBox">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>141</width>
-      <height>24</height>
+      <x>10</x>
+      <y>10</y>
+      <width>161</width>
+      <height>291</height>
      </rect>
     </property>
+    <property name="title">
+     <string>Day browser</string>
+    </property>
+    <widget class="QListWidget" name="dayList">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>70</y>
+       <width>31</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="monthList">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>70</y>
+       <width>31</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="yearList">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>61</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QDateEdit" name="dateEdit">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -83,7 +96,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>958</width>
+     <width>1348</width>
      <height>20</height>
     </rect>
    </property>
