@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 16:45:20
+Modified : 2021-04-21 18:44:02
 
 Comments :
 """
@@ -16,6 +16,7 @@ from PyQt5 import QtWidgets
 # -- local
 import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataviz as dataviz
+import HAL.gui.metadata as metadata
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -89,8 +90,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             self._dataTypeComboBoxSelectionChanged
         )
 
-        # -- GUI
-        self.testButton.clicked.connect(self.printText)
+        self.colorMapComboBox.currentIndexChanged.connect(
+            self._colorMapComboBoxSelectionChanged
+        )
+
+        self.scaleMinEdit.editingFinished.connect(self._scaleMinEditChanged)
+
+        self.scaleMaxEdit.editingFinished.connect(self._scaleMaxEditChanged)
 
     # == CALLBACKS
 
@@ -111,32 +117,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.runListSelectionChanged(self)
         # display
         dataviz.plotSelectedData(self)
-        # FIXME : this is a placeholder
-        '''
-        selection = self.runList.selectedItems()
-        if selection:
-            item = selection[0]
-            path = item.data(QtCore.Qt.UserRole)
-            if path.is_dir():
-                return
-            if path.suffix != '.png':
-                return
-            im_data = image.imread(path)
-            im_data = np.asarray(im_data)
-            self.mainScreen.clear()
-            img = pg.ImageItem()
-            p = self.mainScreen.addPlot(0, 0)
-            p.addItem(img)
-            # Get the colormap
-            colormap = cm.get_cmap("RdBu")
-            colormap._init()
-            lut = (colormap._lut * 255).view(np.ndarray)  # Convert matplotlib colormap from 0-1 to 0 -255 for Qt
-
-            # Apply the colormap
-            img.setLookupTable(lut)
-            img.updateImage(image=im_data, levels=(np.min(im_data), np.max(im_data)))
-        '''
-
+        # metadata
+        metadata.displayMetaData(self)
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
@@ -151,10 +133,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _dataTypeComboBoxSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
 
-    # -- GUI
-    def printText(self, event, msg="lol"):
-        print(self.dummy.name)
-        print(self.current_folder)
+    def _colorMapComboBoxSelectionChanged(self):
+        dataviz.plotSelectedData(self)
+
+    def _scaleMaxEditChanged(self):
+        new_max = self.scaleMaxEdit.text()
+        if not new_max.isnumeric():
+            self.scaleMaxEdit.setText("65535")
+        dataviz.plotSelectedData(self)
+
+    def _scaleMinEditChanged(self):
+        new_min = self.scaleMinEdit.text()
+        if not new_min.isnumeric():
+            self.scaleMinEdit.setText("0")
+        dataviz.plotSelectedData(self)
 
     # == MAIN
 

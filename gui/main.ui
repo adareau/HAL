@@ -7,26 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1348</width>
-    <height>797</height>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>HAL</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="testButton">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>550</y>
-      <width>89</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Test</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="dayBrowserBox">
     <property name="geometry">
      <rect>
@@ -80,7 +67,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="runBrowserBox">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -125,14 +112,27 @@
       <string>Refresh</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="fitButton">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>360</y>
+       <width>80</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>FIT</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTabWidget" name="settingsTabWidget">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>550</y>
-      <width>321</width>
-      <height>181</height>
+      <x>180</x>
+      <y>20</y>
+      <width>151</width>
+      <height>281</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -140,29 +140,96 @@
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>Settings</string>
+      <string>Data</string>
      </attribute>
-     <widget class="QComboBox" name="dataTypeComboBox">
+     <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>0</x>
         <y>10</y>
-        <width>111</width>
-        <height>23</height>
+        <width>141</width>
+        <height>148</height>
        </rect>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Data Type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="dataTypeComboBox"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Colormap</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="colorMapComboBox"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Scale</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLineEdit" name="scaleMinEdit"/>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="scaleMaxEdit"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>FIT</string>
+     </attribute>
     </widget>
    </widget>
    <widget class="GraphicsLayoutWidget" name="mainScreen">
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>20</y>
-      <width>611</width>
-      <height>481</height>
+      <y>10</y>
+      <width>771</width>
+      <height>541</height>
      </rect>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="metaDataBox">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>10</y>
+      <width>191</width>
+      <height>701</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Meta Data</string>
+    </property>
+    <widget class="QTextBrowser" name="metaDataText">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>191</width>
+       <height>521</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
