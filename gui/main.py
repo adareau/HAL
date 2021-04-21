@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 14:23:02
+Modified : 2021-04-21 14:31:59
 
 Comments :
 """
@@ -63,8 +63,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dayList.itemSelectionChanged.connect(
             self._dayListSelectionChanged
         )
+        # sequences
         self.seqList.itemSelectionChanged.connect(
             self._seqListSelectionChanged
+        )
+        # runs
+        self.runList.itemSelectionChanged.connect(
+            self._runListSelectionChanged
         )
         # buttons
         self.refreshRunListButton.clicked.connect(
@@ -88,6 +93,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _dayListSelectionChanged(self):
         filebrowser.dayListSelectionChanged(self)
+
+    def _runListSelectionChanged(self):
+        # handle special selection rules
+        # (for instance, if a sequence is selected)
+        filebrowser.runListSelectionChanged(self)
+        # display file
+        # TODO : here !!
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 14:25:08
+Modified : 2021-04-21 14:40:02
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -224,6 +224,30 @@ def dayListSelectionChanged(self):
     self.dateEdit.blockSignals(False)
 
 
+def runListSelectionChanged(self):
+    '''
+    ATTENTION : this is just to handle the case where a sequence is selected,
+    so that the whole sequence is then selected. File content should be handled
+    by another function !
+    '''
+    # get selected
+    selection = self.runList.selectedItems()
+    # find dirs
+    subdir_list = []
+    for item in selection:
+        data = item.data(QtCore.Qt.UserRole)
+        if data.is_dir():
+            subdir_list.append(data)
+            # unselect
+            item.setSelected(False)
+
+    # select dir content
+    for i in range(self.runList.count()):
+        item = self.runList.item(i)
+        data = item.data(QtCore.Qt.UserRole)
+        if data.parent in subdir_list:
+            item.setSelected(True)
+
 def dateEditClicked(self):
     # -- get selected date
     selected_date = self.dateEdit.date()  # QDate format
@@ -279,7 +303,6 @@ def dateEditClicked(self):
         self.dayList.blockSignals(False)
 
 
-# @pysnooper.snoop()
 def refreshCurrentFolder(self, new_folder=None):
     # -- set new current folder
     if new_folder is not None:
