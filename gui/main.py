@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 18:44:02
+Modified : 2021-04-21 19:20:55
 
 Comments :
 """
@@ -21,6 +21,7 @@ from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
 from HAL.classes.data import implemented_data_dic
+from HAL.classes.metadata import implemented_metadata
 
 # %% DEFINE GUI CLASS
 
@@ -37,6 +38,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.settings = Settings()
         # implemented data classes
         self.data_classes = implemented_data_dic
+        # implemented metadata classes
+        self.metadata_classes = implemented_metadata
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
@@ -55,6 +58,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.setupFileListBrowser(self)
         # -- Data Visualization
         dataviz.setupDataViz(self)
+        # -- Meta data
+        metadata.setupMetaData(self)
 
     def connectActions(self):
         # -- File Browser

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-21 18:04:55
+Modified : 2021-04-21 19:41:49
 
 Comments : Abstract classes for data handling
 """
@@ -10,7 +10,7 @@ Comments : Abstract classes for data handling
 
 # -- global
 from pathlib import Path
-
+from datetime import datetime
 
 # -- local
 from HAL.classes.metadata.abstract import AbstractMetaData
@@ -28,12 +28,63 @@ class FileData(AbstractMetaData):
         self.path = path
 
     def analyze(self):
-        data = {}
+        data = []
         #  name
-        data['name'] = self.path.name
+        param = {
+            "name": "file name",
+            "value": self.path.name,
+            "display": "%s",
+            "unit": "",
+            "comment": "file name",
+        }
+        data.append(param)
+
+        # folder
+        param = {
+            "name": "parent",
+            "value": self.path.parent.name,
+            "display": "%s",
+            "unit": "",
+            "comment": "parent folder",
+        }
+        data.append(param)
+
+        # modification time
+        tmstp = self.path.stat().st_mtime
+        mtime = datetime.fromtimestamp(tmstp)
+        param = {
+            "name": "date",
+            "value": mtime.strftime('%Y-%m-%d'),
+            "display": "%s",
+            "unit": "",
+            "comment": "last modification date",
+        }
+        data.append(param)
+
+        param = {
+            "name": "time",
+            "value": mtime.strftime('%H:%M:%S'),
+            "display": "%s",
+            "unit": "",
+            "comment": "last modification date",
+        }
+        data.append(param)
+
+        # size
+        size = self.path.stat().st_size
+        b_to_Mb = 1 / 1024 ** 2
+        param = {
+            "name": "size",
+            "value": size * b_to_Mb,
+            "display": "%.3g",
+            "unit": "Mb",
+            "comment": "size in mega bytes",
+        }
+        data.append(param)
 
         #  store
         self.data = data
+
 
 # %% TEST
 if __name__ == "__main__":
