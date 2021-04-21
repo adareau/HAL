@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 15:14:31
+Modified : 2021-04-21 16:45:20
 
 Comments :
 """
@@ -11,20 +11,15 @@ Comments :
 
 # -- global
 import sys
-import numpy as np
-from PyQt5 import QtWidgets, QtCore
-from matplotlib import image
-from matplotlib import cm
-
-# -- PyQtGraph
-import pyqtgraph as pg
+from PyQt5 import QtWidgets
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
+import HAL.gui.dataviz as dataviz
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
-
+from HAL.classes.data import implemented_data_dic
 
 # %% DEFINE GUI CLASS
 
@@ -36,8 +31,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        # -- FIRST : load settings
+        # -- FIRST
+        # load settings
         self.settings = Settings()
+        # implemented data classes
+        self.data_classes = implemented_data_dic
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
@@ -54,6 +52,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def setupElements(self):
         # -- File Browser
         filebrowser.setupFileListBrowser(self)
+        # -- Data Visualization
+        dataviz.setupDataViz(self)
 
     def connectActions(self):
         # -- File Browser
@@ -84,6 +84,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
+        # -- Data visualization
+        self.dataTypeComboBox.currentIndexChanged.connect(
+            self._dataTypeComboBoxSelectionChanged
+        )
+
         # -- GUI
         self.testButton.clicked.connect(self.printText)
 
@@ -104,8 +109,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # handle special selection rules
         # (for instance, if a sequence is selected)
         filebrowser.runListSelectionChanged(self)
-        # display file
+        # display
+        dataviz.plotSelectedData(self)
         # FIXME : this is a placeholder
+        '''
         selection = self.runList.selectedItems()
         if selection:
             item = selection[0]
@@ -128,8 +135,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             # Apply the colormap
             img.setLookupTable(lut)
             img.updateImage(image=im_data, levels=(np.min(im_data), np.max(im_data)))
-
-
+        '''
 
 
     def _seqListSelectionChanged(self):
@@ -139,6 +145,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.dateEditClicked(self)
 
     def _refreshRunListButtonClicked(self):
+        filebrowser.refreshCurrentFolder(self)
+
+    # -- Data visualization
+    def _dataTypeComboBoxSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
 
     # -- GUI

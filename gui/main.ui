@@ -142,6 +142,16 @@
      <attribute name="title">
       <string>Settings</string>
      </attribute>
+     <widget class="QComboBox" name="dataTypeComboBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>111</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="GraphicsLayoutWidget" name="mainScreen">
