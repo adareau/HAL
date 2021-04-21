@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 11:24:15
+Modified : 2021-04-21 12:22:46
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -10,12 +10,13 @@ Comments : Functions related to file browsing, i.e. select the right year,
 
 # %% IMPORTS
 import os
+import pysnooper
 from datetime import date, datetime
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
 from PyQt5.QtGui import QFont, QColor, QIcon
-from PyQt5.QtWidgets import QListWidgetItem, QStyle
+from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
 
 # %% TOOLS
 
@@ -78,6 +79,43 @@ def refreshListContent(list, folder, date_format):
         list.addItem(item)
 
 
+def exploreDayFolder(folder):
+    # -- check that a directory is provided
+    if not folder.is_dir():
+        return []
+
+    # -- explore
+    # get list of files and subdirs
+    file_list = []
+    subdir_list = []
+    for content in folder.iterdir():
+        if content.is_dir():
+            subdir_list.append(content)
+        elif content.is_file():
+            file_list.append(content)
+    # sort
+    file_list.sort()
+    subdir_list.sort()
+    # get subdirs content
+    dir_content = []
+    # include current dir
+    dir_content.append({'name': '.', 'path': folder, 'file_list': file_list})
+    # loop on subdirs
+    for subdir in subdir_list:
+        content = {'name': subdir.name, 'path': subdir}
+        file_list = []
+        for file in subdir.iterdir():
+            if file.is_file():
+                # TODO : implement filer per type here !!
+                # right now, only dummy filtering
+                if file.suffix in ['.png', '.atoms']:
+                    file_list.append(file)
+        file_list.sort()
+        content['file_list'] = file_list
+        dir_content.append(content)
+
+    return dir_content
+
 # %% SETUP FUNCTIONS
 
 
@@ -109,20 +147,11 @@ def setupFileListBrowser(self):
     self.dayList.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     # -- file list
-    self.fileList.setIconSize(QSize(15, 15))
-    self.fileList.addItems(["A", "B", "C"])
-    # - custom item
-    item = QListWidgetItem()
-    item.setText("lol")
-    item.setData(QtCore.Qt.UserRole, "a path maybe ?")
-    # item.setFont(QFont('Verdana', QFont.bold))
-    item.setBackground(QColor(0, 0, 255))
-    item.setForeground(QColor(255, 255, 255))
-    # https://joekuan.files.wordpress.com/2015/09/screen3.png
-    item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
-    self.fileList.addItem(item)
-    # - otehr test
-    self.fileList.addItems(["├─ hum", "└─ lol.png"])
+    # selection mode
+    self.runList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+    # icon size
+    self.runList.setIconSize(QSize(15, 15))
+
     # -- calendar
     self.dateEdit.setCalendarPopup(True)
     self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
@@ -170,7 +199,7 @@ def dayListSelectionChanged(self):
     day_dir = day.data(QtCore.Qt.UserRole)
 
     # -- update current folder
-    changeCurrentFolder(self, day_dir)
+    refreshCurrentFolder(self, day_dir)
 
     # -- update calendar date
     # get formats
@@ -191,8 +220,6 @@ def dayListSelectionChanged(self):
     self.dateEdit.blockSignals(True)
     self.dateEdit.setDate(new_date)
     self.dateEdit.blockSignals(False)
-
-
 
 
 def dateEditClicked(self):
@@ -216,7 +243,7 @@ def dateEditClicked(self):
     day_dir = root / year / month / day
 
     # -- update current folder
-    changeCurrentFolder(self, day_dir)
+    refreshCurrentFolder(self, day_dir)
 
     # -- update file browser
     # year
@@ -249,13 +276,46 @@ def dateEditClicked(self):
         self.dayList.setCurrentItem(day_items[0])
         self.dayList.blockSignals(False)
 
-
-def changeCurrentFolder(self, new_folder):
-    # -- update gui file browser
+#@pysnooper.snoop()
+def refreshCurrentFolder(self, new_folder):
+    # -- set new current folder
     self.current_folder = new_folder
-    print("CURRENT FOLDER : %s" % str(new_folder))
+    self.runList.clear()
+    self.seqList.clear()
     # -- check that the folder exists
     if not new_folder.is_dir():
-        self.fileList.clear()
-        self.fileList.addItems(["Folder does not exists"])
+        self.runList.addItems(["Folder does not exists"])
         return
+
+    # -- get content and update list
+    dir_content = exploreDayFolder(self.current_folder)
+    for content in dir_content:
+        # - add subdir item
+        # normal formatting > for seqList
+        item = QListWidgetItem()
+        item.setText(content['name'])
+        item.setData(QtCore.Qt.UserRole, content['path'])
+        self.seqList.addItem(item)
+        # special formatting > for runList
+        item = QListWidgetItem()
+        item.setText(content['name'])
+        item.setData(QtCore.Qt.UserRole, content['path'])
+        item.setForeground(QColor(0, 0, 255))
+        # https://joekuan.files.wordpress.com/2015/09/screen3.png
+        item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
+        self.runList.addItem(item)
+
+        # - add files items
+        n_files = len(['file_list'])
+        for i, file in enumerate(content['file_list']):
+            # good prefix
+            if i == n_files - 1:
+                prefix = '└─ '
+            else:
+                prefix = '├─ '
+            # add item
+            item = QListWidgetItem()
+            item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
+            item.setData(QtCore.Qt.UserRole, file)
+            self.runList.addItem(item)
+

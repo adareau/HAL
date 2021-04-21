@@ -27,16 +27,6 @@
      <string>Test</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="fileList">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>330</y>
-      <width>141</width>
-      <height>321</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="dayBrowserBox">
     <property name="geometry">
      <rect>
@@ -86,6 +76,39 @@
        <y>30</y>
        <width>141</width>
        <height>24</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>311</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Run browser</string>
+    </property>
+    <widget class="QListWidget" name="seqList">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>30</y>
+       <width>141</width>
+       <height>321</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="runList">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>141</width>
+       <height>321</height>
       </rect>
      </property>
     </widget>
