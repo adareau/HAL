@@ -46,6 +46,15 @@ class Ui_mainWindow(object):
         self.refreshRunListButton = QtWidgets.QPushButton(self.groupBox)
         self.refreshRunListButton.setGeometry(QtCore.QRect(10, 360, 80, 23))
         self.refreshRunListButton.setObjectName("refreshRunListButton")
+        self.settingsTabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.settingsTabWidget.setGeometry(QtCore.QRect(340, 550, 251, 141))
+        self.settingsTabWidget.setObjectName("settingsTabWidget")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.settingsTabWidget.addTab(self.tab, "")
+        self.mainScreen = GraphicsLayoutWidget(self.centralwidget)
+        self.mainScreen.setGeometry(QtCore.QRect(340, 20, 611, 481))
+        self.mainScreen.setObjectName("mainScreen")
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1348, 20))
@@ -56,6 +65,7 @@ class Ui_mainWindow(object):
         mainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(mainWindow)
+        self.settingsTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -65,3 +75,5 @@ class Ui_mainWindow(object):
         self.dayBrowserBox.setTitle(_translate("mainWindow", "Day browser"))
         self.groupBox.setTitle(_translate("mainWindow", "Run browser"))
         self.refreshRunListButton.setText(_translate("mainWindow", "Refresh"))
+        self.settingsTabWidget.setTabText(self.settingsTabWidget.indexOf(self.tab), _translate("mainWindow", "Settings"))
+from pyqtgraph import GraphicsLayoutWidget

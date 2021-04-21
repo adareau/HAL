@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 14:43:00
+Modified : 2021-04-21 15:10:22
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -229,6 +229,7 @@ def runListSelectionChanged(self):
     so that the whole sequence is then selected. File content should be handled
     by another function !
     """
+    self.runList.blockSignals(True)
     # get selected
     selection = self.runList.selectedItems()
     # find dirs
@@ -247,6 +248,7 @@ def runListSelectionChanged(self):
         if data.parent in subdir_list:
             item.setSelected(True)
 
+    self.runList.blockSignals(False)
 
 def dateEditClicked(self):
     # -- get selected date

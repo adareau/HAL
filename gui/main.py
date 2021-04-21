@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 14:31:59
+Modified : 2021-04-21 15:08:38
 
 Comments :
 """
@@ -11,7 +11,13 @@ Comments :
 
 # -- global
 import sys
-from PyQt5 import QtWidgets
+import numpy as np
+from PyQt5 import QtWidgets, QtCore
+from matplotlib import image
+from matplotlib import cm
+
+# -- PyQtGraph
+import pyqtgraph as pg
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
@@ -99,7 +105,34 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # (for instance, if a sequence is selected)
         filebrowser.runListSelectionChanged(self)
         # display file
-        # TODO : here !!
+        # FIXME : this is a placeholder
+        selection = self.runList.selectedItems()
+        if selection:
+            item = selection[0]
+            path = item.data(QtCore.Qt.UserRole)
+            if path.is_dir():
+                return
+            if path.suffix != '.png':
+                return
+            im_data = image.imread(path)
+            im_data = np.asarray(im_data)
+            print(path)
+            print(im_data.shape)
+            self.mainScreen.clear()
+            img = pg.ImageItem()
+            p = self.mainScreen.addPlot(0, 0)
+            p.addItem(img)
+            # Get the colormap
+            colormap = cm.get_cmap("RdBu")
+            colormap._init()
+            lut = (colormap._lut * 255).view(np.ndarray)  # Convert matplotlib colormap from 0-1 to 0 -255 for Qt
+
+            # Apply the colormap
+            img.setLookupTable(lut)
+            img.updateImage(image=im_data, levels=(np.min(im_data), np.max(im_data)))
+
+
+
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
