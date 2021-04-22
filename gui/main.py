@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-21 19:20:55
+Modified : 2021-04-22 09:57:44
 
 Comments :
 """
@@ -16,7 +16,7 @@ from PyQt5 import QtWidgets
 # -- local
 import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataviz as dataviz
-import HAL.gui.metadata as metadata
+import HAL.gui.dataexplorer as dataexplorer
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -59,7 +59,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Data Visualization
         dataviz.setupDataViz(self)
         # -- Meta data
-        metadata.setupMetaData(self)
+        dataexplorer.setupMetaData(self)
 
     def connectActions(self):
         # -- File Browser
@@ -123,7 +123,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # display
         dataviz.plotSelectedData(self)
         # metadata
-        metadata.displayMetaData(self)
+        dataexplorer.displayMetaData(self)
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)

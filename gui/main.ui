@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1348</width>
-    <height>784</height>
+    <width>1465</width>
+    <height>903</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,7 +72,7 @@
      <rect>
       <x>10</x>
       <y>340</y>
-      <width>401</width>
+      <width>461</width>
       <height>391</height>
      </rect>
     </property>
@@ -104,7 +104,7 @@
       <rect>
        <x>310</x>
        <y>50</y>
-       <width>81</width>
+       <width>141</width>
        <height>301</height>
       </rect>
      </property>
@@ -152,8 +152,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>355</y>
-       <width>340</width>
+       <y>357</y>
+       <width>291</width>
        <height>31</height>
       </rect>
      </property>
@@ -172,17 +172,36 @@
         </property>
        </widget>
       </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>309</x>
+       <y>357</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="saveSetButton">
+       <widget class="QPushButton" name="newSetButton">
         <property name="text">
-         <string>save set</string>
+         <string>new</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="deleteSetButton">
         <property name="text">
-         <string>delete set</string>
+         <string>del</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="favSetButton">
+        <property name="text">
+         <string>⭐</string>
         </property>
        </widget>
       </item>
@@ -194,7 +213,7 @@
      <rect>
       <x>180</x>
       <y>20</y>
-      <width>231</width>
+      <width>291</width>
       <height>311</height>
      </rect>
     </property>
@@ -205,44 +224,44 @@
      <attribute name="title">
       <string>Data</string>
      </attribute>
-     <widget class="QWidget" name="verticalLayoutWidget">
+     <widget class="QWidget" name="formLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>10</y>
-        <width>141</width>
-        <height>161</height>
+        <width>221</width>
+        <height>85</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Data Type</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="1">
         <widget class="QComboBox" name="dataTypeComboBox"/>
        </item>
-       <item>
+       <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Colormap</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="1">
         <widget class="QComboBox" name="colorMapComboBox"/>
        </item>
-       <item>
+       <item row="2" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Scale</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="2" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLineEdit" name="scaleMinEdit"/>
@@ -264,20 +283,20 @@
    <widget class="GraphicsLayoutWidget" name="mainScreen">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>480</x>
       <y>10</y>
-      <width>691</width>
-      <height>541</height>
+      <width>781</width>
+      <height>631</height>
      </rect>
     </property>
    </widget>
    <widget class="QGroupBox" name="metaDataBox">
     <property name="geometry">
      <rect>
-      <x>1120</x>
+      <x>1270</x>
       <y>10</y>
       <width>191</width>
-      <height>721</height>
+      <height>851</height>
      </rect>
     </property>
     <property name="title">
@@ -289,23 +308,38 @@
        <x>0</x>
        <y>20</y>
        <width>191</width>
-       <height>521</height>
+       <height>611</height>
       </rect>
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QTabWidget" name="dataExplorerTabWidget">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>560</y>
-      <width>691</width>
-      <height>171</height>
+      <x>480</x>
+      <y>650</y>
+      <width>771</width>
+      <height>211</height>
      </rect>
     </property>
-    <property name="title">
-     <string>Meta Data Plotter</string>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Quick Plot</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Stats</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Advanced Plot</string>
+     </attribute>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -313,12 +347,40 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1348</width>
+     <width>1465</width>
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDataView">
+    <property name="title">
+     <string>Data View</string>
+    </property>
+    <widget class="QMenu" name="menu2D">
+     <property name="title">
+      <string>2D</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menu3D">
+     <property name="title">
+      <string>3D</string>
+     </property>
+    </widget>
+    <addaction name="menu2D"/>
+    <addaction name="menu3D"/>
+   </widget>
+   <addaction name="menuDataView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionv1s">
+   <property name="text">
+    <string>v1s</string>
+   </property>
+  </action>
+  <action name="actionl">
+   <property name="text">
+    <string>l</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

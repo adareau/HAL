@@ -2,9 +2,9 @@
 '''
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-21 19:38:56
+Modified : 2021-04-22 09:57:06
 
-Comments : Functions related to data visualization
+Comments : Functions related to (meta)data exploration
 '''
 
 # %% IMPORTS
