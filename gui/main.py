@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 10:24:13
+Modified : 2021-04-22 11:10:14
 
 Comments :
 """
@@ -12,6 +12,7 @@ Comments :
 # -- global
 import sys
 from PyQt5 import QtWidgets
+from pathlib import Path
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
@@ -32,6 +33,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+
+
 
         # -- FIRST
         # load settings
@@ -56,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Hidden
         self._version = '0.0'
         self._name = 'HAL'
+        self._settings_folder = Path().home() / '.HAL'
 
     def setupElements(self):
         # -- File Browser
@@ -63,7 +67,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Data Visualization
         dataviz.setupDataViz(self)
         # -- Meta data
-        dataexplorer.setupMetaData(self)
+        dataexplorer.setupDataExplorer(self)
 
     def connectActions(self):
 
@@ -131,6 +135,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _dayListSelectionChanged(self):
         filebrowser.dayListSelectionChanged(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _runListSelectionChanged(self):
         # handle special selection rules
@@ -143,12 +148,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _dateEditClicked(self):
         filebrowser.dateEditClicked(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _refreshRunListButtonClicked(self):
         filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     # -- DATA VISUALIZATION
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 10:48:44
+Modified : 2021-04-22 11:11:00
 
 Comments : Functions related to (meta)data exploration
 """
@@ -10,8 +10,14 @@ Comments : Functions related to (meta)data exploration
 # %% IMPORTS
 import json
 from datetime import datetime
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QInputDialog
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import (
+    QInputDialog,
+    QAbstractItemView,
+    QStyle,
+    QListWidgetItem,
+)
 
 
 # %% GLOBAL
@@ -23,10 +29,15 @@ PREFIX_LAST = "└─ "
 # %% SETUP FUNCTIONS
 
 
-def setupMetaData(self):
+def setupDataExplorer(self):
     # -- meta data text display
     self.metaDataText.setReadOnly(True)
     self.metaDataText.setLineWrapMode(self.metaDataText.NoWrap)
+
+    # -- set list
+    self.setList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    self.setList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+    self.setList.setIconSize(QSize(15, 15))
 
 
 # %% DISPLAY FUNCTIONS
@@ -127,3 +138,66 @@ def addNewSet(self):
         json_file = root / ".datasets" / ("%s.json" % name)
         json_txt = json.dumps(json_content)
         json_file.write_text(json_txt)
+
+    # refresh
+    refreshDataSetList(self)
+
+
+def refreshDataSetList(self):
+    """
+    Refresh the data set list, with all datasets in the current folder, and the favorite ones stored in ~/.HAL/datasets
+    """
+
+    # -- get datasets
+    # in current folder
+    current_datasets = []
+    root = self.current_folder
+    dataset_dir = root / ".datasets"
+    if dataset_dir.is_dir():
+        for content in dataset_dir.iterdir():
+            if content.suffix == ".json":
+                current_datasets.append(content)
+    # in home folder
+    fav_datasets = []
+    root = self._settings_folder
+    dataset_dir = root / ".datasets"
+    if dataset_dir.is_dir():
+        for content in dataset_dir.iterdir():
+            if content.suffix == ".json":
+                fav_datasets.append(content)
+
+    # -- show in setList
+    self.setList.clear()
+    for name, datasets in zip(
+        ["current folder", "favorite"], [current_datasets, fav_datasets]
+    ):
+        if datasets:
+            # title
+            item = QListWidgetItem()
+            item.setText(name)
+            item.setData(Qt.UserRole, None)
+            item.setForeground(QColor(255, 0, 0))
+            item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
+            self.setList.addItem(item)
+            # sets
+            n_files = len(datasets)
+            for i, file in enumerate(datasets):
+                # good prefix
+                if i == n_files - 1:
+                    prefix = "└─ "
+                else:
+                    prefix = "├─ "
+                # add item
+                item = QListWidgetItem()
+                item.setText(
+                    prefix + file.stem
+                )  # NB: use file.stem to remove ext
+                item.setData(Qt.UserRole, file)
+                self.setList.addItem(item)
+
+
+def renameDataSet(self):
+    """
+    PLACEHOLDER : should be called when double-clicking on setList
+    """
+    pass

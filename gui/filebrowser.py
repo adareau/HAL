@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-22 10:27:27
+Modified : 2021-04-22 11:07:02
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -90,7 +90,7 @@ def exploreDayFolder(folder):
     for content in folder.iterdir():
         if content.is_dir():
             # ignore hidden folders
-            if content.name.startswith('.'):
+            if content.name.startswith("."):
                 continue
             # otherwise, append
             subdir_list.append(content)
@@ -253,6 +253,7 @@ def runListSelectionChanged(self):
             item.setSelected(True)
 
     self.runList.blockSignals(False)
+
 
 def dateEditClicked(self):
     # -- get selected date
