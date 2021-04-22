@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-22 13:48:42
+Modified : 2021-04-22 13:53:45
 
 Comments : Abstract classes for data handling
 """
@@ -41,6 +41,19 @@ class GusData(AbstractMetaData):
         # - init data
         data = []
 
+        # - find script name
+        for content in self.path.parent.iterdir():
+            if content.suffix == ".m":
+                if not content.name.startswith(("x_", "z_")):
+                    param = {
+                        "name": "script",
+                        "value": content.name,
+                        "display": "%s",
+                        "unit": "",
+                        "comment": "",
+                    }
+                    data.append(param)
+
         # - gus generated .mat file
         # generate file path
         mat_file = self.path.with_suffix(".mat")
@@ -66,8 +79,6 @@ class GusData(AbstractMetaData):
                     "comment": "",
                 }
                 data.append(param)
-
-        # - find script name
 
         # - store
         self.data = data
