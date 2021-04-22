@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 09:57:44
+Modified : 2021-04-22 10:24:13
 
 Comments :
 """
@@ -53,6 +53,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dummy = Dummy()
         self.current_folder = None
 
+        # -- Hidden
+        self._version = '0.0'
+        self._name = 'HAL'
+
     def setupElements(self):
         # -- File Browser
         filebrowser.setupFileListBrowser(self)
@@ -62,7 +66,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.setupMetaData(self)
 
     def connectActions(self):
-        # -- File Browser
+
+        # -- File Browser --
+
         # year
         self.yearList.itemSelectionChanged.connect(
             self._yearListSelectionChanged
@@ -90,18 +96,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
-        # -- Data visualization
+        # -- Data visualization --
+
+        # select data type
         self.dataTypeComboBox.currentIndexChanged.connect(
             self._dataTypeComboBoxSelectionChanged
         )
-
+        # select colormap
         self.colorMapComboBox.currentIndexChanged.connect(
             self._colorMapComboBoxSelectionChanged
         )
-
+        # colormap scale min
         self.scaleMinEdit.editingFinished.connect(self._scaleMinEditChanged)
 
+        # colormap scale max
         self.scaleMaxEdit.editingFinished.connect(self._scaleMaxEditChanged)
+
+        # -- Data explorer --
+
+        # - sets management
+
+        # new set
+        self.newSetButton.clicked.connect(self._newSetButtonClicked)
 
     # == CALLBACKS
 
@@ -134,7 +150,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _refreshRunListButtonClicked(self):
         filebrowser.refreshCurrentFolder(self)
 
-    # -- Data visualization
+    # -- DATA VISUALIZATION
+
     def _dataTypeComboBoxSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
 
@@ -152,6 +169,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         if not new_min.isnumeric():
             self.scaleMinEdit.setText("0")
         dataviz.plotSelectedData(self)
+
+    # -- DATA EXPLORER
+
+    def _newSetButtonClicked(self):
+        dataexplorer.addNewSet(self)
 
     # == MAIN
 

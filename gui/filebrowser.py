@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-21 15:10:22
+Modified : 2021-04-22 10:27:27
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -74,7 +74,7 @@ def refreshListContent(list, folder, date_format):
     for subdir in subdir_list:
         item = QListWidgetItem()
         item.setText(subdir.name)
-        item.setData(QtCore.Qt.UserRole, subdir)
+        item.setData(Qt.UserRole, subdir)
         list.addItem(item)
 
 
@@ -89,6 +89,10 @@ def exploreDayFolder(folder):
     subdir_list = []
     for content in folder.iterdir():
         if content.is_dir():
+            # ignore hidden folders
+            if content.name.startswith('.'):
+                continue
+            # otherwise, append
             subdir_list.append(content)
         elif content.is_file():
             file_list.append(content)
@@ -167,7 +171,7 @@ def yearListSelectionChanged(self):
         return
     # get selected year
     year = self.yearList.selectedItems()[0]
-    year_dir = year.data(QtCore.Qt.UserRole)
+    year_dir = year.data(Qt.UserRole)
     # get month formatting
     conf = self.settings.config
     month_fmt = conf["data"]["month folder"]
@@ -183,7 +187,7 @@ def monthListSelectionChanged(self):
         return
     # get selected month
     month = self.monthList.selectedItems()[0]
-    month_dir = month.data(QtCore.Qt.UserRole)
+    month_dir = month.data(Qt.UserRole)
     # get day formatting
     conf = self.settings.config
     day_fmt = conf["data"]["day folder"]
@@ -197,7 +201,7 @@ def dayListSelectionChanged(self):
         return
     # -- get selected day
     day = self.dayList.selectedItems()[0]
-    day_dir = day.data(QtCore.Qt.UserRole)
+    day_dir = day.data(Qt.UserRole)
 
     # -- update current folder
     refreshCurrentFolder(self, day_dir)
@@ -235,7 +239,7 @@ def runListSelectionChanged(self):
     # find dirs
     subdir_list = []
     for item in selection:
-        data = item.data(QtCore.Qt.UserRole)
+        data = item.data(Qt.UserRole)
         if data.is_dir():
             subdir_list.append(data)
             # unselect
@@ -244,7 +248,7 @@ def runListSelectionChanged(self):
     # select dir content
     for i in range(self.runList.count()):
         item = self.runList.item(i)
-        data = item.data(QtCore.Qt.UserRole)
+        data = item.data(Qt.UserRole)
         if data.parent in subdir_list:
             item.setSelected(True)
 
@@ -315,7 +319,7 @@ def refreshCurrentFolder(self, new_folder=None):
     # -- get selected sequences and runs
     selected_sequences = [item.text() for item in self.seqList.selectedItems()]
     selected_runs = [
-        item.data(QtCore.Qt.UserRole) for item in self.runList.selectedItems()
+        item.data(Qt.UserRole) for item in self.runList.selectedItems()
     ]
     # handle case where "all" is selected
     if "[all]" in selected_sequences:
@@ -330,7 +334,7 @@ def refreshCurrentFolder(self, new_folder=None):
     # add "all" to seqlist
     item = QListWidgetItem()
     item.setText("[all]")
-    item.setData(QtCore.Qt.UserRole, None)
+    item.setData(Qt.UserRole, None)
     self.seqList.addItem(item)
     # unblock
     self.seqList.blockSignals(False)
@@ -352,7 +356,7 @@ def refreshCurrentFolder(self, new_folder=None):
         # normal formatting > for seqList
         item = QListWidgetItem()
         item.setText(content["name"])
-        item.setData(QtCore.Qt.UserRole, content["path"])
+        item.setData(Qt.UserRole, content["path"])
         self.seqList.addItem(item)
 
         # stop here if not selected
@@ -362,7 +366,7 @@ def refreshCurrentFolder(self, new_folder=None):
         # special formatting > for runList
         item = QListWidgetItem()
         item.setText(content["name"])
-        item.setData(QtCore.Qt.UserRole, content["path"])
+        item.setData(Qt.UserRole, content["path"])
         item.setForeground(QColor(0, 0, 255))
         # https://joekuan.files.wordpress.com/2015/09/screen3.png
         item.setIcon(self.style().standardIcon(QStyle.SP_DirIcon))
@@ -379,12 +383,12 @@ def refreshCurrentFolder(self, new_folder=None):
             # add item
             item = QListWidgetItem()
             item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
-            item.setData(QtCore.Qt.UserRole, file)
+            item.setData(Qt.UserRole, file)
             self.runList.addItem(item)
 
     # -- restore selections
     for i in range(self.runList.count()):
-        data = self.runList.item(i).data(QtCore.Qt.UserRole)
+        data = self.runList.item(i).data(Qt.UserRole)
         if data in selected_runs:
             self.runList.item(i).setSelected(True)
     self.seqList.blockSignals(True)
