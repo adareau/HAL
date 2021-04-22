@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 11:36:13
+Modified : 2021-04-22 11:54:05
 
 Comments :
 """
@@ -34,8 +34,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-
-
         # -- FIRST
         # load settings
         self.settings = Settings()
@@ -55,6 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Other initializations
         self.dummy = Dummy()
         self.current_folder = None
+        self.metadata = {}
 
         # -- Hidden
         self._version = '0.0'

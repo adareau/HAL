@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 11:43:47
+Modified : 2021-04-22 12:18:11
 
 Comments : Functions related to (meta)data exploration
 """
@@ -41,7 +41,7 @@ def setupDataExplorer(self):
     self.setList.setIconSize(QSize(15, 15))
 
 
-# %% DISPLAY FUNCTIONS
+# %% META DATA MANAGEMENT
 
 
 def displayMetaData(self):
@@ -68,8 +68,11 @@ def displayMetaData(self):
         meta.analyze()
         metadata[meta.name] = meta.data
 
-    # -- display
-    # generate text string
+    # -- store
+    self.metadata = metadata
+
+    # -- display and store available metadata
+    # init
     text = ""
     for name in metadata_names:
         param_list = metadata[name]
@@ -94,6 +97,39 @@ def displayMetaData(self):
             text += param_str
 
     self.metaDataText.setPlainText(text)
+
+    # -- refresh dataexplorer metadata list
+    refreshMetaDataList(self)
+
+
+def refreshMetaDataList(self):
+    """
+    Updates all the GUI elements that allows the selection of metadata
+    """
+    # -- get data
+    # sorted !!
+    metadata_names = [meta.name for meta in self.metadata_classes]
+    metadata = self.metadata
+
+    # -- combo box elements
+    combo_boxes = [self.quickPlotXComboBox, self.quickPlotYComboBox]
+    for box in combo_boxes:
+        # get current selection
+        current_selection = box.currentText()
+        box.clear()
+        for name in metadata_names:
+            param_list = metadata[name]
+            if not param_list:
+                continue
+            for par in param_list:
+                # TODO : filter numeric ?? ??
+                display_name = "%s > %s" % (name, par['name'])
+                box.addItem(display_name, (name, par['name']))
+        # restore
+        if current_selection:
+            index = box.findText(current_selection)
+            if index != -1:
+                box.setCurrentIndex(index)
 
 
 # %% SET MANAGEMENT
