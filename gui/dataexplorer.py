@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 11:33:46
+Modified : 2021-04-22 11:43:47
 
 Comments : Functions related to (meta)data exploration
 """
@@ -146,9 +146,26 @@ def addNewSet(self):
 
 def renameDataSet(self):
     """
-    PLACEHOLDER : should be called when double-clicking on setList
+    Rename the currently selected dataset
     """
-    pass
+    # -- get dataset
+    current_dataset = self.setList.currentItem()
+    path = current_dataset.data(Qt.UserRole)
+    if path is None or not path.is_file():
+        return
+
+    # -- rename
+    # ask for name
+    current_name = str(path.stem)
+    new_name, ok = QInputDialog.getText(
+        self, "rename data set", "Enter new dataset name:", text=current_name
+    )
+    # OK, let's do it
+    if ok:
+        path.rename(path.with_stem(new_name))
+
+    # -- refresh
+    refreshDataSetList(self)
 
 
 def deleteDataSet(self):

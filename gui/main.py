@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 11:15:39
+Modified : 2021-04-22 11:36:13
 
 Comments :
 """
@@ -126,6 +126,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.deleteSetButton.clicked.connect(self._deleteSetButtonClicked)
         # add to favorite
         self.favSetButton.clicked.connect(self._favSetButtonClicked)
+        # rename
+        self.setList.doubleClicked.connect(self._setListDoubleClicked)
 
     # == CALLBACKS
 
@@ -192,6 +194,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _favSetButtonClicked(self):
         dataexplorer.favDataSet(self)
+
+    def _setListDoubleClicked(self):
+        dataexplorer.renameDataSet(self)
 
     # == MAIN
 
