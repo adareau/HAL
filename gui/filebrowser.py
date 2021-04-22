@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-22 11:07:02
+Modified : 2021-04-22 15:51:31
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -97,8 +97,8 @@ def exploreDayFolder(folder):
         elif content.is_file():
             file_list.append(content)
     # sort
-    file_list.sort()
-    subdir_list.sort()
+    file_list.sort(reverse=True)
+    subdir_list.sort(reverse=True)
     # get subdirs content
     dir_content = []
     # include current dir
@@ -113,7 +113,7 @@ def exploreDayFolder(folder):
                 # right now, only dummy filtering
                 if file.suffix in [".png", ".atoms"]:
                     file_list.append(file)
-        file_list.sort()
+        file_list.sort(reverse=True)
         content["file_list"] = file_list
         dir_content.append(content)
 
