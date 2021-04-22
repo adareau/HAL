@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 11:11:00
+Modified : 2021-04-22 11:33:46
 
 Comments : Functions related to (meta)data exploration
 """
@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (
     QAbstractItemView,
     QStyle,
     QListWidgetItem,
+    QMessageBox,
 )
 
 
@@ -131,7 +132,7 @@ def addNewSet(self):
     # ask name
     default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
     name, ok = QInputDialog.getText(
-        self, "create new data", "Enter dataset name:", text=default_name
+        self, "create new data set", "Enter dataset name:", text=default_name
     )
     # write json file
     if ok:
@@ -143,9 +144,68 @@ def addNewSet(self):
     refreshDataSetList(self)
 
 
+def renameDataSet(self):
+    """
+    PLACEHOLDER : should be called when double-clicking on setList
+    """
+    pass
+
+
+def deleteDataSet(self):
+    """
+    Delete the currently selected datasets
+    """
+    # -- get selected datasets
+    selected_datasets = self.setList.selectedItems()
+
+    # -- remove
+    # are you sure ?
+    answer = QMessageBox.question(
+        self,
+        "delete data set",
+        "delete %i datasets ?" % len(selected_datasets),
+        QMessageBox.Yes | QMessageBox.No,
+    )
+    # OK, let's do it
+    if answer == QMessageBox.Yes:
+        for item in selected_datasets:
+            path = item.data(Qt.UserRole)
+            if path is not None:
+                path.unlink()
+    # refresh
+    refreshDataSetList(self)
+
+
+def favDataSet(self):
+    """
+    Move currently dataset to home folder (as favorite)
+    """
+    # get selected datasets
+    selected_datasets = self.setList.selectedItems()
+    if not selected_datasets:
+        return
+
+    # target directory
+    root = self._settings_folder
+    fav_dir = root / "datasets"
+    fav_dir.mkdir(parents=True, exist_ok=True)
+
+    # copy
+    for item in selected_datasets:
+        path = item.data(Qt.UserRole)
+        if path is not None and path.is_file():
+            setname = path.name
+            new_path = fav_dir / setname
+            new_path.write_text(path.read_text())  # copy !
+
+    # refresh
+    refreshDataSetList(self)
+
+
 def refreshDataSetList(self):
     """
-    Refresh the data set list, with all datasets in the current folder, and the favorite ones stored in ~/.HAL/datasets
+    Refresh the data set list, with all datasets in the current folder, and the
+    favorite ones stored in ~/.HAL/datasets
     """
 
     # -- get datasets
@@ -160,7 +220,7 @@ def refreshDataSetList(self):
     # in home folder
     fav_datasets = []
     root = self._settings_folder
-    dataset_dir = root / ".datasets"
+    dataset_dir = root / "datasets"
     if dataset_dir.is_dir():
         for content in dataset_dir.iterdir():
             if content.suffix == ".json":
@@ -194,10 +254,3 @@ def refreshDataSetList(self):
                 )  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
-
-
-def renameDataSet(self):
-    """
-    PLACEHOLDER : should be called when double-clicking on setList
-    """
-    pass

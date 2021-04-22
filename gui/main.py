@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 11:10:14
+Modified : 2021-04-22 11:15:39
 
 Comments :
 """
@@ -122,6 +122,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # new set
         self.newSetButton.clicked.connect(self._newSetButtonClicked)
+        # delete set
+        self.deleteSetButton.clicked.connect(self._deleteSetButtonClicked)
+        # add to favorite
+        self.favSetButton.clicked.connect(self._favSetButtonClicked)
 
     # == CALLBACKS
 
@@ -182,6 +186,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _newSetButtonClicked(self):
         dataexplorer.addNewSet(self)
+
+    def _deleteSetButtonClicked(self):
+        dataexplorer.deleteDataSet(self)
+
+    def _favSetButtonClicked(self):
+        dataexplorer.favDataSet(self)
 
     # == MAIN
 
