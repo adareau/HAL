@@ -2,7 +2,7 @@
 '''
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 09:57:06
+Modified : 2021-04-22 10:08:51
 
 Comments : Functions related to (meta)data exploration
 '''
@@ -78,3 +78,12 @@ def displayMetaData(self):
 
     self.metaDataText.setPlainText(text)
 
+
+# %% SET MANAGEMENT
+
+def addNewSet(self):
+    '''
+    Add a new dataset, consisting of the currently selected runs.
+    The dataset is saved in the day folder, in a '.datasets' subfolder
+    '''
+    print('lol')
