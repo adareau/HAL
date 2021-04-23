@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-22 11:54:05
+Modified : 2021-04-23 14:11:32
 
 Comments :
 """
@@ -56,9 +56,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.metadata = {}
 
         # -- Hidden
-        self._version = '0.0'
-        self._name = 'HAL'
-        self._settings_folder = Path().home() / '.HAL'
+        self._version = "0.0"
+        self._name = "HAL"
+        self._settings_folder = Path().home() / ".HAL"
 
     def setupElements(self):
         # -- File Browser
@@ -117,6 +117,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- Data explorer --
 
+        # - meta data management
+        self.metaDataList.itemSelectionChanged.connect(
+            self._metaDataListSelectionChanged
+        )
         # - sets management
 
         # new set
@@ -184,6 +188,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataviz.plotSelectedData(self)
 
     # -- DATA EXPLORER
+
+    def _metaDataListSelectionChanged(self):
+        dataexplorer.displayMetaData(self)
+        dataexplorer.refreshMetaDataList(self)
 
     def _newSetButtonClicked(self):
         dataexplorer.addNewSet(self)

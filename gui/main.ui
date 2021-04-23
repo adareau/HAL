@@ -179,7 +179,7 @@
       <rect>
        <x>309</x>
        <y>357</y>
-       <width>141</width>
+       <width>254</width>
        <height>31</height>
       </rect>
      </property>
@@ -312,6 +312,29 @@
       </rect>
      </property>
     </widget>
+    <widget class="QListWidget" name="metaDataList">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>661</y>
+       <width>191</width>
+       <height>141</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>643</y>
+       <width>161</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Metadata sources :</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTabWidget" name="dataExplorerTabWidget">
     <property name="geometry">
@@ -335,7 +358,7 @@
         <x>20</x>
         <y>20</y>
         <width>201</width>
-        <height>51</height>
+        <height>54</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">

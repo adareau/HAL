@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-22 12:18:11
+Modified : 2021-04-23 14:11:11
 
 Comments : Functions related to (meta)data exploration
 """
@@ -35,6 +35,21 @@ def setupDataExplorer(self):
     self.metaDataText.setReadOnly(True)
     self.metaDataText.setLineWrapMode(self.metaDataText.NoWrap)
 
+    # -- meta data list
+    # setup selection and scroll mode
+    self.metaDataList.setSelectionMode(QAbstractItemView.MultiSelection)
+    self.metaDataList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    # add all metadata classes names
+    for metadata in self.metadata_classes:
+        item = QListWidgetItem()
+        item.setText(metadata.name)
+        self.metaDataList.addItem(item)
+    # select all
+    self.metaDataList.blockSignals(True)
+    for i in range(self.metaDataList.count()):
+        self.metaDataList.item(i).setSelected(True)
+    self.metaDataList.blockSignals(False)
+
     # -- set list
     self.setList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     self.setList.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -44,11 +59,22 @@ def setupDataExplorer(self):
 # %% META DATA MANAGEMENT
 
 
+def getMetaData(self, data_list=None):
+    """
+    TODO : NEXT !!!
+
+    PLACEHOLDER : for each selected set (and selected run), gather
+    the metadata listed in data_list (name, param_name)
+
+    LOW LEVEL FUNCTION, will be called by plotting / stats functions !
+    """
+    pass
+
+
 def displayMetaData(self):
     """
     loads related meta data and display it
     """
-    # FIXME : preliminary, should call dataViz classes for displaying !
     # -- get selected data
     selection = self.runList.selectedItems()
     if not selection:
@@ -59,8 +85,16 @@ def displayMetaData(self):
     path = item.data(Qt.UserRole)
 
     # -- get metadata
+    # get selected metadata
+    selected_metadata = [
+        item.text() for item in self.metaDataList.selectedItems()
+    ]
     # we store names in a sorted way
-    metadata_names = [meta.name for meta in self.metadata_classes]
+    metadata_names = [
+        meta.name
+        for meta in self.metadata_classes
+        if meta.name in selected_metadata
+    ]
     # values are then sorted in a dict
     metadata = {}
     for meta in self.metadata_classes:
@@ -89,7 +123,7 @@ def displayMetaData(self):
             else:
                 param_str = PREFIX_CORE
             # prepare param string
-            param_str += par["name"] + "\t= " + par["display"] % par["value"]
+            param_str += par["name"] + " : " + par["display"] % par["value"]
             if par["unit"]:
                 param_str += " %s" % par["unit"]
             param_str += "\n"
@@ -107,8 +141,16 @@ def refreshMetaDataList(self):
     Updates all the GUI elements that allows the selection of metadata
     """
     # -- get data
-    # sorted !!
-    metadata_names = [meta.name for meta in self.metadata_classes]
+    # get selected metadata
+    selected_metadata = [
+        item.text() for item in self.metaDataList.selectedItems()
+    ]
+    # we store names in a sorted way
+    metadata_names = [
+        meta.name
+        for meta in self.metadata_classes
+        if meta.name in selected_metadata
+    ]
     metadata = self.metadata
 
     # -- combo box elements
@@ -123,8 +165,8 @@ def refreshMetaDataList(self):
                 continue
             for par in param_list:
                 # TODO : filter numeric ?? ??
-                display_name = "%s > %s" % (name, par['name'])
-                box.addItem(display_name, (name, par['name']))
+                display_name = "%s > %s" % (name, par["name"])
+                box.addItem(display_name, (name, par["name"]))
         # restore
         if current_selection:
             index = box.findText(current_selection)
