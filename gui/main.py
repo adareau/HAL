@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-23 14:11:32
+Modified : 2021-04-23 14:24:22
 
 Comments :
 """
@@ -18,6 +18,7 @@ from pathlib import Path
 import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataviz as dataviz
 import HAL.gui.dataexplorer as dataexplorer
+import HAL.gui.quickplot as quickplot
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -54,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dummy = Dummy()
         self.current_folder = None
         self.metadata = {}
+        self.current_fig = None
 
         # -- Hidden
         self._version = "0.0"
@@ -67,6 +69,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataviz.setupDataViz(self)
         # -- Meta data
         dataexplorer.setupDataExplorer(self)
+        # -- Quick Plot
+        quickplot.setupQuickPlot(self)
 
     def connectActions(self):
 
@@ -131,6 +135,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.favSetButton.clicked.connect(self._favSetButtonClicked)
         # rename
         self.setList.doubleClicked.connect(self._setListDoubleClicked)
+
+        # - quickplot
+        self.quickPlotButton.clicked.connect(self._quickPlotButtonClicked)
 
     # == CALLBACKS
 
@@ -204,6 +211,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _setListDoubleClicked(self):
         dataexplorer.renameDataSet(self)
+
+    def _quickPlotButtonClicked(self):
+        quickplot.plotData(self)
 
     # == MAIN
 

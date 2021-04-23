@@ -2,13 +2,14 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-23 14:11:11
+Modified : 2021-04-23 15:49:33
 
 Comments : Functions related to (meta)data exploration
 """
 
 # %% IMPORTS
 import json
+from pathlib import Path
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QColor
@@ -59,16 +60,84 @@ def setupDataExplorer(self):
 # %% META DATA MANAGEMENT
 
 
+def _loadSetMetaData(self, path_list, data_list=None):
+    """
+    Subfunction, used for instance by getMetaData. Loads the selected metaData
+    from the list of paths (i.e., for one dataset)
+    """
+    # -- prepare metadata classes
+    if data_list is None:
+        # then load all
+        metadata_classes = self.metadata_classes
+    else:
+        # get requested names
+        requested_names = [d[0] for d in data_list]
+        metadata_classes = [
+            m for m in self.metadata_classes if m.name in requested_names
+        ]
+
+    # -- prepare lists
+    metadata = {}
+    for d in data_list:  # FIXME handle case where data_list is None : take all
+        if d[0] not in metadata:
+            metadata[d[0]] = {}
+        metadata[d[0]][d[1]] = [None for p in path_list]
+
+    # -- collect
+    # loop on all files
+    for i, path in enumerate(path_list):
+        path = Path(path)
+        # loop on metadata classes
+        for meta in metadata_classes:
+            meta.path = path
+            meta.analyze()
+            # check all gathered parameters
+            for param in meta.data:
+                pname = param["name"]
+                if pname in metadata[meta.name]:
+                    # if parameter name is requested : store it
+                    pvalue = param["value"]
+                    metadata[meta.name][pname][i] = pvalue
+                    # store info
+                    if "%s_info" % pname not in metadata[meta.name]:
+                        metadata[meta.name]["%s_info" % pname] = param
+
+    return metadata
+
+
 def getMetaData(self, data_list=None):
     """
-    TODO : NEXT !!!
-
-    PLACEHOLDER : for each selected set (and selected run), gather
+    For each selected set (and selected run), gather
     the metadata listed in data_list (name, param_name)
 
     LOW LEVEL FUNCTION, will be called by plotting / stats functions !
     """
-    pass
+    # -- prepare datasets lists
+    # get selected datasets
+    selected_datasets = [
+        item.data(Qt.UserRole) for item in self.setList.selectedItems()
+    ]
+    # get corresponding paths
+    dataset_list = {}
+    for set in selected_datasets:
+        if set.is_file():
+            set_json = json.loads(set.read_text())
+            if "paths" in set_json:
+                dataset_list[set.stem] = set_json["paths"]
+
+    # add the current selection
+    selected_runs = [
+        item.data(Qt.UserRole) for item in self.runList.selectedItems()
+    ]
+    if len(selected_runs) > 1:
+        dataset_list["current selection"] = selected_runs
+
+    # -- load metadata
+    metadata = {}
+    for setname, paths in dataset_list.items():
+        metadata[setname] = _loadSetMetaData(self, paths, data_list)
+
+    return metadata
 
 
 def displayMetaData(self):
@@ -349,3 +418,26 @@ def refreshDataSetList(self):
                 )  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
+
+
+# %% TEST
+if __name__ == "__main__":
+    from HAL.classes.metadata import implemented_metadata
+
+    root = Path().home()
+    path = (
+        root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
+    )
+
+    print(path.is_file())
+    path_list = [
+        path,
+    ]
+    data_list = [("HeV-fit", "cx"), ("file", "size"), ("HeV-fit", "Nint")]
+
+    class Dummy(object):
+        def __init__(self):
+            self.metadata_classes = implemented_metadata
+
+    mdata = _loadSetMetaData(Dummy(), path_list, data_list)
+    print(mdata)

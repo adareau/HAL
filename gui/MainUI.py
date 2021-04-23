@@ -65,7 +65,7 @@ class Ui_mainWindow(object):
         self.fitButton.setObjectName("fitButton")
         self.horizontalLayout_3.addWidget(self.fitButton)
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.runBrowserBox)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(309, 357, 254, 31))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(309, 357, 141, 31))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
