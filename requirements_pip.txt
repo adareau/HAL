@@ -1,0 +1,45 @@
+appdirs==1.4.4
+backcall @ file:///home/ktietz/src/ci/backcall_1611930011877/work
+certifi==2020.12.5
+cffi @ file:///tmp/build/80754af9/cffi_1613246951236/work
+cfgv @ file:///home/conda/feedstock_root/build_artifacts/cfgv_1596220740692/work
+cycler==0.10.0
+decorator @ file:///tmp/build/80754af9/decorator_1617624478095/work
+distlib @ file:///tmp/build/80754af9/distlib_1613173074792/work
+editdistance-s @ file:///home/conda/feedstock_root/build_artifacts/editdistance-s_1618487412677/work
+filelock @ file:///home/linux1/recipes/ci/filelock_1610993975404/work
+identify @ file:///home/conda/feedstock_root/build_artifacts/identify_1618976307492/work
+ipython @ file:///home/conda/feedstock_root/build_artifacts/ipython_1616836850526/work
+ipython-genutils @ file:///tmp/build/80754af9/ipython_genutils_1606773439826/work
+jedi @ file:///tmp/build/80754af9/jedi_1611333729159/work
+kiwisolver @ file:///tmp/build/80754af9/kiwisolver_1612281846643/work
+matplotlib @ file:///tmp/build/80754af9/matplotlib-suite_1613407855456/work
+nodeenv @ file:///home/conda/feedstock_root/build_artifacts/nodeenv_1617967501629/work
+numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1616933154495/work
+olefile==0.46
+parso @ file:///tmp/build/80754af9/parso_1617223946239/work
+pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
+Pillow @ file:///tmp/build/80754af9/pillow_1617385572585/work
+pre-commit @ file:///home/conda/feedstock_root/build_artifacts/pre-commit_1618620235817/work
+prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1616415428029/work
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+Pygments @ file:///tmp/build/80754af9/pygments_1615143339740/work
+PyOpenGL==3.1.1a1
+pyparsing @ file:///home/linux1/recipes/ci/pyparsing_1610983426697/work
+PyQt5==5.12.3
+PyQt5-sip==4.19.18
+PyQtChart==5.12
+pyqtgraph @ file:///home/conda/feedstock_root/build_artifacts/pyqtgraph_1616720069622/work
+PyQtWebEngine==5.12.1
+PySnooper @ file:///home/conda/feedstock_root/build_artifacts/pysnooper_1614461214932/work
+python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+PyYAML==5.4.1
+scipy @ file:///home/conda/feedstock_root/build_artifacts/scipy_1616878675982/work
+six @ file:///tmp/build/80754af9/six_1605205306277/work
+toml @ file:///tmp/build/80754af9/toml_1616166611790/work
+tornado @ file:///tmp/build/80754af9/tornado_1606942317143/work
+traitlets @ file:///home/ktietz/src/ci/traitlets_1611929699868/work
+virtualenv @ file:///tmp/build/80754af9/virtualenv_1615921751920/work
+wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
