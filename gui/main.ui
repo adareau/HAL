@@ -350,7 +350,7 @@
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>Quick Plot</string>
+      <string>Quick Analysis</string>
      </attribute>
      <widget class="QWidget" name="formLayoutWidget_2">
       <property name="geometry">
@@ -397,15 +397,23 @@
        <string>PLOT</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Stats</string>
-     </attribute>
+     <widget class="QPushButton" name="quickStatsButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>20</y>
+        <width>61</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>STATS</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
-      <string>Advanced Plot</string>
+      <string>Advanced Analysis</string>
      </attribute>
     </widget>
    </widget>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui/main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.3
 #
@@ -159,10 +159,10 @@ class Ui_mainWindow(object):
         self.quickPlotButton = QtWidgets.QPushButton(self.tab_3)
         self.quickPlotButton.setGeometry(QtCore.QRect(240, 20, 61, 51))
         self.quickPlotButton.setObjectName("quickPlotButton")
+        self.quickStatsButton = QtWidgets.QPushButton(self.tab_3)
+        self.quickStatsButton.setGeometry(QtCore.QRect(320, 20, 61, 51))
+        self.quickStatsButton.setObjectName("quickStatsButton")
         self.dataExplorerTabWidget.addTab(self.tab_3, "")
-        self.tab_4 = QtWidgets.QWidget()
-        self.tab_4.setObjectName("tab_4")
-        self.dataExplorerTabWidget.addTab(self.tab_4, "")
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
         self.dataExplorerTabWidget.addTab(self.tab_5, "")
@@ -216,9 +216,9 @@ class Ui_mainWindow(object):
         self.label_7.setText(_translate("mainWindow", "X :"))
         self.label_8.setText(_translate("mainWindow", "Y :"))
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))
-        self.dataExplorerTabWidget.setTabText(self.dataExplorerTabWidget.indexOf(self.tab_3), _translate("mainWindow", "Quick Plot"))
-        self.dataExplorerTabWidget.setTabText(self.dataExplorerTabWidget.indexOf(self.tab_4), _translate("mainWindow", "Stats"))
-        self.dataExplorerTabWidget.setTabText(self.dataExplorerTabWidget.indexOf(self.tab_5), _translate("mainWindow", "Advanced Plot"))
+        self.quickStatsButton.setText(_translate("mainWindow", "STATS"))
+        self.dataExplorerTabWidget.setTabText(self.dataExplorerTabWidget.indexOf(self.tab_3), _translate("mainWindow", "Quick Analysis"))
+        self.dataExplorerTabWidget.setTabText(self.dataExplorerTabWidget.indexOf(self.tab_5), _translate("mainWindow", "Advanced Analysis"))
         self.menuDataView.setTitle(_translate("mainWindow", "Data View"))
         self.menu2D.setTitle(_translate("mainWindow", "2D"))
         self.menu3D.setTitle(_translate("mainWindow", "3D"))
