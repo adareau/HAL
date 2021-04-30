@@ -15,3 +15,19 @@ $> pyuic5 main.ui > MainUI.py
 ```bash
 $> conda develop /path/to/folder
 ```
+
+## PyQtGraph
+
+We use the PyQtGraph package for image and data display (mostly because it is faster than matplotlib). Useful links :
+
+* [official website](http://www.pyqtgraph.org/)
+* [documentation](https://pyqtgraph.readthedocs.io/en/latest/)
+
+To see examples (useful to start programming):
+
+```bash
+$> python -m pyqtgraph.examples
+```
+
+
+
