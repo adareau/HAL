@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-04-22 15:51:31
+Modified : 2021-05-03 14:49:54
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -180,6 +180,7 @@ def yearListSelectionChanged(self):
     # clear day list
     self.dayList.clear()
 
+
 def monthListSelectionChanged(self):
     # if nothing seleted, return
     if not self.monthList.selectedItems():
@@ -253,6 +254,7 @@ def runListSelectionChanged(self):
 
     self.runList.blockSignals(False)
 
+
 def todayButtonClicked(self):
     selected_date = date.today()
     updateDayBrowser(self, selected_date)
@@ -264,6 +266,7 @@ def dateEditClicked(self):
     selected_date = self.dateEdit.date()  # QDate format
     selected_date = selected_date.toPyDate()  # datetime.date format
     updateDayBrowser(self, selected_date)
+
 
 def updateDayBrowser(self, selected_date):
     """
