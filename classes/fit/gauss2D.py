@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-03 15:25:24
+Modified : 2021-05-03 16:25:35
 
 Comments : implements a 2D Gauss fit
 """
@@ -114,8 +114,8 @@ class Gauss2DFit(Abstract2DFit):
         # -- get 2D guess
         cx = results["x"][3]
         cy = results["y"][3]
-        sx = results["x"][2]
-        sy = results["y"][2]
+        sx = np.abs(results["x"][2])
+        sy = np.abs(results["y"][2])
         offset = 0.5 * (results["x"][0] + results["y"][0])
         # find max
         xr = X.ravel()
@@ -126,6 +126,132 @@ class Gauss2DFit(Abstract2DFit):
         # guess
         p0 = [offset, amplitude, sx, sy, cx, cy]
         self.guess = p0
+
+    def compute_values(self):
+        """compute some physical values from the fit optimal parameters"""
+
+        # -- check that the data and coordinates were provided
+        if len(self.z) * len(self.x) * len(self.popt) == 0:
+            return
+
+        # -- get data
+        Z = self.z
+        (X, Y) = self.x
+        Zfit = self._fitfunc((X, Y), *self.popt)
+        dx = np.abs(X[0, 1] - X[0, 0])
+        dy = np.abs(Y[1, 0] - Y[0, 0])
+
+        # -- get fit results
+        offset, amplitude, sx, sy, cx, cy = self.popt
+        offset_err, amplitude_err, sx_err, sy_err, cx_err, cy_err = self.perr
+
+        # -- init values list
+        values = []
+
+        # -- counts
+        conv_factor = self.count_conversion_factor
+        # Nfit
+        Nfit = np.sum(Zfit - offset) * conv_factor
+        param = {
+            "name": "Nfit",
+            "value": Nfit,
+            "display": "%.3g",
+            "unit": self.converted_count_unit,
+            "comment": "counts, from fit, restricted to ROI",
+        }
+        values.append(param)
+
+        # Nint
+        Nint = np.sum(Z) * conv_factor
+        param = {
+            "name": "Nint",
+            "value": Nint,
+            "display": "%.3g",
+            "unit": self.converted_count_unit,
+            "comment": "counts, from integrated raw data, restricted to ROI",
+        }
+        values.append(param)
+
+        # Ncalc
+        Ncal = 2 * np.pi * amplitude * sx * sy / dx / dy * conv_factor
+        param = {
+            "name": "Ncal",
+            "value": Ncal,
+            "display": "%.3g",
+            "unit": self.converted_count_unit,
+            "comment": "counts, calculated from fit results, not restrited to ROI",
+        }
+        values.append(param)
+
+        # -- spatial values in pixels
+
+        for name, key in zip(["center", "size"], ["c", "s"]):
+            for ax in ["x", "y"]:
+                # values
+                v = eval("%s%s" % (key, ax))
+                v_err = eval("%s%s_err" % (key, ax))
+
+                # save value
+                param = {
+                    "name": "%s%s_px" % (key, ax),
+                    "value": v,
+                    "display": "%.3g",
+                    "unit": "px",
+                    "comment": "%s along %s, in pixels" % (name, ax),
+                }
+                values.append(param)
+
+                # save values error
+                param = {
+                    "name": "%s%s_err_px" % (key, ax),
+                    "value": v_err,
+                    "display": "%.3g",
+                    "unit": "px",
+                    "comment": "%s fit error along %s, in pixels" % (name, ax),
+                }
+                values.append(param)
+
+        # -- spatial values in physical units
+        for name, key in zip(["center", "size"], ["c", "s"]):
+            for ax in ["x", "y"]:
+                # values
+                conversion = self.__getattribute__("pixel_size_%s" % ax)
+                unit = self.__getattribute__("pixel_size_%s_unit" % ax)
+                v = eval("%s%s" % (key, ax)) * conversion
+                v_err = eval("%s%s_err" % (key, ax)) * conversion
+
+                # save value
+                param = {
+                    "name": "%s%s" % (key, ax),
+                    "value": v,
+                    "display": "%.3g",
+                    "unit": unit,
+                    "comment": "%s along %s, in pixels" % (name, ax),
+                }
+                values.append(param)
+
+                # save values error
+                param = {
+                    "name": "%s%s_err" % (key, ax),
+                    "value": v_err,
+                    "display": "%.3g",
+                    "unit": unit,
+                    "comment": "%s fit error along %s, in pixels" % (name, ax),
+                }
+                values.append(param)
+
+        # -- other
+        fit_error = np.mean(np.sqrt((Z - Zfit) ** 2))
+        param = {
+            "name": "fit error",
+            "value": fit_error,
+            "display": "%.3g",
+            "unit": "",
+            "comment": "fit error = mean(sqrt((data - fit)**2)))",
+        }
+        values.append(param)
+        # -- store
+        self.values = values
 
 
 # %% TESTS
@@ -144,14 +270,15 @@ if __name__ == "__main__":
     g2Dfit = Gauss2DFit(x=(X, Y), z=Z)
     g2Dfit.guess = [0.4, 6, 3.2, 1.8, 0, 0]
     g2Dfit.do_guess()
-    print('>> guess')
+    print(">> guess")
     print(g2Dfit.guess)
     g2Dfit.do_fit()
 
     Zfit = g2Dfit.eval((X, Y))
-    print('>> popt')
+    print(">> popt")
     print(g2Dfit.popt)
 
+    g2Dfit.compute_values()
     print(g2Dfit.export_json_str())
     # -- Plot
     # setup
@@ -173,5 +300,3 @@ if __name__ == "__main__":
         X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
     )
     plt.show()
-
-

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-03 15:36:06
+Modified : 2021-05-03 15:46:02
 
 Comments : Abstract classes for data fitting
 """
@@ -128,9 +128,17 @@ class Abstract2DFit(AbstractFit):
 
         # -- 2D attributes
         self.pixel_size_x = 1
-        self.pixel_size_x_unit = "µm"
+        self.pixel_size_x_unit = "px"
         self.pixel_size_y = 1
-        self.pixel_size_y_unit = "µm"
+        self.pixel_size_y_unit = "px"
+        # convert pixel counts into something (for instance, atoms !)
+        # example : for fluo, we have :
+        #  > count_conversion_factor = 1 / N_phot_per_atom
+        #                                / quantum_efficiency
+        #                                / solid_angle
+        # with N_phot_per_atom = 0.5 * Gamma * fluo_exposure_duration
+        self.count_conversion_factor = 1
+        self.converted_count_unit = ""
 
     def do_fit(self, **fit_options):
         """fits the data. Any keyword option is passed to the fitting routine
