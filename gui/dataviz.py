@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-29 18:04:53
+Modified : 2021-04-30 17:45:40
 
 Comments : Functions related to data visualization
 """
@@ -170,6 +170,7 @@ def plotSelectedData(self):
     img = pg.ImageItem()
     p = self.mainScreen.addPlot(0, 0)
     p.addItem(img)
+    self.image_plot = p
     # Get the colormap
     colormap_name = self.colorMapComboBox.currentText()
     if colormap_name == 'Greiner':
@@ -191,3 +192,8 @@ def plotSelectedData(self):
     scale_max = float(self.scaleMaxEdit.text())
     # update
     img.updateImage(image=data.data, levels=(scale_min, scale_max))
+
+    # add ROIS
+    # FIXME: prelim
+    for roi in self.roi_list:
+        p.addItem(roi)

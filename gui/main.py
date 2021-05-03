@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-23 14:24:22
+Modified : 2021-04-30 14:16:49
 
 Comments :
 """
@@ -19,6 +19,7 @@ import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataviz as dataviz
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
+import HAL.gui.fitting as fitting
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -56,6 +57,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_folder = None
         self.metadata = {}
         self.current_fig = None
+        self.roi_list = []
+        self.image_plot = None
 
         # -- Hidden
         self._version = "0.0"
@@ -71,6 +74,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.setupDataExplorer(self)
         # -- Quick Plot
         quickplot.setupQuickPlot(self)
+        # -- Fitting
+        fitting.setupFitting(self)
 
     def connectActions(self):
 
@@ -138,6 +143,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # - quickplot
         self.quickPlotButton.clicked.connect(self._quickPlotButtonClicked)
+
+        # -- Fitting --
+        self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
 
     # == CALLBACKS
 
@@ -214,6 +222,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotButtonClicked(self):
         quickplot.plotData(self)
+
+    # -- FITTING
+
+    def _addRoiButtonClicked(self):
+        fitting.addROI(self)
 
     # == MAIN
 

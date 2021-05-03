@@ -218,7 +218,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -278,6 +278,29 @@
      <attribute name="title">
       <string>FIT</string>
      </attribute>
+     <widget class="QPushButton" name="addRoiButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>71</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>add ROI</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="selectRoiComboBox">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>20</y>
+        <width>41</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="GraphicsLayoutWidget" name="mainScreen">
