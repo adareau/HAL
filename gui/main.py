@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-03 15:01:21
+Modified : 2021-05-03 16:51:08
 
 Comments :
 """
@@ -62,6 +62,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_fig = None
         self.roi_list = []
         self.image_plot = None
+        self.current_data = None
 
         # -- Hidden
         self._version = "0.0"
@@ -149,6 +150,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- Fitting --
         self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
+        self.fitButton.clicked.connect(self._fitButtonClicked)
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
@@ -233,6 +235,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _addRoiButtonClicked(self):
         fitting.addROI(self)
+
+    def _fitButtonClicked(self):
+        fitting.fit_data(self)
 
     # -- DEBUG
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-30 17:45:40
+Modified : 2021-05-03 16:51:33
 
 Comments : Functions related to data visualization
 """
@@ -197,3 +197,5 @@ def plotSelectedData(self):
     # FIXME: prelim
     for roi in self.roi_list:
         p.addItem(roi)
+
+    self.current_data = data

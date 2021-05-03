@@ -166,7 +166,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="fitButton">
+       <widget class="QPushButton" name="fitBrowserButton">
         <property name="text">
          <string>FIT</string>
         </property>
@@ -179,7 +179,7 @@
       <rect>
        <x>309</x>
        <y>357</y>
-       <width>141</width>
+       <width>254</width>
        <height>31</height>
       </rect>
      </property>
@@ -299,6 +299,41 @@
         <width>41</width>
         <height>23</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="formLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>201</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="1">
+        <widget class="QComboBox" name="fitTypeComboBox"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>fit type</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="fitButton">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>60</y>
+        <width>51</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>FIT</string>
       </property>
      </widget>
     </widget>
