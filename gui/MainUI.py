@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui/main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -29,8 +29,16 @@ class Ui_mainWindow(object):
         self.yearList.setGeometry(QtCore.QRect(10, 70, 61, 241))
         self.yearList.setObjectName("yearList")
         self.dateEdit = QtWidgets.QDateEdit(self.dayBrowserBox)
-        self.dateEdit.setGeometry(QtCore.QRect(10, 30, 141, 24))
+        self.dateEdit.setGeometry(QtCore.QRect(10, 30, 101, 24))
         self.dateEdit.setObjectName("dateEdit")
+        self.todayButton = QtWidgets.QPushButton(self.dayBrowserBox)
+        self.todayButton.setGeometry(QtCore.QRect(120, 30, 31, 24))
+        self.todayButton.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/today.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.todayButton.setIcon(icon)
+        self.todayButton.setIconSize(QtCore.QSize(24, 24))
+        self.todayButton.setObjectName("todayButton")
         self.runBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
         self.runBrowserBox.setGeometry(QtCore.QRect(10, 340, 461, 391))
         self.runBrowserBox.setObjectName("runBrowserBox")
@@ -65,7 +73,7 @@ class Ui_mainWindow(object):
         self.fitButton.setObjectName("fitButton")
         self.horizontalLayout_3.addWidget(self.fitButton)
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.runBrowserBox)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(309, 357, 141, 31))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(309, 357, 254, 31))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -85,7 +93,7 @@ class Ui_mainWindow(object):
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.formLayoutWidget = QtWidgets.QWidget(self.tab)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 221, 85))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 221, 91))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -139,7 +147,7 @@ class Ui_mainWindow(object):
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
         self.formLayoutWidget_2 = QtWidgets.QWidget(self.tab_3)
-        self.formLayoutWidget_2.setGeometry(QtCore.QRect(20, 20, 201, 54))
+        self.formLayoutWidget_2.setGeometry(QtCore.QRect(20, 20, 201, 58))
         self.formLayoutWidget_2.setObjectName("formLayoutWidget_2")
         self.formLayout_2 = QtWidgets.QFormLayout(self.formLayoutWidget_2)
         self.formLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -168,7 +176,7 @@ class Ui_mainWindow(object):
         self.dataExplorerTabWidget.addTab(self.tab_5, "")
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1465, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1465, 22))
         self.menubar.setObjectName("menubar")
         self.menuDataView = QtWidgets.QMenu(self.menubar)
         self.menuDataView.setObjectName("menuDataView")
