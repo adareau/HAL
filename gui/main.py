@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-30 14:16:49
+Modified : 2021-05-03 09:58:07
 
 Comments :
 """
@@ -147,6 +147,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Fitting --
         self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
 
+        # -- DEBUG --
+        self.debugButton.clicked.connect(self._DEBUG)
+
     # == CALLBACKS
 
     # -- FILE BROWSER (defined in gui.filebrowser)
@@ -227,6 +230,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _addRoiButtonClicked(self):
         fitting.addROI(self)
+
+    # -- DEBUG
+
+    def _DEBUG(self):
+        print("DEBUG")
 
     # == MAIN
 
