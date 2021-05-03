@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-03 16:25:35
+Modified : 2021-05-03 16:27:17
 
 Comments : implements a 2D Gauss fit
 """
@@ -179,7 +179,7 @@ class Gauss2DFit(Abstract2DFit):
             "value": Ncal,
             "display": "%.3g",
             "unit": self.converted_count_unit,
-            "comment": "counts, calculated from fit results, not restrited to ROI",
+            "comment": "counts, calculated from fit results, not restricted to ROI",
         }
         values.append(param)
 
