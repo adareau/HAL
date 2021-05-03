@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-03 14:18:17
+Modified : 2021-05-03 15:25:24
 
 Comments : implements a 2D Gauss fit
 """
@@ -151,6 +151,8 @@ if __name__ == "__main__":
     Zfit = g2Dfit.eval((X, Y))
     print('>> popt')
     print(g2Dfit.popt)
+
+    print(g2Dfit.export_json_str())
     # -- Plot
     # setup
     fig, ax = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
@@ -171,3 +173,5 @@ if __name__ == "__main__":
         X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
     )
     plt.show()
+
+

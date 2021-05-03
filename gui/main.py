@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-03 09:58:07
+Modified : 2021-05-03 15:01:21
 
 Comments :
 """
@@ -25,6 +25,7 @@ from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
 from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
+from HAL.classes.fit import implemented_fit_dic
 
 # %% DEFINE GUI CLASS
 
@@ -43,6 +44,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.data_classes = implemented_data_dic
         # implemented metadata classes
         self.metadata_classes = implemented_metadata
+        # implemented fit classes
+        self.fit_classes = implemented_fit_dic
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)

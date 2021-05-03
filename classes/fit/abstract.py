@@ -2,14 +2,30 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-03 14:17:33
+Modified : 2021-05-03 15:36:06
 
 Comments : Abstract classes for data fitting
 """
 # %% IMPORTS
-from pathlib import Path
+import json
+import jsbeautifier as jsb
 import numpy as np
 import scipy.optimize as opt
+from datetime import datetime
+
+
+# %% USEFUL : JSON ARRAY ENCODER
+
+
+class NumpyArrayEncoder(json.JSONEncoder):
+    """convert ndarray into list to avoid the error :
+    TypeError: Object of type ndarray is not JSON serializable
+    """
+
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 
 # %% CLASS DEFINITION
@@ -78,15 +94,30 @@ class AbstractFit(object):
 
     # == SAVE / LOAD ==
 
-    def save_results(self, out_path=None):
-        """saves the fit results"""
-        # TODO: implement
-        pass
+    def export_dic(self):
+        """exports fit info and results as a python dictionnary"""
+        # -- prepare dictionnary
+        out = {}
+        out["fit name"] = self.name
+        out["fit formula"] = self.formula_help
+        out["fit parameters"] = self.parameters_help
+        out["fit version"] = self._version
+        out["date"] = str(datetime.now())
+        out["popt"] = self.popt
+        out["pcov"] = self.pcov
+        out["perr"] = self.perr
+        out["values"] = self.values
+        return out
 
-    def load_results(self, out_path=None):
-        """loads fit results"""
-        # TODO: implement
-        pass
+    def export_json_str(self):
+        """exports fit info and results as a json string"""
+        # get dictionnary
+        out_dic = self.export_dic()
+        json_str = json.dumps(
+            out_dic, ensure_ascii=False, cls=NumpyArrayEncoder
+        )
+        json_str = jsb.beautify(json_str)
+        return json_str
 
 
 class Abstract2DFit(AbstractFit):
