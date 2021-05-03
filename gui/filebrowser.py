@@ -10,7 +10,7 @@ Comments : Functions related to file browsing, i.e. select the right year,
 
 # %% IMPORTS
 import pysnooper
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
@@ -180,7 +180,6 @@ def yearListSelectionChanged(self):
     # clear day list
     self.dayList.clear()
 
-
 def monthListSelectionChanged(self):
     # if nothing seleted, return
     if not self.monthList.selectedItems():
@@ -254,12 +253,22 @@ def runListSelectionChanged(self):
 
     self.runList.blockSignals(False)
 
+def todayButtonClicked(self):
+    selected_date = date.today()
+    updateDayBrowser(self, selected_date)
+    return
+
 
 def dateEditClicked(self):
     # -- get selected date
     selected_date = self.dateEdit.date()  # QDate format
     selected_date = selected_date.toPyDate()  # datetime.date format
+    updateDayBrowser(self, selected_date)
 
+def updateDayBrowser(self, selected_date):
+    """
+    update the day browser by first changing year, month and day.
+    """
     # -- update current path
     # get config
     conf = self.settings.config
