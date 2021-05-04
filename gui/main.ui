@@ -237,7 +237,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -297,6 +297,29 @@
      <attribute name="title">
       <string>FIT</string>
      </attribute>
+     <widget class="QPushButton" name="addRoiButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>71</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>add ROI</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="selectRoiComboBox">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>20</y>
+        <width>41</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="GraphicsLayoutWidget" name="mainScreen">
@@ -369,7 +392,7 @@
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>Quick Plot</string>
+      <string>Quick Analysis</string>
      </attribute>
      <widget class="QWidget" name="formLayoutWidget_2">
       <property name="geometry">
@@ -416,17 +439,38 @@
        <string>PLOT</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Stats</string>
-     </attribute>
+     <widget class="QPushButton" name="quickStatsButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>20</y>
+        <width>61</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>STATS</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
-      <string>Advanced Plot</string>
+      <string>Advanced Analysis</string>
      </attribute>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="debugButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>740</y>
+      <width>361</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DEBUG</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

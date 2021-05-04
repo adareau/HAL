@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-04-23 14:24:22
+Modified : 2021-05-03 15:01:21
 
 Comments :
 """
@@ -19,11 +19,13 @@ import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataviz as dataviz
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
+import HAL.gui.fitting as fitting
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
 from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
+from HAL.classes.fit import implemented_fit_dic
 
 # %% DEFINE GUI CLASS
 
@@ -42,6 +44,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.data_classes = implemented_data_dic
         # implemented metadata classes
         self.metadata_classes = implemented_metadata
+        # implemented fit classes
+        self.fit_classes = implemented_fit_dic
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
@@ -56,6 +60,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_folder = None
         self.metadata = {}
         self.current_fig = None
+        self.roi_list = []
+        self.image_plot = None
 
         # -- Hidden
         self._version = "0.0"
@@ -71,6 +77,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.setupDataExplorer(self)
         # -- Quick Plot
         quickplot.setupQuickPlot(self)
+        # -- Fitting
+        fitting.setupFitting(self)
 
     def connectActions(self):
 
@@ -140,6 +148,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # - quickplot
         self.quickPlotButton.clicked.connect(self._quickPlotButtonClicked)
+
+        # -- Fitting --
+        self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
+
+        # -- DEBUG --
+        self.debugButton.clicked.connect(self._DEBUG)
 
     # == CALLBACKS
 
@@ -220,6 +234,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotButtonClicked(self):
         quickplot.plotData(self)
+
+    # -- FITTING
+
+    def _addRoiButtonClicked(self):
+        fitting.addROI(self)
+
+    # -- DEBUG
+
+    def _DEBUG(self):
+        print("DEBUG")
 
     # == MAIN
 
