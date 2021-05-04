@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 11:47:38
+Modified : 2021-05-04 15:45:05
 
 Comments : Functions related to data visualization
 """
@@ -220,9 +220,9 @@ def plotSelectedData(self):
     # update
     img.updateImage(image=data.data, levels=(scale_min, scale_max))
 
-    # add ROIS
-    # FIXME: prelim
-    for roi in self.mainScreen.roi_list:
-        p.addItem(roi)
+    # remove ROIS
+    # FIXME: we should manage roi conservation when uploading a new image...
+    # maybe we should not clear the screen ?
+    self.mainScreen.roi_list = []
 
     self.mainScreen.current_data = data
