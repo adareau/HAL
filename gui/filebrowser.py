@@ -2,13 +2,15 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-03 14:49:54
+Modified : 2021-05-04 15:40:21
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
 """
 
 # %% IMPORTS
+
+# -- global
 import pysnooper
 from datetime import datetime, date
 from pathlib import Path
@@ -16,6 +18,10 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
+
+# -- local
+import HAL.gui.fitting as fitting
+
 
 # %% TOOLS
 
@@ -392,9 +398,19 @@ def refreshCurrentFolder(self, new_folder=None):
                 prefix = "└─ "
             else:
                 prefix = "├─ "
+
+            # is there a fit ?
+            suffix = ''
+            if fitting.saved_fit_exist(self, file):
+                # ideas for markers :
+                # 🟩, ✳️ ✔️
+                # see https://emojipedia.org
+                suffix += ' ✔️'
+
             # add item
             item = QListWidgetItem()
-            item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
+            # NB: use file.stem to remove ext
+            item.setText(prefix + file.stem + suffix)
             item.setData(Qt.UserRole, file)
             self.runList.addItem(item)
 
