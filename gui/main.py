@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-03 16:51:08
+Modified : 2021-05-04 09:46:56
 
 Comments :
 """
@@ -20,6 +20,8 @@ import HAL.gui.dataviz as dataviz
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
+import HAL.gui.testing as testing
+
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -242,7 +244,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # -- DEBUG
 
     def _DEBUG(self):
-        print("DEBUG")
+        testing.open_image(self)
+        fitting.addROI(self)
 
     # == MAIN
 
