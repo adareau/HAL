@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file 'gui/main.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,17 +13,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(1465, 903)
+        mainWindow.resize(1501, 903)
         self.centralwidget = QtWidgets.QWidget(mainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.dayBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.dayBrowserBox.setGeometry(QtCore.QRect(10, 10, 161, 321))
+        self.dayBrowserBox.setGeometry(QtCore.QRect(10, 10, 171, 321))
         self.dayBrowserBox.setObjectName("dayBrowserBox")
         self.dayList = QtWidgets.QListWidget(self.dayBrowserBox)
-        self.dayList.setGeometry(QtCore.QRect(120, 70, 31, 241))
+        self.dayList.setGeometry(QtCore.QRect(130, 70, 31, 241))
         self.dayList.setObjectName("dayList")
         self.monthList = QtWidgets.QListWidget(self.dayBrowserBox)
-        self.monthList.setGeometry(QtCore.QRect(80, 70, 31, 241))
+        self.monthList.setGeometry(QtCore.QRect(86, 70, 31, 241))
         self.monthList.setObjectName("monthList")
         self.yearList = QtWidgets.QListWidget(self.dayBrowserBox)
         self.yearList.setGeometry(QtCore.QRect(10, 70, 61, 241))
@@ -32,11 +32,7 @@ class Ui_mainWindow(object):
         self.dateEdit.setGeometry(QtCore.QRect(10, 30, 101, 24))
         self.dateEdit.setObjectName("dateEdit")
         self.todayButton = QtWidgets.QPushButton(self.dayBrowserBox)
-        self.todayButton.setGeometry(QtCore.QRect(120, 30, 31, 24))
-        self.todayButton.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/today.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.todayButton.setIcon(icon)
+        self.todayButton.setGeometry(QtCore.QRect(120, 30, 41, 24))
         self.todayButton.setIconSize(QtCore.QSize(24, 24))
         self.todayButton.setObjectName("todayButton")
         self.runBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -88,12 +84,12 @@ class Ui_mainWindow(object):
         self.favSetButton.setObjectName("favSetButton")
         self.horizontalLayout.addWidget(self.favSetButton)
         self.settingsTabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.settingsTabWidget.setGeometry(QtCore.QRect(180, 20, 291, 311))
+        self.settingsTabWidget.setGeometry(QtCore.QRect(190, 20, 281, 311))
         self.settingsTabWidget.setObjectName("settingsTabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.formLayoutWidget = QtWidgets.QWidget(self.tab)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 221, 91))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 211, 91))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -123,7 +119,7 @@ class Ui_mainWindow(object):
         self.horizontalLayout_2.addWidget(self.scaleMaxEdit)
         self.formLayout.setLayout(2, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_2)
         self.autoScaleCheckBox = QtWidgets.QCheckBox(self.tab)
-        self.autoScaleCheckBox.setGeometry(QtCore.QRect(236, 72, 52, 21))
+        self.autoScaleCheckBox.setGeometry(QtCore.QRect(227, 72, 52, 21))
         self.autoScaleCheckBox.setTristate(False)
         self.autoScaleCheckBox.setObjectName("autoScaleCheckBox")
         self.settingsTabWidget.addTab(self.tab, "")
@@ -155,13 +151,13 @@ class Ui_mainWindow(object):
         self.mainScreen.setGeometry(QtCore.QRect(480, 10, 781, 631))
         self.mainScreen.setObjectName("mainScreen")
         self.metaDataBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.metaDataBox.setGeometry(QtCore.QRect(1270, 10, 191, 851))
+        self.metaDataBox.setGeometry(QtCore.QRect(1270, 10, 231, 851))
         self.metaDataBox.setObjectName("metaDataBox")
         self.metaDataText = QtWidgets.QPlainTextEdit(self.metaDataBox)
-        self.metaDataText.setGeometry(QtCore.QRect(0, 20, 191, 611))
+        self.metaDataText.setGeometry(QtCore.QRect(0, 20, 231, 611))
         self.metaDataText.setObjectName("metaDataText")
         self.metaDataList = QtWidgets.QListWidget(self.metaDataBox)
-        self.metaDataList.setGeometry(QtCore.QRect(0, 661, 191, 141))
+        self.metaDataList.setGeometry(QtCore.QRect(0, 661, 231, 141))
         self.metaDataList.setObjectName("metaDataList")
         self.label_9 = QtWidgets.QLabel(self.metaDataBox)
         self.label_9.setGeometry(QtCore.QRect(3, 643, 161, 16))
@@ -204,7 +200,7 @@ class Ui_mainWindow(object):
         self.debugButton.setObjectName("debugButton")
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1465, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1501, 20))
         self.menubar.setObjectName("menubar")
         self.menuDataView = QtWidgets.QMenu(self.menubar)
         self.menuDataView.setObjectName("menuDataView")
@@ -233,6 +229,7 @@ class Ui_mainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         mainWindow.setWindowTitle(_translate("mainWindow", "HAL"))
         self.dayBrowserBox.setTitle(_translate("mainWindow", "Day browser"))
+        self.todayButton.setText(_translate("mainWindow", "now"))
         self.runBrowserBox.setTitle(_translate("mainWindow", "Run browser"))
         self.label_4.setText(_translate("mainWindow", "runs"))
         self.label_5.setText(_translate("mainWindow", "sequences"))

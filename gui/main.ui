@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1465</width>
+    <width>1501</width>
     <height>903</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>161</width>
+      <width>171</width>
       <height>321</height>
      </rect>
     </property>
@@ -29,7 +29,7 @@
     <widget class="QListWidget" name="dayList">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>130</x>
        <y>70</y>
        <width>31</width>
        <height>241</height>
@@ -39,7 +39,7 @@
     <widget class="QListWidget" name="monthList">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>86</x>
        <y>70</y>
        <width>31</width>
        <height>241</height>
@@ -71,7 +71,7 @@
       <rect>
        <x>120</x>
        <y>30</y>
-       <width>31</width>
+       <width>41</width>
        <height>24</height>
       </rect>
      </property>
@@ -230,9 +230,9 @@
    <widget class="QTabWidget" name="settingsTabWidget">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>20</y>
-      <width>291</width>
+      <width>281</width>
       <height>311</height>
      </rect>
     </property>
@@ -248,7 +248,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>221</width>
+        <width>211</width>
         <height>91</height>
        </rect>
       </property>
@@ -295,7 +295,7 @@
      <widget class="QCheckBox" name="autoScaleCheckBox">
       <property name="geometry">
        <rect>
-        <x>236</x>
+        <x>227</x>
         <y>72</y>
         <width>52</width>
         <height>21</height>
@@ -388,7 +388,7 @@
      <rect>
       <x>1270</x>
       <y>10</y>
-      <width>191</width>
+      <width>231</width>
       <height>851</height>
      </rect>
     </property>
@@ -400,7 +400,7 @@
       <rect>
        <x>0</x>
        <y>20</y>
-       <width>191</width>
+       <width>231</width>
        <height>611</height>
       </rect>
      </property>
@@ -410,7 +410,7 @@
       <rect>
        <x>0</x>
        <y>661</y>
-       <width>191</width>
+       <width>231</width>
        <height>141</height>
       </rect>
      </property>
@@ -529,8 +529,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1465</width>
-     <height>22</height>
+     <width>1501</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataView">
