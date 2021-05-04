@@ -258,7 +258,6 @@ def runListSelectionChanged(self):
 def todayButtonClicked(self):
     selected_date = date.today()
     updateDayBrowser(self, selected_date)
-    return
 
 
 def dateEditClicked(self):
