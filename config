@@ -4,3 +4,6 @@ day folder = %d
 month folder = %m
 year folder = %Y
 
+[fit]
+fit folder name = .HAL_fits
+

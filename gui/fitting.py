@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 14:55:15
+Modified : 2021-05-04 15:06:01
 
 Comments : Functions related to data fitting
 """
@@ -109,7 +109,6 @@ def addROI(self):
 def _roi_changed(self):
     # TODO : move self.label
     position = self.pos()
-    size = self.size()
     self.label.setPos(position[0], position[1])
 
 
@@ -134,7 +133,7 @@ def _get_2D_roi_data(self, roi):
     return Z, (X, Y)
 
 
-def _fit_2D_data(self, Z, XY):
+def _fit_2D_data(self, Z, XY, data_object):
     """handles data fitting"""
     # -- get selected fit
     selected_fit = self.fitTypeComboBox.currentText()
@@ -145,6 +144,14 @@ def _fit_2D_data(self, Z, XY):
     # -- fit
     # init fit object
     fit = fit_class(x=XY, z=Z)
+    # get sizes / units from data object
+    px_size_x, px_size_y = data_object.pixel_scale
+    unit_x, unit_y = data_object.pixel_unit
+    # update sizez / units in fit object
+    fit.pixel_size_x = px_size_x
+    fit.pixel_size_y = px_size_y
+    fit.pixel_size_x_unit = unit_x
+    fit.pixel_size_y_unit = unit_y
     # guess / fit / compute values
     fit.do_guess()
     fit.do_fit()
@@ -239,7 +246,7 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     data_info["pixel unit"] = data_object.pixel_unit
 
     # specific to camera pictures
-    if isinstance(data_info, AbstractCameraPictureData):
+    if isinstance(data_object, AbstractCameraPictureData):
         data_info["data class"] = "camera picture"
         data_info["camera pixel size"] = {
             "value": data_object.pixel_size,
@@ -302,7 +309,7 @@ def fit_data(self):
         # get roi data
         Z, XY = _get_2D_roi_data(self, roi)
         # fit the data
-        fit = _fit_2D_data(self, Z, XY)
+        fit = _fit_2D_data(self, Z, XY, data_object)
         if fit is None:
             # to handle the cas where the fit is not implemented
             # (cf. _fit_2D_data)

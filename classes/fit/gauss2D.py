@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-04 13:29:31
+Modified : 2021-05-04 15:08:42
 
 Comments : implements a 2D Gauss fit
 """
@@ -226,7 +226,7 @@ class Gauss2DFit(Abstract2DFit):
                     "value": v,
                     "display": "%.3g",
                     "unit": unit,
-                    "comment": "%s along %s, in pixels" % (name, ax),
+                    "comment": "%s along %s, in %s" % (name, ax, unit),
                 }
                 values.append(param)
 
@@ -236,7 +236,8 @@ class Gauss2DFit(Abstract2DFit):
                     "value": v_err,
                     "display": "%.3g",
                     "unit": unit,
-                    "comment": "%s fit error along %s, in pixels" % (name, ax),
+                    "comment": "%s fit error along %s, in %s"
+                    % (name, ax, unit),
                 }
                 values.append(param)
 
@@ -303,4 +304,3 @@ if __name__ == "__main__":
             X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
         )
         plt.show()
-
