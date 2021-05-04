@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-04 11:21:19
+Modified : 2021-05-04 13:29:31
 
 Comments : implements a 2D Gauss fit
 """
@@ -138,8 +138,8 @@ class Gauss2DFit(Abstract2DFit):
         Z = self.z
         (X, Y) = self.x
         Zfit = self._fitfunc((X, Y), *self.popt)
-        dx = np.abs(X[0, 1] - X[0, 0])
-        dy = np.abs(Y[1, 0] - Y[0, 0])
+        dx = np.abs(X[1, 0] - X[0, 0])
+        dy = np.abs(Y[0, 1] - Y[0, 0])
 
         # -- get fit results
         offset, amplitude, sx, sy, cx, cy = self.popt
