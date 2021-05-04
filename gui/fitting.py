@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 11:23:01
+Modified : 2021-05-04 11:39:22
 
 Comments : Functions related to data fitting
 """
@@ -111,45 +111,69 @@ def _roi_changed(self):
 # == low level functions
 
 
+def _get_2D_roi_data(self, roi):
+    """ returns the currently displayed data in the provided roi"""
+    # -- get current data and image item
+    # TODO : migrate to a method in the display data class ?
+    data = self.mainScreen.current_data.data
+    image_item = self.mainScreen.current_image
+
+    # -- get roi data
+    # use the convenient 'getArrayRegion' to retrieve selected image roi
+    Z, XY = roi.getArrayRegion(data, image_item, returnMappedCoords=True)
+    X = XY[0, :, :]
+    Y = XY[1, :, :]
+
+    return Z, (X, Y)
+
+
+def _fit_2D_data(self, Z, XY):
+    """handles data fitting"""
+    # -- get selected fit
+    selected_fit = self.fitTypeComboBox.currentText()
+    if selected_fit not in self.fit_classes:
+        print("ERROR : fit '%s' is not implemented ?!" % selected_fit)
+        return
+    fit_class = self.fit_classes[selected_fit]
+    # -- fit
+    # init fit object
+    fit = fit_class(x=XY, z=Z)
+    # guess / fit / compute values
+    fit.do_guess()
+    fit.do_fit()
+    fit.compute_values()
+
+    return fit
+
+
 # == high level fit function
 
 
 def fit_data(self):
-    """FIXME: temporary test for data fitting #quickanddirty"""
-    # -- get roi information
-    # select last roi
-    if len(self.mainScreen.roi_list) == 0:
-        return
-    roi = self.mainScreen.roi_list[-1]
-    # get position and size
-    pos = roi.pos()
-    size = roi.size()
+    """high level function for data fitting. Loop on all defined ROIs,
+       fit the data, and save results"""
 
-    # -- get image region
-    # get current image data (=array)
+    # -- check current data object (for dimension)
     # TODO : migrate to a method in the display data class ?
-    Z = self.mainScreen.current_data.data
-    # use the convenient 'getArrayRegion' to retrieve selected image roi
-    Z_roi, XY_roi = roi.getArrayRegion(
-        Z, self.mainScreen.current_image, returnMappedCoords=True
-    )
-    # separate X and Y coordinates
-    X_roi = XY_roi[0, :, :]
-    Y_roi = XY_roi[1, :, :]
-
-    # -- FIT
-    # get selected fit
-    selected_fit = self.fitTypeComboBox.currentText()
-    if selected_fit not in self.fit_classes:
+    data_object = self.mainScreen.current_data
+    if data_object.dimension != 2:
+        print("ERROR : fit only implemented for 2D data !")
         return
-    fit_class = self.fit_classes[selected_fit]
-    # init fit object
-    fit = fit_class(x=(X_roi, Y_roi), z=Z_roi)
-    # guess / fit / compute values
-    fit.do_guess()
-    print(fit.guess)
-    fit.do_fit()
-    fit.compute_values()
-    # TEMP : print results
-    print(fit.export_json_str())
-    fit.plot_fit_result()
+
+    # -- loop on roi list
+    if len(self.mainScreen.roi_list) == 0:
+        print("ERROR : no ROI selected !!")
+        return
+
+    for roi in self.mainScreen.roi_list:
+        # get roi data
+        Z, XY = _get_2D_roi_data(self, roi)
+        # fit the data
+        fit = _fit_2D_data(self, Z, XY)
+        if fit is None:
+            # to handle the cas where the fit is not implemented
+            # (cf. _fit_2D_data)
+            # TODO : raise an error instead ?
+            return
+        # TEMP : plot
+        fit.plot_fit_result()
