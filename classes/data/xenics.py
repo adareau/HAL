@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 10:31:48
+Modified : 2021-05-04 10:35:47
 
 Comments : Abstract classes for data handling
 """
@@ -57,6 +57,7 @@ class XenicsData(AbstractData):
 # %% TEST
 if __name__ == "__main__":
     import numpy as np
+
     root = Path().home()
     path = root / "gus_data_dummy" / "cam_example" / "001" / "001_001.png"
 
