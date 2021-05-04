@@ -218,7 +218,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -230,7 +230,7 @@
         <x>10</x>
         <y>10</y>
         <width>221</width>
-        <height>85</height>
+        <height>91</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -272,6 +272,22 @@
         </layout>
        </item>
       </layout>
+     </widget>
+     <widget class="QCheckBox" name="autoScaleCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>236</x>
+        <y>72</y>
+        <width>52</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>auto</string>
+      </property>
+      <property name="tristate">
+       <bool>false</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 11:05:29
+Modified : 2021-05-04 11:47:38
 
 Comments : Functions related to data visualization
 """
@@ -210,8 +210,13 @@ def plotSelectedData(self):
         lut = np.append([[255, 255, 255, 255]], lut, axis=0)
     # Apply the colormap
     img.setLookupTable(lut)
-    scale_min = float(self.scaleMinEdit.text())
-    scale_max = float(self.scaleMaxEdit.text())
+    if self.autoScaleCheckBox.isChecked():
+        scale_min = np.min(data.data)
+        scale_max = np.max(data.data)
+    else:
+        scale_min = float(self.scaleMinEdit.text())
+        scale_max = float(self.scaleMaxEdit.text())
+
     # update
     img.updateImage(image=data.data, levels=(scale_min, scale_max))
 

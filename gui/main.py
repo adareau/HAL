@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-04 11:07:51
+Modified : 2021-05-04 11:45:45
 
 Comments :
 """
@@ -150,6 +150,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Fitting --
         self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
         self.fitButton.clicked.connect(self._fitButtonClicked)
+        self.fitBrowserButton.clicked.connect(self._fitButtonClicked)
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
@@ -241,6 +242,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # -- DEBUG
 
     def _DEBUG(self):
+        self.autoScaleCheckBox.setChecked(True)
         testing.open_image(self)
         fitting.addROI(self)
 
