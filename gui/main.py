@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-04 11:59:55
+Modified : 2021-05-04 14:05:51
 
 Comments :
 """
@@ -68,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Hidden
         self._version = "0.0"
         self._name = "HAL"
+        self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
 
         # -- Keyboard shortcuts
@@ -251,8 +252,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _DEBUG(self):
         self.autoScaleCheckBox.setChecked(True)
-        testing.open_image(self)
-        fitting.addROI(self)
+        testing.open_image_and_fit(self)
 
     # == KEYBOARD SHORTCUTS
 

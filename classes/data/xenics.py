@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 10:35:47
+Modified : 2021-05-04 14:36:09
 
 Comments : Abstract classes for data handling
 """
@@ -15,11 +15,11 @@ from pathlib import Path
 
 
 # -- local
-from HAL.classes.data.abstract import AbstractData
+from HAL.classes.data.abstract import AbstractCameraPictureData
 
 
 # %% CLASS DEFINITION
-class XenicsData(AbstractData):
+class XenicsData(AbstractCameraPictureData):
     """docstring for Dummy"""
 
     def __init__(self, path=Path(".")):
@@ -32,12 +32,13 @@ class XenicsData(AbstractData):
 
         # - special for camera
         self.pixel_size = 6.45  # µm
+        self.pixel_unit = "µm"
         self.magnification = 0.27
 
         # - data related
         x = self.pixel_size / self.magnification
         self.pixel_scale = (x, x)
-        self.pixel_unit = ("µm", "µm")
+        self.pixel_unit = (self.pixel_unit, self.pixel_unit)
         self.data = []
 
     def filter(self):
