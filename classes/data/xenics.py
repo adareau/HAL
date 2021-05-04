@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-21 16:17:04
+Modified : 2021-05-04 10:31:48
 
 Comments : Abstract classes for data handling
 """
@@ -10,6 +10,7 @@ Comments : Abstract classes for data handling
 
 # -- global
 import cv2
+import numpy as np
 from pathlib import Path
 
 
@@ -45,7 +46,12 @@ class XenicsData(AbstractData):
 
     def load(self):
         """loads data"""
-        self.data = cv2.imread(str(self.path), cv2.IMREAD_UNCHANGED)
+        # load (as 16bit array)
+        data_in = cv2.imread(str(self.path), cv2.IMREAD_UNCHANGED)
+        # rotate to match former orientation
+        data = np.rot90(data_in, -1)
+        # store
+        self.data = data
 
 
 # %% TEST
