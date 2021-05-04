@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-04 11:45:45
+Modified : 2021-05-04 11:59:55
 
 Comments :
 """
@@ -12,6 +12,8 @@ Comments :
 # -- global
 import sys
 from PyQt5 import QtWidgets
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut
 from pathlib import Path
 
 # -- local
@@ -67,6 +69,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._version = "0.0"
         self._name = "HAL"
         self._settings_folder = Path().home() / ".HAL"
+
+        # -- Keyboard shortcuts
+        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
+        self.ctrlF.activated.connect(self._ctrlF)
+        self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
+        self.ctrlD.activated.connect(self._ctrlD)
 
     def setupElements(self):
         # -- File Browser
@@ -245,6 +253,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.autoScaleCheckBox.setChecked(True)
         testing.open_image(self)
         fitting.addROI(self)
+
+    # == KEYBOARD SHORTCUTS
+
+    def _ctrlF(self):
+        """called when 'Ctrl+F' is pressed"""
+        fitting.fit_data(self)
+
+    def _ctrlD(self):
+        """called when 'Ctrl+D' is pressed"""
+        self._DEBUG()
 
     # == MAIN
 
