@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-03 16:51:33
+Modified : 2021-05-04 10:36:50
 
 Comments : Functions related to data visualization
 """
@@ -136,6 +136,15 @@ def setupDataViz(self):
     # -- setup colormaps
     for cmap in IMPLEMENTED_COLORMAPS:
         self.colorMapComboBox.addItem(cmap)
+    # -- add some attributes to mainScreen
+    # (will be useful for easy access to some data)
+    # TODO : maybe we remove that in the future, and replace
+    #        it by methods / attributes linked to the data display
+    #        classes that will handle data visualization ?
+    self.mainScreen.roi_list = []
+    self.mainScreen.image_plot = None
+    self.mainScreen.current_data = None
+    self.mainScreen.current_image = None
 
 
 # %% DISPLAY FUNCTIONS
@@ -169,11 +178,25 @@ def plotSelectedData(self):
     self.mainScreen.clear()
     img = pg.ImageItem()
     p = self.mainScreen.addPlot(0, 0)
+    # lock aspect ratio
+    p.setAspectLocked(lock=True, ratio=1)
+    # set limits
+    print(data.data.shape)
+    p.setLimits(
+        xMin=0, yMin=0, xMax=data.data.shape[0], yMax=data.data.shape[1]
+    )
+    # axis
+    p.setLabel("bottom", "X", units="px")
+    p.setLabel("left", "Y", units="px")
+    # p.setXRange(0, data.data.shape[0])
+    # p.setYRange(0, data.data.shape[1])
+    # image
     p.addItem(img)
-    self.image_plot = p
+    self.mainScreen.image_plot = p
+    self.mainScreen.current_image = img
     # Get the colormap
     colormap_name = self.colorMapComboBox.currentText()
-    if colormap_name == 'Greiner':
+    if colormap_name == "Greiner":
         lut = np.array(GREINER) * 255
     else:
         colormap = cm.get_cmap(colormap_name)
@@ -195,7 +218,7 @@ def plotSelectedData(self):
 
     # add ROIS
     # FIXME: prelim
-    for roi in self.roi_list:
+    for roi in self.mainScreen.roi_list:
         p.addItem(roi)
 
-    self.current_data = data
+    self.mainScreen.current_data = data
