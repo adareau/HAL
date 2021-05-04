@@ -2,14 +2,14 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-22 15:49:39
+Modified : 2021-05-04 15:48:29
 
-Comments : Abstract classes for data handling
+Comments : Imports fit information, as saved by our former image analysis
+           program HeV
 """
 # %% IMPORTS
 
 # -- global
-import numpy as np
 from pathlib import Path
 from scipy.io import loadmat
 
@@ -23,7 +23,8 @@ FIT_PARAM_CONVERSION = {
     "TF": {"cx": 5, "cy": 6, "sx": 3, "sy": 4},
 }
 
-CENTER_SIZE_FMT = '%.3g'
+CENTER_SIZE_FMT = "%.3g"
+
 
 def is_integer_num(n):
     if isinstance(n, int):

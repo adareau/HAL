@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 15:19:31
+Modified : 2021-05-04 16:06:26
 
 Comments : Functions related to data fitting
 """
@@ -250,7 +250,7 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
         data_info["data class"] = "camera picture"
         data_info["camera pixel size"] = {
             "value": data_object.pixel_size,
-            "unit": data_object.pixel_unit,
+            "unit": data_object.pixel_size_unit,
         }
         data_info["magnification"] = data_object.magnification
 

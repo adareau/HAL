@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 14:36:09
+Modified : 2021-05-04 16:07:30
 
 Comments : Abstract classes for data handling
 """
@@ -32,13 +32,13 @@ class XenicsData(AbstractCameraPictureData):
 
         # - special for camera
         self.pixel_size = 6.45  # µm
-        self.pixel_unit = "µm"
+        self.pixel_size_unit = "µm"
         self.magnification = 0.27
 
         # - data related
         x = self.pixel_size / self.magnification
         self.pixel_scale = (x, x)
-        self.pixel_unit = (self.pixel_unit, self.pixel_unit)
+        self.pixel_unit = (self.pixel_size_unit, self.pixel_size_unit)
         self.data = []
 
     def filter(self):
