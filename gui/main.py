@@ -83,7 +83,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def connectActions(self):
 
         # -- File Browser --
-
         # year
         self.yearList.itemSelectionChanged.connect(
             self._yearListSelectionChanged
@@ -107,6 +106,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # buttons
         self.refreshRunListButton.clicked.connect(
             self._refreshRunListButtonClicked
+        )
+        self.todayButton.clicked.connect(
+            self._todayButtonClicked
         )
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
@@ -186,6 +188,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _refreshRunListButtonClicked(self):
         filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
+
+    def _todayButtonClicked(self):
+        filebrowser.todayButtonClicked(self)
         dataexplorer.refreshDataSetList(self)
 
     # -- DATA VISUALIZATION

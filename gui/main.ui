@@ -61,9 +61,28 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>141</width>
+       <width>101</width>
        <height>24</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="todayButton">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
+       <width>31</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>now</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </widget>
@@ -179,7 +198,7 @@
       <rect>
        <x>309</x>
        <y>357</y>
-       <width>141</width>
+       <width>254</width>
        <height>31</height>
       </rect>
      </property>
@@ -230,7 +249,7 @@
         <x>10</x>
         <y>10</y>
         <width>221</width>
-        <height>85</height>
+        <height>91</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -381,7 +400,7 @@
         <x>20</x>
         <y>20</y>
         <width>201</width>
-        <height>54</height>
+        <height>58</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -460,7 +479,7 @@
      <x>0</x>
      <y>0</y>
      <width>1465</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataView">
