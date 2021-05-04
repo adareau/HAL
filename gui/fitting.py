@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 15:06:01
+Modified : 2021-05-04 15:19:31
 
 Comments : Functions related to data fitting
 """
@@ -273,16 +273,45 @@ def _save_fit_result_as_json(self, fit_dic, data_object):
 
     # -- save it
     # generate path
-    data_path = Path(data_object.path)  # ensure we have a Path() object
-    data_root = data_path.parent  # data folder
-    data_stem = data_path.stem  # data name (without extension !)
-    # create fit folder
-    fit_folder_name = self.settings.config["fit"]["fit folder name"]
-    fit_folder = data_root / fit_folder_name
+    fit_file = _gen_saved_fit_path(self, data_object.path)
+    fit_folder = fit_file.parent
     fit_folder.mkdir(exist_ok=True)
     # write
-    fit_file = fit_folder / (data_stem + ".json")
     fit_file.write_text(json_str)
+
+
+def _gen_saved_fit_path(self, data_path):
+    """generates a saved fit path from data path"""
+
+    # take data path
+    data_path = Path(data_path)  # ensure we have a Path() object
+    data_root = data_path.parent  # data folder
+    data_stem = data_path.stem  # data name (without extension !)
+
+    # gen fit folder path
+    fit_folder_name = self.settings.config["fit"]["fit folder name"]
+    fit_folder = data_root / fit_folder_name
+
+    # get fit file path
+    fit_file = fit_folder / (data_stem + ".json")
+    return fit_file
+
+
+def saved_fit_exist(self, data_path=None):
+    """checks whether there is a saved fit for the data. If a path is provided,
+       look for a fit linked to this data path. Otherwise, use current data
+       path"""
+
+    # if no path provided: use current data
+    if data_path is None:
+        # TODO : migrate to a method in the display data class ?
+        data_object = self.mainScreen.current_data
+        data_path = Path(data_object.path)
+
+    # generate saved fit path
+    fit_file = _gen_saved_fit_path(self, data_path)
+
+    return fit_file.is_file()
 
 
 # == high level fit function
