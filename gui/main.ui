@@ -185,7 +185,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="fitButton">
+       <widget class="QPushButton" name="fitBrowserButton">
         <property name="text">
          <string>FIT</string>
         </property>
@@ -237,7 +237,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -292,6 +292,22 @@
        </item>
       </layout>
      </widget>
+     <widget class="QCheckBox" name="autoScaleCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>236</x>
+        <y>72</y>
+        <width>52</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>auto</string>
+      </property>
+      <property name="tristate">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -318,6 +334,41 @@
         <width>41</width>
         <height>23</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="formLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>201</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_3">
+       <item row="0" column="1">
+        <widget class="QComboBox" name="fitTypeComboBox"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>fit type</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="fitButton">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>60</y>
+        <width>51</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>FIT</string>
       </property>
      </widget>
     </widget>

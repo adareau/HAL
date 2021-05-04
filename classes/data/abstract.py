@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-21 15:54:30
+Modified : 2021-05-04 14:35:55
 
 Comments : Abstract classes for data handling
 """
@@ -30,3 +30,14 @@ class AbstractData(object):
     def load(self):
         """should load data"""
         pass
+
+
+class AbstractCameraPictureData(AbstractData):
+    """Abstract Data object, for camera pictures"""
+
+    def __init__(self):
+        super().__init__()
+        # - special for camera
+        self.pixel_size = 1
+        self.pixel_unit = ""
+        self.magnification = 1

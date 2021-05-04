@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-03 15:46:02
+Modified : 2021-05-04 13:05:06
 
 Comments : Abstract classes for data fitting
 """
@@ -11,6 +11,7 @@ import json
 import jsbeautifier as jsb
 import numpy as np
 import scipy.optimize as opt
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -87,12 +88,13 @@ class AbstractFit(object):
         pass
 
     # == ANALYZE OF FIT PARAMETERS ==
+
     def compute_values(self):
         """compute some physical values from the fit optimal parameters"""
         # HAS TO BE IMPLEMENTED IN ALL REAL FIT MODELS !!
         self.values = []
 
-    # == SAVE / LOAD ==
+    # == EXPORT / SHOW RESULTS ==
 
     def export_dic(self):
         """exports fit info and results as a python dictionnary"""
@@ -181,6 +183,37 @@ class Abstract2DFit(AbstractFit):
         self.popt = popt
         self.pcov = pcov
         self.perr = perr
+
+    def plot_fit_result(self, figsize=(10, 4)):
+        """plots the fit result, for a rapid check"""
+        # -- check that the data and coordinates were provided
+        if len(self.z) * len(self.x) * len(self.popt) == 0:
+            return
+
+        # -- prepare data
+        Z = self.z
+        X, Y = self.x
+        Zfit = self.eval((X, Y))
+
+        # -- plot
+        # setup
+        fig, ax = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
+        # min / max
+        vmin = np.min(Z)
+        vmax = np.max(Z)
+        # data
+        ax[0].pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, shading="auto")
+        ax[0].set_title("data")
+        # fit
+        ax[1].pcolormesh(X, Y, Zfit, vmin=vmin, vmax=vmax, shading="auto")
+        ax[1].set_title("fit")
+        # err
+        ax[2].pcolormesh(
+            X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
+        )
+        ax[2].set_title("error")
+        # show
+        plt.show()
 
 
 # %% TESTS

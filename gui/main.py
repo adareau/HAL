@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-03 15:01:21
+Modified : 2021-05-04 14:05:51
 
 Comments :
 """
@@ -12,6 +12,8 @@ Comments :
 # -- global
 import sys
 from PyQt5 import QtWidgets
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut
 from pathlib import Path
 
 # -- local
@@ -20,6 +22,8 @@ import HAL.gui.dataviz as dataviz
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
+import HAL.gui.testing as testing
+
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
@@ -60,13 +64,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_folder = None
         self.metadata = {}
         self.current_fig = None
-        self.roi_list = []
-        self.image_plot = None
 
         # -- Hidden
         self._version = "0.0"
         self._name = "HAL"
+        self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
+
+        # -- Keyboard shortcuts
+        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
+        self.ctrlF.activated.connect(self._ctrlF)
+        self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
+        self.ctrlD.activated.connect(self._ctrlD)
 
     def setupElements(self):
         # -- File Browser
@@ -151,6 +160,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- Fitting --
         self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
+        self.fitButton.clicked.connect(self._fitButtonClicked)
+        self.fitBrowserButton.clicked.connect(self._fitButtonClicked)
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
@@ -240,10 +251,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _addRoiButtonClicked(self):
         fitting.addROI(self)
 
+    def _fitButtonClicked(self):
+        fitting.fit_data(self)
+
     # -- DEBUG
 
     def _DEBUG(self):
-        print("DEBUG")
+        self.autoScaleCheckBox.setChecked(True)
+        testing.open_image_and_fit(self)
+
+    # == KEYBOARD SHORTCUTS
+
+    def _ctrlF(self):
+        """called when 'Ctrl+F' is pressed"""
+        fitting.fit_data(self)
+
+    def _ctrlD(self):
+        """called when 'Ctrl+D' is pressed"""
+        self._DEBUG()
 
     # == MAIN
 

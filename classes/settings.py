@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-04-08 09:43:59
+Modified : 2021-05-04 14:23:21
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -23,6 +23,10 @@ DATA_DEFAULTS = {
     "day folder": "%d",
     "month folder": "%m",
     "year folder": "%Y",
+}
+
+FIT_DEFAULTS = {
+    "fit folder name": ".HAL_fits",
 }
 
 
@@ -50,6 +54,7 @@ class Settings(object):
 
     def init_default(self):
         self.config["data"] = DATA_DEFAULTS
+        self.config["fit"] = FIT_DEFAULTS
 
     def load(self):
         """load the configuration file and parse it"""
