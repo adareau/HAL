@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-04 09:30:49
-Modified : 2021-05-04 15:31:22
+Modified : 2021-05-04 15:32:39
 
 Comments : developer functions, meant to test / debug the gui
 """
@@ -11,7 +11,6 @@ Comments : developer functions, meant to test / debug the gui
 
 # -- GLOBAL
 from datetime import datetime
-from pathlib import Path
 from PyQt5.QtCore import Qt
 
 # -- LOCAL
