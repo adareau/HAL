@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-04 09:46:56
+Modified : 2021-05-04 11:07:51
 
 Comments :
 """
@@ -62,9 +62,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_folder = None
         self.metadata = {}
         self.current_fig = None
-        self.roi_list = []
-        self.image_plot = None
-        self.current_data = None
 
         # -- Hidden
         self._version = "0.0"

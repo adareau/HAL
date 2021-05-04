@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 10:36:50
+Modified : 2021-05-04 11:05:29
 
 Comments : Functions related to data visualization
 """
@@ -181,7 +181,6 @@ def plotSelectedData(self):
     # lock aspect ratio
     p.setAspectLocked(lock=True, ratio=1)
     # set limits
-    print(data.data.shape)
     p.setLimits(
         xMin=0, yMin=0, xMax=data.data.shape[0], yMax=data.data.shape[1]
     )

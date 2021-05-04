@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-03 16:27:17
+Modified : 2021-05-04 11:21:19
 
 Comments : implements a 2D Gauss fit
 """
@@ -70,12 +70,12 @@ class Gauss2DFit(Abstract2DFit):
         Z = np.asarray(Z)
 
         # 1D x,y arrays
-        x = X[0, :]
-        y = Y[:, 0]
+        x = X[:, 0]
+        y = Y[0, :]
 
         # -- use 1D fits on integrated data to estimate 2D fit parameters
         results = {}
-        for axis, u, label in zip([0, 1], [x, y], ["x", "y"]):
+        for axis, u, label in zip([1, 0], [x, y], ["x", "y"]):
             # -- integrate
             z = np.mean(Z, axis=axis)
 
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 
     # -- generate noisy data
     x = np.linspace(-10, 10, 200)
-    X, Y = np.meshgrid(x, x)
+    Y, X = np.meshgrid(x, x)
     p = [0.5, 5.0, 0.5, 2.0, 5, 1.0]
     Z = Gauss2D((X, Y), *p)
     noise = (np.random.rand(*X.shape) - 0.5) * 2
@@ -273,30 +273,34 @@ if __name__ == "__main__":
     print(">> guess")
     print(g2Dfit.guess)
     g2Dfit.do_fit()
-
     Zfit = g2Dfit.eval((X, Y))
+
     print(">> popt")
     print(g2Dfit.popt)
 
     g2Dfit.compute_values()
     print(g2Dfit.export_json_str())
-    # -- Plot
-    # setup
-    fig, ax = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
-    vmin = 0
-    vmax = np.max(Z)
 
-    # input data
-    cax = ax[0]
-    cax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, shading="auto")
+    g2Dfit.plot_fit_result()
+    if False:
+        # -- Plot
+        # setup
+        fig, ax = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
+        vmin = 0
+        vmax = np.max(Z)
 
-    # fit
-    cax = ax[1]
-    cax.pcolormesh(X, Y, Zfit, vmin=vmin, vmax=vmax, shading="auto")
+        # input data
+        cax = ax[0]
+        cax.pcolormesh(X, Y, Z, vmin=vmin, vmax=vmax, shading="auto")
 
-    # err
-    cax = ax[2]
-    cax.pcolormesh(
-        X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
-    )
-    plt.show()
+        # fit
+        cax = ax[1]
+        cax.pcolormesh(X, Y, Zfit, vmin=vmin, vmax=vmax, shading="auto")
+
+        # err
+        cax = ax[2]
+        cax.pcolormesh(
+            X, Y, Z - Zfit, vmin=-0.5 * vmax, vmax=0.5 * vmax, shading="auto"
+        )
+        plt.show()
+
