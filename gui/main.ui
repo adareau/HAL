@@ -188,17 +188,171 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
-          <widget class="QWidget" name="tab_3">
+          <widget class="QWidget" name="settingsDataTab">
            <attribute name="title">
             <string>Data</string>
            </attribute>
+           <widget class="QLabel" name="label_3">
+            <property name="geometry">
+             <rect>
+              <x>17</x>
+              <y>78</y>
+              <width>33</width>
+              <height>25</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Scale</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label">
+            <property name="geometry">
+             <rect>
+              <x>17</x>
+              <y>20</y>
+              <width>60</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Data Type</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="colorMapComboBox">
+            <property name="geometry">
+             <rect>
+              <x>83</x>
+              <y>49</y>
+              <width>143</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="dataTypeComboBox">
+            <property name="geometry">
+             <rect>
+              <x>83</x>
+              <y>20</y>
+              <width>143</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_2">
+            <property name="geometry">
+             <rect>
+              <x>17</x>
+              <y>49</y>
+              <width>58</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Colormap</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="scaleMinEdit">
+            <property name="geometry">
+             <rect>
+              <x>80</x>
+              <y>80</y>
+              <width>67</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="scaleMaxEdit">
+            <property name="geometry">
+             <rect>
+              <x>150</x>
+              <y>80</y>
+              <width>68</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="autoScaleCheckBox">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>110</y>
+              <width>52</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>auto</string>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
+           </widget>
           </widget>
-          <widget class="QWidget" name="tab_4">
+          <widget class="QWidget" name="settingsFitTab">
            <attribute name="title">
             <string>FIT</string>
            </attribute>
+           <widget class="QPushButton" name="fitButton">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>110</y>
+              <width>51</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>FIT</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_10">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>80</y>
+              <width>43</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>fit type</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="selectRoiComboBox">
+            <property name="geometry">
+             <rect>
+              <x>100</x>
+              <y>20</y>
+              <width>41</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="addRoiButton">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>20</y>
+              <width>71</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>add ROI</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="fitTypeComboBox">
+            <property name="geometry">
+             <rect>
+              <x>69</x>
+              <y>80</y>
+              <width>150</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
           </widget>
          </widget>
         </item>
@@ -405,6 +559,19 @@
             </layout>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deBugButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>DEBUG</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
