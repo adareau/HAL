@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-05 10:41:56
+Modified : 2021-05-05 14:03:32
 
 Comments :
 """
@@ -118,9 +118,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.refreshRunListButton.clicked.connect(
             self._refreshRunListButtonClicked
         )
-        self.todayButton.clicked.connect(
-            self._todayButtonClicked
-        )
+        self.todayButton.clicked.connect(self._todayButtonClicked)
         # calendar
         self.dateEdit.dateChanged.connect(self._dateEditClicked)
 
@@ -167,7 +165,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
-
 
     # == CALLBACKS
 
