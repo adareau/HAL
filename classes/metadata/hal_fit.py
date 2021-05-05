@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-05 14:15:21
+Modified : 2021-05-05 14:20:54
 
 Comments : Imports fit information, as saved by HAL
 """
@@ -95,7 +95,7 @@ class HALFitData(AbstractMetaData):
         for roi, fitres in fit_collection.items():
             for value in fitres["result"]["values"]:
                 param = {k: v for k, v in value.items()}
-                param["name"] = "%s > %s" % (roi, value["name"])
+                param["name"] = "%s::%s" % (roi, value["name"])
                 data.append(param)
         # - store
         self.data = data
