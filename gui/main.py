@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-05 14:17:48
+Modified : 2021-05-05 14:28:10
 
 Comments :
 """
@@ -262,8 +262,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _DEBUG(self):
         self.autoScaleCheckBox.setChecked(True)
-        # testing.open_image_and_fit(self)
-        testing.open_image(self)
+        testing.open_image_and_fit(self)
+        # testing.open_image(self)
 
     # == KEYBOARD SHORTCUTS
 

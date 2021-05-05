@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 16:06:26
+Modified : 2021-05-05 14:27:42
 
 Comments : Functions related to data fitting
 """
@@ -212,7 +212,7 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     fit_info["fit formula"] = fit.formula_help
     fit_info["fit parameters"] = fit.parameters_help
     fit_info["fit version"] = fit._version
-    fit_info["generated on"] = str(datetime.now())
+    fit_info["generated on"] = datetime.now().strftime('%y-%m-%d %H:%M:%S')
 
     # specific to 2D fits
     if isinstance(fit, Abstract2DFit):
