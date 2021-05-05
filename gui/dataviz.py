@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-04 15:45:05
+Modified : 2021-05-05 17:26:44
 
 Comments : Functions related to data visualization
 """
@@ -175,24 +175,30 @@ def plotSelectedData(self):
     data.load()
 
     # -- plot
-    self.mainScreen.clear()
-    img = pg.ImageItem()
-    p = self.mainScreen.addPlot(0, 0)
-    # lock aspect ratio
-    p.setAspectLocked(lock=True, ratio=1)
-    # set limits
-    p.setLimits(
-        xMin=0, yMin=0, xMax=data.data.shape[0], yMax=data.data.shape[1]
-    )
-    # axis
-    p.setLabel("bottom", "X", units="px")
-    p.setLabel("left", "Y", units="px")
-    # p.setXRange(0, data.data.shape[0])
-    # p.setYRange(0, data.data.shape[1])
-    # image
-    p.addItem(img)
-    self.mainScreen.image_plot = p
-    self.mainScreen.current_image = img
+    # init, if not done
+    if self.mainScreen.current_image is None:
+        self.mainScreen.clear()
+        img = pg.ImageItem()
+        p = self.mainScreen.addPlot(0, 0)
+        # lock aspect ratio
+        p.setAspectLocked(lock=True, ratio=1)
+        # set limits
+        p.setLimits(
+            xMin=0, yMin=0, xMax=data.data.shape[0], yMax=data.data.shape[1]
+        )
+        # axis
+        p.setLabel("bottom", "X", units="px")
+        p.setLabel("left", "Y", units="px")
+        # p.setXRange(0, data.data.shape[0])
+        # p.setYRange(0, data.data.shape[1])
+        # image
+        p.addItem(img)
+        self.mainScreen.image_plot = p
+        self.mainScreen.current_image = img
+    else:
+        p = self.mainScreen.image_plot
+        img = self.mainScreen.current_image
+
     # Get the colormap
     colormap_name = self.colorMapComboBox.currentText()
     if colormap_name == "Greiner":
@@ -223,6 +229,6 @@ def plotSelectedData(self):
     # remove ROIS
     # FIXME: we should manage roi conservation when uploading a new image...
     # maybe we should not clear the screen ?
-    self.mainScreen.roi_list = []
+    # self.mainScreen.roi_list = []
 
     self.mainScreen.current_data = data
