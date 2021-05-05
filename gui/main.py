@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-05 14:28:10
+Modified : 2021-05-05 16:39:11
 
 Comments :
 """
@@ -31,6 +31,7 @@ from HAL.classes.settings import Settings
 from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
 from HAL.classes.fit import implemented_fit_dic
+
 
 # %% DEFINE GUI CLASS
 

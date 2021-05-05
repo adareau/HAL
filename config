@@ -1,3 +1,15 @@
+[data helium1]
+root = ~/gus_data_dummy
+day folder = %d
+month folder = %m
+year folder = %Y
+
+[data helium2]
+root = ~/helium2_data_dummy
+day folder = %d
+month folder = %m %B
+year folder = %Y
+
 [data]
 root = ~/gus_data_dummy
 day folder = %d

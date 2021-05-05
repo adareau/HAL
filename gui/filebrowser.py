@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-04 15:40:21
+Modified : 2021-05-05 16:59:42
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -12,6 +12,7 @@ Comments : Functions related to file browsing, i.e. select the right year,
 
 # -- global
 import pysnooper
+import locale
 from datetime import datetime, date
 from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -23,6 +24,13 @@ from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
 import HAL.gui.fitting as fitting
 
 
+# %% GLOBAL VARIABLES
+
+YEAR_DISPLAY_FMT = "%Y"
+MONTH_DISPLAY_FMT = "%m"
+DAY_DISPLAY_FMT = "%d"
+DEFAULT_LOCALE = "en_GB.UTF-8"
+
 # %% TOOLS
 
 
@@ -33,14 +41,35 @@ class EmptyIconProvider(QtWidgets.QFileIconProvider):
 
 def validateDateFormat(date_string, date_format):
     try:
+        # temporary switch of time locale
+        stored_locale = locale.getlocale(locale.LC_TIME)
+        locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
         # if this fails, then format is bad
         date_object = datetime.strptime(date_string, date_format)
+        # string back
+        date_string_back = date_object.strftime(date_format)
+        # restore
+        locale.setlocale(locale.LC_TIME, stored_locale)
         # this is to ensuire zero paddings
-        if date_string != date_object.strftime(date_format):
+        if date_string != date_string_back:
             raise ValueError
         return True
     except ValueError:
+        locale.setlocale(locale.LC_TIME, stored_locale)
         return False
+
+
+def convertDateFormat(date_string, date_format_in, date_format_out):
+    # temporary switch of time locale
+    stored_locale = locale.getlocale(locale.LC_TIME)
+    locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
+    # convert to date object
+    date_object = datetime.strptime(date_string, date_format_in)
+    # convert back to string
+    date_string_out = date_object.strftime(date_format_out)
+    # restore
+    locale.setlocale(locale.LC_TIME, stored_locale)
+    return date_string_out
 
 
 # %% LOW LEVEL FUNCTIONS
@@ -64,7 +93,7 @@ def getSubfolders(folder_path, date_format):
     return selected_content
 
 
-def refreshListContent(list, folder, date_format):
+def refreshListContent(list, folder, date_format, display_format):
     """
     Low-level function to refresh the content of the
     year / month / day lists
@@ -78,8 +107,9 @@ def refreshListContent(list, folder, date_format):
 
     # populate list
     for subdir in subdir_list:
+        name = convertDateFormat(subdir.name, date_format, display_format)
         item = QListWidgetItem()
-        item.setText(subdir.name)
+        item.setText(name)
         item.setData(Qt.UserRole, subdir)
         list.addItem(item)
 
@@ -140,7 +170,7 @@ def setupFileListBrowser(self):
     # -- year
     # initialize year list
     year_fmt = conf["data"]["year folder"]
-    refreshListContent(self.yearList, root, year_fmt)
+    refreshListContent(self.yearList, root, year_fmt, YEAR_DISPLAY_FMT)
 
     # scrollbar
     self.yearList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -182,7 +212,7 @@ def yearListSelectionChanged(self):
     conf = self.settings.config
     month_fmt = conf["data"]["month folder"]
     # refresh month list
-    refreshListContent(self.monthList, year_dir, month_fmt)
+    refreshListContent(self.monthList, year_dir, month_fmt, MONTH_DISPLAY_FMT)
     # clear day list
     self.dayList.clear()
 
@@ -198,7 +228,7 @@ def monthListSelectionChanged(self):
     conf = self.settings.config
     day_fmt = conf["data"]["day folder"]
     # refresh day list
-    refreshListContent(self.dayList, month_dir, day_fmt)
+    refreshListContent(self.dayList, month_dir, day_fmt, DAY_DISPLAY_FMT)
 
 
 def dayListSelectionChanged(self):
@@ -213,19 +243,14 @@ def dayListSelectionChanged(self):
     refreshCurrentFolder(self, day_dir)
 
     # -- update calendar date
-    # get formats
-    conf = self.settings.config
-    year_fmt = conf["data"]["year folder"]
-    month_fmt = conf["data"]["month folder"]
-    day_fmt = conf["data"]["day folder"]
     # get selected
     year_str = self.yearList.selectedItems()[0].text()
     month_str = self.monthList.selectedItems()[0].text()
     day_str = self.dayList.selectedItems()[0].text()
     # get date
-    year = datetime.strptime(year_str, year_fmt).year
-    month = datetime.strptime(month_str, month_fmt).month
-    day = datetime.strptime(day_str, day_fmt).day
+    year = datetime.strptime(year_str, YEAR_DISPLAY_FMT).year
+    month = datetime.strptime(month_str, MONTH_DISPLAY_FMT).month
+    day = datetime.strptime(day_str, DAY_DISPLAY_FMT).day
     # update
     new_date = QDate(year, month, day)
     self.dateEdit.blockSignals(True)
@@ -400,12 +425,12 @@ def refreshCurrentFolder(self, new_folder=None):
                 prefix = "├─ "
 
             # is there a fit ?
-            suffix = ''
+            suffix = ""
             if fitting.saved_fit_exist(self, file):
                 # ideas for markers :
                 # 🟩, ✳️ ✔️
                 # see https://emojipedia.org
-                suffix += ' ✔️'
+                suffix += " ✔️"
 
             # add item
             item = QListWidgetItem()
