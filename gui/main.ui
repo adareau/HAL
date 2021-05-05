@@ -206,6 +206,12 @@
       </item>
       <item>
        <widget class="QGroupBox" name="runBrowserBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="maximumSize">
          <size>
           <width>460</width>
@@ -220,6 +226,12 @@
           <layout class="QGridLayout" name="gridLayout">
            <item row="0" column="0">
             <widget class="QLabel" name="label_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>runs</string>
              </property>
@@ -227,6 +239,12 @@
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>sequences</string>
              </property>
@@ -234,19 +252,46 @@
            </item>
            <item row="0" column="2">
             <widget class="QLabel" name="label_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>sets</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QListWidget" name="runList"/>
+            <widget class="QListWidget" name="runList">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QListWidget" name="seqList"/>
+            <widget class="QListWidget" name="seqList">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QListWidget" name="setList"/>
+            <widget class="QListWidget" name="setList">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -256,6 +301,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QPushButton" name="refreshRunListButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Refresh</string>
                </property>
@@ -263,6 +314,12 @@
              </item>
              <item>
               <widget class="QPushButton" name="fitBrowserButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>FIT</string>
                </property>
@@ -271,9 +328,37 @@
             </layout>
            </item>
            <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
               <widget class="QPushButton" name="newSetButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>new</string>
                </property>
@@ -281,6 +366,18 @@
              </item>
              <item>
               <widget class="QPushButton" name="deleteSetButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>del</string>
                </property>
@@ -288,6 +385,18 @@
              </item>
              <item>
               <widget class="QPushButton" name="favSetButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>⭐</string>
                </property>
