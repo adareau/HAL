@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 16:19:05
+Modified : 2021-05-05 14:15:21
 
 Comments : Imports fit information, as saved by HAL
 """
@@ -33,7 +33,8 @@ class HALFitData(AbstractMetaData):
         self.path = path
 
     def analyze(self):
-        # - init data
+        # - init / reset data
+        self.data = []
         data = []
 
         # - find HAL-generated fit file
