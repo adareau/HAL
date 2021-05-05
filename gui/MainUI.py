@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui/main.ui'
+# Form implementation generated from reading ui file 'main.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.3
 #
@@ -14,6 +14,11 @@ class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(1501, 903)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(mainWindow.sizePolicy().hasHeightForWidth())
+        mainWindow.setSizePolicy(sizePolicy)
         self.centralwidget = QtWidgets.QWidget(mainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.dayBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -85,6 +90,11 @@ class Ui_mainWindow(object):
         self.horizontalLayout.addWidget(self.favSetButton)
         self.settingsTabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.settingsTabWidget.setGeometry(QtCore.QRect(190, 20, 281, 311))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.settingsTabWidget.sizePolicy().hasHeightForWidth())
+        self.settingsTabWidget.setSizePolicy(sizePolicy)
         self.settingsTabWidget.setObjectName("settingsTabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
