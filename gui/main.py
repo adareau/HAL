@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-05 14:13:57
+Modified : 2021-05-05 14:17:48
 
 Comments :
 """
@@ -252,7 +252,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         fitting.addROI(self)
 
     def _fitButtonClicked(self):
+        # fit
         fitting.fit_data(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     # -- DEBUG
 
@@ -265,7 +269,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _ctrlF(self):
         """called when 'Ctrl+F' is pressed"""
-        fitting.fit_data(self)
+        self._fitButtonClicked()
 
     def _ctrlD(self):
         """called when 'Ctrl+D' is pressed"""
