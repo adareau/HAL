@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-04 14:05:51
+Modified : 2021-05-05 10:41:56
 
 Comments :
 """
@@ -23,6 +23,7 @@ import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
 import HAL.gui.testing as testing
+import HAL.gui.misc as misc
 
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
@@ -70,6 +71,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._name = "HAL"
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
+        self._kl = []
 
         # -- Keyboard shortcuts
         self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
@@ -165,6 +167,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
+
 
     # == CALLBACKS
 
@@ -269,6 +272,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _ctrlD(self):
         """called when 'Ctrl+D' is pressed"""
         self._DEBUG()
+
+    def keyPressEvent(self, event):
+        """key pressed"""
+        self._kl.append(event.key())
+        misc.analyse_keylog(self)
 
     # == MAIN
 
