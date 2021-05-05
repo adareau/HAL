@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-04 13:05:06
+Modified : 2021-05-05 15:12:59
 
 Comments : Abstract classes for data fitting
 """
@@ -27,6 +27,13 @@ class NumpyArrayEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
+
+
+# %% FUNCTIONS
+
+
+def Gauss1D(x, *p):
+    return p[0] + p[1] * np.exp(-((x - p[3]) ** 2) / 2 / p[2] ** 2)
 
 
 # %% CLASS DEFINITION
@@ -214,6 +221,151 @@ class Abstract2DFit(AbstractFit):
         ax[2].set_title("error")
         # show
         plt.show()
+
+    def _get_spatial_stats(self, Z_offset=0):
+        """returns the spatial center of mass and standard deviation.
+           intended to be used in compute_values(), to add stats values"""
+
+        # -- get data
+        if len(self.z) * len(self.x) == 0:
+            return
+
+        Z = self.z - Z_offset
+        X, Y = self.x
+
+        # -- compute stats
+        values = []
+        # center of mass (pixels)
+        com = {}
+        for ax, U in zip(["x", "y"], [X, Y]):
+            com[ax] = np.average(U, weights=Z)
+            param = {
+                "name": "com_%s_px" % ax,
+                "value": com[ax],
+                "display": "%.3g",
+                "unit": "px",
+                "comment": "center of mass along %s, in pixels" % ax,
+            }
+            values.append(param)
+
+        # standard dev (pixels)
+        std = {}
+        for ax, U in zip(["x", "y"], [X, Y]):
+            std[ax] = np.sqrt(np.average((U - com[ax]) ** 2, weights=Z))
+            param = {
+                "name": "std_%s_px" % ax,
+                "value": std[ax],
+                "display": "%.3g",
+                "unit": "px",
+                "comment": "standard deviation along %s, in pixels" % ax,
+            }
+            values.append(param)
+
+        # now with real physical units
+        display = {
+            "com": "center of mass along %s, in %s",
+            "std": "standard deviation along %s, in %s",
+        }
+        for name, val in zip(["com", "std"], [com, std]):
+            for ax in ["x", "y"]:
+                conversion = self.__getattribute__("pixel_size_%s" % ax)
+                unit = self.__getattribute__("pixel_size_%s_unit" % ax)
+                param = {
+                    "name": "%s_%s" % (name, ax),
+                    "value": val[ax] * conversion,
+                    "display": "%.3g",
+                    "unit": unit,
+                    "comment": display[name] % (ax, unit),
+                }
+                values.append(param)
+
+        return values
+
+
+class Abstract2DBellShaped(Abstract2DFit):
+    """abstract class for 'bell shaped' functions. the idea is to define once
+       and for all some methods (such as do_guess()) that will be shared by
+       all fit models based such functions (that is, basically, all of them)"""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "Abstract2DBellShaped"
+
+    def do_guess(self):
+        """guess fit parameters from preliminary data analysis. this is done
+           by fitting the integrated data along the two axes using a Gaussian
+           shape"""
+
+        # -- check that the data and coordinates were provided
+        if len(self.z) == 0 or len(self.x) == 0:
+            return
+
+        # -- get data
+        Z = self.z
+        (X, Y) = self.x  # this is a 2D fit !
+
+        # should be arrays
+        X = np.asarray(X)
+        Y = np.asarray(Y)
+        Z = np.asarray(Z)
+
+        # 1D x,y arrays
+        x = X[:, 0]
+        y = Y[0, :]
+
+        # -- use 1D fits on integrated data to estimate 2D fit parameters
+        results = {}
+        for axis, u, label in zip([1, 0], [x, y], ["x", "y"]):
+            # -- integrate
+            z = np.mean(Z, axis=axis)
+
+            # -- guess for 1D fit
+            # min, max, amp
+            threshold = 0.05
+            zmin = np.min(z)
+            zmax = np.max(z)
+            A = zmax - zmin
+
+            # offset, amplitude
+            offset_guess = np.mean(z[z < zmin + threshold * A])
+            amp_guess = zmax - offset_guess
+
+            # filter to remove noise
+            i_filter = (z - offset_guess) > threshold * amp_guess
+            weights = z[i_filter] - offset_guess
+            uf = u[i_filter]
+
+            # center = center of mass
+            c_guess = np.average(uf, weights=weights)
+
+            # size = standard deviation
+            s_guess = np.sqrt(np.average((uf - c_guess) ** 2, weights=weights))
+
+            # -- 1D fit
+            p0 = [offset_guess, amp_guess, s_guess, c_guess]
+            try:
+                popt, _ = opt.curve_fit(Gauss1D, u, z, p0=p0)
+            except Exception as e:
+                print(e)
+                popt = p0
+
+            results[label] = popt
+
+        # -- get 2D guess
+        cx = results["x"][3]
+        cy = results["y"][3]
+        sx = np.abs(results["x"][2])
+        sy = np.abs(results["y"][2])
+        offset = 0.5 * (results["x"][0] + results["y"][0])
+        # find max
+        xr = X.ravel()
+        yr = Y.ravel()
+        zr = Z.ravel()
+        imax = np.argmin((cx - xr) ** 2 + (cy - yr) ** 2)
+        amplitude = zr[imax]
+        # guess
+        p0 = [offset, amplitude, sx, sy, cx, cy]
+        self.guess = p0
 
 
 # %% TESTS
