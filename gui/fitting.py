@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-05 14:27:42
+Modified : 2021-05-06 14:35:25
 
 Comments : Functions related to data fitting
 """
@@ -12,24 +12,14 @@ Comments : Functions related to data fitting
 # -- global
 import json
 import jsbeautifier as jsb
-import pyqtgraph as pg
-import numpy as np
-import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (
-    QInputDialog,
-    QAbstractItemView,
-    QStyle,
-    QListWidgetItem,
-    QMessageBox,
-)
 
 # -- local
 from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
+from HAL.classes.fit import implemented_fit_dic
 from HAL.classes.data.abstract import AbstractCameraPictureData
+from HAL.gui.misc import warn
 
 # %% TOOLS
 
@@ -54,15 +44,8 @@ def setupFitting(self):
 # %% ROI MANAGEMENT
 
 
-def addROI(self):
-    """
-    FIXME: this is a test with PyQtGraph ROIs, we will have the think the ROI
-    management when working on the fitting classes !
-    """
-    # -- add new ROI
-    if self.mainScreen.image_plot is None:
-        # no 'image plot' initialized, return !
-        return
+def addROI(self, roi_name=None):
+    """ adds a new roi to the current display"""
 
     # define roi style
     roi_style = {"color": "#3FFF53FF", "width": 2}
@@ -70,67 +53,26 @@ def addROI(self):
     handle_style = {"color": "#3FFF53FF", "width": 2}
     handle_hover_style = {"color": "#FFF73FFF", "width": 2}
 
-    # create roi object
-    new_roi = pg.RectROI(
-        pos=[0, 0],
-        size=[50, 50],
-        rotatable=False,
-        pen=roi_style,
-        hoverPen=roi_hover_style,
-        handlePen=handle_style,
-        handleHoverPen=handle_hover_style,
+    # define label style
+    label_color = "#3FFF53FF"
+    if roi_name is None:
+        n_roi = len(self.display.getROINames())
+        roi_name = "ROI %i" % n_roi
+
+    # add roi
+    self.display.addROI(
+        roi_name=roi_name,
+        roi_style=roi_style,
+        roi_hover_style=roi_hover_style,
+        handle_style=handle_style,
+        handle_hover_style=handle_hover_style,
+        label_color=label_color,
     )
-
-    # add a label
-    n_roi = len(self.mainScreen.roi_list)
-    roi_label = pg.TextItem("ROI %i" % n_roi, color="#3FFF53FF")
-    roi_label.setPos(0, 0)
-    new_roi.label = roi_label  # link to roi !!
-    new_roi.number = n_roi
-
-    # TODO : make it such that the label follows the ROI !
-    # using sigRegionChanged
-    new_roi.sigRegionChanged.connect(_roi_changed)
-
-    # add scale handles
-    for pos in ([1, 0.5], [0, 0.5], [0.5, 0], [0.5, 1]):
-        new_roi.addScaleHandle(pos=pos, center=[0.5, 0.5])
-    for pos, center in zip(
-        ([0, 0], [1, 0], [1, 1], [0, 1]), ([1, 1], [0, 1], [0, 0], [1, 0])
-    ):
-        new_roi.addScaleHandle(pos=pos, center=center)
-
-    # add to current image plot
-    self.mainScreen.image_plot.addItem(new_roi)
-    self.mainScreen.image_plot.addItem(roi_label)
-    self.mainScreen.roi_list.append(new_roi)
-
-
-def _roi_changed(self):
-    # TODO : move self.label
-    position = self.pos()
-    self.label.setPos(position[0], position[1])
 
 
 # %% FIT
 
 # == low level functions
-
-
-def _get_2D_roi_data(self, roi):
-    """ returns the currently displayed data in the provided roi"""
-    # -- get current data and image item
-    # TODO : migrate to a method in the display data class ?
-    data = self.mainScreen.current_data.data
-    image_item = self.mainScreen.current_image
-
-    # -- get roi data
-    # use the convenient 'getArrayRegion' to retrieve selected image roi
-    Z, XY = roi.getArrayRegion(data, image_item, returnMappedCoords=True)
-    X = XY[0, :, :]
-    Y = XY[1, :, :]
-
-    return Z, (X, Y)
 
 
 def _fit_2D_data(self, Z, XY, data_object):
@@ -160,7 +102,7 @@ def _fit_2D_data(self, Z, XY, data_object):
     return fit
 
 
-def _generate_roi_result_dic(roi, fit):
+def _generate_roi_result_dic(display, roi_name, fit):
     """generates a dictionnary with the fit results for a given roi,
        including information about the roi itself, in order to be
        saved as part of the global fit result """
@@ -171,13 +113,13 @@ def _generate_roi_result_dic(roi, fit):
     # -- store roi info
     # position
     roi_dic["pos"] = {
-        "value": list(roi.pos()),
+        "value": display.getROIPos(roi_name),
         "unit": "px",
         "comment": "roi position (lower left corner)",
     }
     # position
     roi_dic["size"] = {
-        "value": list(roi.size()),
+        "value": display.getROISize(roi_name),
         "unit": "px",
         "comment": "roi size",
     }
@@ -212,7 +154,7 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     fit_info["fit formula"] = fit.formula_help
     fit_info["fit parameters"] = fit.parameters_help
     fit_info["fit version"] = fit._version
-    fit_info["generated on"] = datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    fit_info["generated on"] = datetime.now().strftime("%y-%m-%d %H:%M:%S")
 
     # specific to 2D fits
     if isinstance(fit, Abstract2DFit):
@@ -304,14 +246,76 @@ def saved_fit_exist(self, data_path=None):
 
     # if no path provided: use current data
     if data_path is None:
-        # TODO : migrate to a method in the display data class ?
-        data_object = self.mainScreen.current_data
+        data_object = self.display.getCurrentDataObject()
         data_path = Path(data_object.path)
 
     # generate saved fit path
     fit_file = _gen_saved_fit_path(self, data_path)
 
     return fit_file.is_file()
+
+
+def load_saved_fit(self, data_path=None):
+    """loads a saved fit"""
+
+    # -- load saved fit
+    # if no path provided: use current data
+    if data_path is None:
+        data_object = self.display.getCurrentDataObject()
+        data_path = Path(data_object.path)
+
+    # generate saved fit path
+    fit_file = _gen_saved_fit_path(self, data_path)
+
+    # if does not exist : return
+    if not fit_file.is_file():
+        return
+
+    # load
+    fit_json = json.loads(fit_file.read_text())
+
+    # -- analyze fit
+    # get fit info
+    if "__fit_info__" not in fit_json:
+        warn("no fit info found...")
+        return
+
+    fit_info = fit_json["__fit_info__"]
+    fit_name = fit_info["fit name"]
+    fit_version = fit_info["fit version"]
+
+    # check fit name
+    if fit_name not in implemented_fit_dic:
+        warn("saved fit '%s' is not implemented !" % fit_name)
+        return
+
+    # check fit version
+    fit_class = implemented_fit_dic[fit_name]
+    if fit_class()._version != fit_version:
+        msg = "saved fit version (%s) does not match " % fit_version
+        msg += "the current implemented version (%s) " % fit_class()._version
+        msg += "for the '%s' fit class" % fit_name
+        msg += "I will try to go on though..."
+        warn(msg)
+
+    # load
+    fit_collection = {}
+    for roi_name, roi_info in fit_json["collection"].items():
+        # get fit result
+        fit_res = roi_info["result"]
+        # generate a fit object
+        fit = fit_class()
+        fit.popt = fit_res["popt"]
+        fit.pcov = fit_res["pcov"]
+        fit.perr = fit_res["perr"]
+        # save
+        fit_collection[roi_name] = {
+            "pos": roi_info["pos"],
+            "size": roi_info["size"],
+            "fit": fit,
+        }
+
+    return fit_collection
 
 
 # == high level fit function
@@ -322,21 +326,22 @@ def fit_data(self):
        fit the data, and save results"""
 
     # -- check current data object (for dimension)
-    # TODO : migrate to a method in the display data class ?
-    data_object = self.mainScreen.current_data
+    data_object = self.display.getCurrentDataObject()
     if data_object.dimension != 2:
         print("ERROR : fit only implemented for 2D data !")
         return
 
     # -- loop on roi list
-    if len(self.mainScreen.roi_list) == 0:
-        print("ERROR : no ROI selected !!")
+    if len(self.display.getROINames()) == 0:
+        print("ERROR : no ROI defined !!")
         return
 
     fit_collection = []
-    for roi in self.mainScreen.roi_list:
+    for roi_name in self.display.getROINames():
         # get roi data
-        Z, XY = _get_2D_roi_data(self, roi)
+        Z, XY = self.display.getROIData(roi_name)
+        if Z is None:
+            continue
         # fit the data
         fit = _fit_2D_data(self, Z, XY, data_object)
         if fit is None:
@@ -346,17 +351,16 @@ def fit_data(self):
             return
         # fit.plot_fit_result()  # TEMP
         # store for later
-        fit_collection.append((roi, fit))
+        fit_collection.append((roi_name, fit))
 
     # -- save fit
     # - prepare fit collection
     roi_collection = {}
-    for (roi, fit) in fit_collection:
+    for (roi_name, fit) in fit_collection:
         # prepare dictionnary with results for the current roi
-        roi_dic = _generate_roi_result_dic(roi, fit)
+        roi_dic = _generate_roi_result_dic(self.display, roi_name, fit)
         # save it to the global dic
-        n_roi = roi.number
-        roi_collection["roi%i" % n_roi] = roi_dic
+        roi_collection[roi_name] = roi_dic
 
     # - prepare fit dict
     fit_dic = _generate_fit_result_dic(self, roi_collection, fit, data_object)

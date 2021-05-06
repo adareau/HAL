@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-05 16:39:11
+Modified : 2021-05-06 13:49:45
 
 Comments :
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
-import HAL.gui.dataviz as dataviz
+import HAL.gui.display as display
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
@@ -31,6 +31,7 @@ from HAL.classes.settings import Settings
 from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
 from HAL.classes.fit import implemented_fit_dic
+from HAL.classes.display import implemented_display_dic
 
 
 # %% DEFINE GUI CLASS
@@ -52,6 +53,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.metadata_classes = implemented_metadata
         # implemented fit classes
         self.fit_classes = implemented_fit_dic
+        # implemented display classes
+        self.display_classes = implemented_display_dic
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
@@ -84,7 +87,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- File Browser
         filebrowser.setupFileListBrowser(self)
         # -- Data Visualization
-        dataviz.setupDataViz(self)
+        display.setupDisplay(self)
         # -- Meta data
         dataexplorer.setupDataExplorer(self)
         # -- Quick Plot
@@ -186,7 +189,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # (for instance, if a sequence is selected)
         filebrowser.runListSelectionChanged(self)
         # display
-        dataviz.plotSelectedData(self)
+        display.plotSelectedData(self)
         # metadata
         dataexplorer.displayMetaData(self)
 
@@ -212,19 +215,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.refreshCurrentFolder(self)
 
     def _colorMapComboBoxSelectionChanged(self):
-        dataviz.plotSelectedData(self)
+        display.updateColormap(self)
 
     def _scaleMaxEditChanged(self):
         new_max = self.scaleMaxEdit.text()
         if not new_max.isnumeric():
             self.scaleMaxEdit.setText("65535")
-        dataviz.plotSelectedData(self)
+        display.plotSelectedData(self)
 
     def _scaleMinEditChanged(self):
         new_min = self.scaleMinEdit.text()
         if not new_min.isnumeric():
             self.scaleMinEdit.setText("0")
-        dataviz.plotSelectedData(self)
+        display.plotSelectedData(self)
 
     # -- DATA EXPLORER
 
@@ -263,8 +266,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _DEBUG(self):
         self.autoScaleCheckBox.setChecked(True)
-        testing.open_image_and_fit(self)
-        # testing.open_image(self)
+        # testing.open_image_and_fit(self)
+        testing.open_image(self)
 
     # == KEYBOARD SHORTCUTS
 

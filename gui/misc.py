@@ -2,13 +2,21 @@
 """
 Author   : Alexandre
 Created  : 2021-05-05 10:24:37
-Modified : 2021-05-05 10:59:18
+Modified : 2021-05-06 14:05:20
 
 Comments : miscellaneous functions, that would not fit anywhere else
 """
 
 # %% IMPORTS
+import warnings
 from PyQt5.QtCore import Qt
+
+
+# %% WARNING
+def warn(msg):
+    warn_base = "I'm affraid I can't do that: %s"
+    warnings.warn(warn_base % msg)
+    print(warn_base % msg)
 
 
 # %% KEY MANAGEMENT
