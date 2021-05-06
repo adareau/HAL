@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-05 17:26:44
+Modified : 2021-05-06 11:36:24
 
 Comments : Functions related to data visualization
 """
@@ -126,16 +126,28 @@ GREINER = [
 # %% SETUP FUNCTIONS
 
 
-def setupDataViz(self):
+def setupDisplay(self):
     # -- setup data classes list selector
     for name in self.data_classes.keys():
         self.dataTypeComboBox.addItem(name)
     # -- setup min / max scale
     self.scaleMinEdit.setText("0")
     self.scaleMaxEdit.setText("65535")
-    # -- setup colormaps
-    for cmap in IMPLEMENTED_COLORMAPS:
+
+    # -- initialize display
+    # TODO update the menu !
+    display_list = list(self.display_classes.keys())
+
+    # setup display
+    display_class = self.display_classes["Basic image display"]
+    self.display = display_class(screen=self.mainScreen)
+    self.display.setup()
+
+    # setup colormaps
+    colormap_list = self.display.getColormaps()
+    for cmap in colormap_list:
         self.colorMapComboBox.addItem(cmap)
+
     # -- add some attributes to mainScreen
     # (will be useful for easy access to some data)
     # TODO : maybe we remove that in the future, and replace
@@ -150,11 +162,21 @@ def setupDataViz(self):
 # %% DISPLAY FUNCTIONS
 
 
+def updateColormap(self):
+    """
+    Updates current colormap
+    """
+    # get the colormap
+    colormap_name = self.colorMapComboBox.currentText()
+
+    # update
+    self.display.updateColormap(colormap_name)
+
+
 def plotSelectedData(self):
     """
     loads the selected data, and plot it
     """
-    # FIXME : preliminary, should call dataViz classes for displaying !
     # -- get selected data
     selection = self.runList.selectedItems()
     if not selection:
@@ -175,47 +197,15 @@ def plotSelectedData(self):
     data.load()
 
     # -- plot
-    # init, if not done
-    if self.mainScreen.current_image is None:
-        self.mainScreen.clear()
-        img = pg.ImageItem()
-        p = self.mainScreen.addPlot(0, 0)
-        # lock aspect ratio
-        p.setAspectLocked(lock=True, ratio=1)
-        # set limits
-        p.setLimits(
-            xMin=0, yMin=0, xMax=data.data.shape[0], yMax=data.data.shape[1]
-        )
-        # axis
-        p.setLabel("bottom", "X", units="px")
-        p.setLabel("left", "Y", units="px")
-        # p.setXRange(0, data.data.shape[0])
-        # p.setYRange(0, data.data.shape[1])
-        # image
-        p.addItem(img)
-        self.mainScreen.image_plot = p
-        self.mainScreen.current_image = img
-    else:
-        p = self.mainScreen.image_plot
-        img = self.mainScreen.current_image
+    # TODO: we should ensure that the selected data type
+    # matches the current display object type! For instance,
+    # if an image is selected, the current display should take
+    # a 2D array as an input !
 
-    # Get the colormap
+    # get the colormap
     colormap_name = self.colorMapComboBox.currentText()
-    if colormap_name == "Greiner":
-        lut = np.array(GREINER) * 255
-    else:
-        colormap = cm.get_cmap(colormap_name)
-        colormap._init()
-        lut = (colormap._lut[:-1] * 255).view(
-            np.ndarray
-        )  # Convert matplotlib colormap from 0-1 to 0 -255 for Qt
 
-    # greiner style ?
-    # TODO : option ?
-    if False:
-        lut = np.append([[255, 255, 255, 255]], lut, axis=0)
-    # Apply the colormap
-    img.setLookupTable(lut)
+    # get the scale
     if self.autoScaleCheckBox.isChecked():
         scale_min = np.min(data.data)
         scale_max = np.max(data.data)
@@ -223,12 +213,13 @@ def plotSelectedData(self):
         scale_min = float(self.scaleMinEdit.text())
         scale_max = float(self.scaleMaxEdit.text())
 
-    # update
-    img.updateImage(image=data.data, levels=(scale_min, scale_max))
+    # plot
+    self.display.updatePlot(
+        image=data.data, levels=(scale_min, scale_max), colormap=colormap_name
+    )
 
-    # remove ROIS
+    # remove ROI
     # FIXME: we should manage roi conservation when uploading a new image...
     # maybe we should not clear the screen ?
     # self.mainScreen.roi_list = []
-
     self.mainScreen.current_data = data

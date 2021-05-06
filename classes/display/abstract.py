@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 10:54:32
+Modified : 2021-05-06 11:35:38
 
 Comments : Abstract classes for data display
 """
@@ -12,8 +12,8 @@ Comments : Abstract classes for data display
 # -- local
 from HAL.classes.display.colormaps import IMPLEMENTED_COLORMAPS
 
-# %% CLASS DEFINITION
 
+# %% CLASS DEFINITION
 
 class AbstractDisplay(object):
     """Abstract display object, to use as a model"""
@@ -35,10 +35,6 @@ class AbstractDisplay(object):
         """sets up display"""
         pass
 
-    def clear(self):
-        """clear (reset) the whole display"""
-        pass
-
     def clearPlot(self):
         """clear all the data plot"""
         pass
@@ -46,6 +42,10 @@ class AbstractDisplay(object):
     def updatePlot(self):
         """to update the current plot with image, 3D atoms position...
            depending on the display type"""
+        pass
+
+    def updateColormap(self):
+        """update colormap"""
         pass
 
     def clearFit(self):
