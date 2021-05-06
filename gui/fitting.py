@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 12:01:37
+Modified : 2021-05-06 12:32:57
 
 Comments : Functions related to data fitting
 """
@@ -84,22 +84,6 @@ def addROI(self):
 # == low level functions
 
 
-def _get_2D_roi_data(self, roi):
-    """ returns the currently displayed data in the provided roi"""
-    # -- get current data and image item
-    # TODO : migrate to a method in the display data class ?
-    data = self.mainScreen.current_data.data
-    image_item = self.mainScreen.current_image
-
-    # -- get roi data
-    # use the convenient 'getArrayRegion' to retrieve selected image roi
-    Z, XY = roi.getArrayRegion(data, image_item, returnMappedCoords=True)
-    X = XY[0, :, :]
-    Y = XY[1, :, :]
-
-    return Z, (X, Y)
-
-
 def _fit_2D_data(self, Z, XY, data_object):
     """handles data fitting"""
     # -- get selected fit
@@ -127,7 +111,7 @@ def _fit_2D_data(self, Z, XY, data_object):
     return fit
 
 
-def _generate_roi_result_dic(roi, fit):
+def _generate_roi_result_dic(display, roi_name, fit):
     """generates a dictionnary with the fit results for a given roi,
        including information about the roi itself, in order to be
        saved as part of the global fit result """
@@ -138,13 +122,13 @@ def _generate_roi_result_dic(roi, fit):
     # -- store roi info
     # position
     roi_dic["pos"] = {
-        "value": list(roi.pos()),
+        "value": display.getROIPos(roi_name),
         "unit": "px",
         "comment": "roi position (lower left corner)",
     }
     # position
     roi_dic["size"] = {
-        "value": list(roi.size()),
+        "value": display.getROISize(roi_name),
         "unit": "px",
         "comment": "roi size",
     }
@@ -296,14 +280,16 @@ def fit_data(self):
         return
 
     # -- loop on roi list
-    if len(self.mainScreen.roi_list) == 0:
-        print("ERROR : no ROI selected !!")
+    if len(self.display.getROINames()) == 0:
+        print("ERROR : no ROI defined !!")
         return
 
     fit_collection = []
-    for roi in self.mainScreen.roi_list:
+    for roi_name in self.display.getROINames():
         # get roi data
-        Z, XY = _get_2D_roi_data(self, roi)
+        Z, XY = self.display.getROIData(roi_name)
+        if Z is None:
+            continue
         # fit the data
         fit = _fit_2D_data(self, Z, XY, data_object)
         if fit is None:
@@ -313,17 +299,16 @@ def fit_data(self):
             return
         # fit.plot_fit_result()  # TEMP
         # store for later
-        fit_collection.append((roi, fit))
+        fit_collection.append((roi_name, fit))
 
     # -- save fit
     # - prepare fit collection
     roi_collection = {}
-    for (roi, fit) in fit_collection:
+    for (roi_name, fit) in fit_collection:
         # prepare dictionnary with results for the current roi
-        roi_dic = _generate_roi_result_dic(roi, fit)
+        roi_dic = _generate_roi_result_dic(self.display, roi_name, fit)
         # save it to the global dic
-        n_roi = roi.number
-        roi_collection["roi%i" % n_roi] = roi_dic
+        roi_collection[roi_name] = roi_dic
 
     # - prepare fit dict
     fit_dic = _generate_fit_result_dic(self, roi_collection, fit, data_object)

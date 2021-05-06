@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-04 09:30:49
-Modified : 2021-05-04 15:32:39
+Modified : 2021-05-06 12:31:14
 
 Comments : developer functions, meant to test / debug the gui
 """
@@ -56,7 +56,6 @@ def open_image_and_fit(self):
     # -- set ROI and fit
     self.mainScreen.roi_list = []
     fitting.addROI(self)
-    roi = self.mainScreen.roi_list[0]
-    roi.setPos((82, 100), finish=True, update=True)
-    roi.setSize((164, 94), finish=True, update=True)
+    roi_names = self.display.getROINames()
+    self.display.updateROI(roi_names[0], pos=(82, 100), size=(164, 94))
     fitting.fit_data(self)

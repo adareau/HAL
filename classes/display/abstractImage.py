@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 12:08:34
+Modified : 2021-05-06 12:30:23
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -19,6 +19,7 @@ from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
 
 
 # %% FUNCTIONS
+
 
 def _roi_changed(self):
     # move self.label
@@ -109,23 +110,62 @@ class AbstractImageDisplay(AbstractDisplay):
         """returns list of current roi"""
         return list(self.roi_list.keys())
 
-    def getROIPos(self):
+    def getROIPos(self, roi_name="ROI"):
         """returns a given roi position"""
-        pass
+        if roi_name not in self.roi_list:
+            msg = "I'm afraid I can't do that : '%s' roi name not found."
+            warnings.warn(msg % roi_name)
+            return [0, 0]
+        return list(self.roi_list[roi_name].pos())
 
-    def getROISize(self):
+    def getROISize(self, roi_name="ROI"):
         """returns a given roi position"""
-        pass
+        if roi_name not in self.roi_list:
+            msg = "I'm afraid I can't do that : '%s' roi name not found."
+            warnings.warn(msg % roi_name)
+            return [0, 0]
+        return list(self.roi_list[roi_name].size())
 
-    def removeROI(self):
+    def removeROI(self, roi_name="ROI"):
         """remove given roi"""
         pass
 
+    def updateROI(self, roi_name="ROI", pos=None, size=None):
+        """updates a given ROI"""
+        if roi_name not in self.roi_list:
+            msg = "I'm afraid I can't do that : '%s' roi name not found."
+            warnings.warn(msg % roi_name)
+            return
+        roi = self.roi_list[roi_name]
+        if pos is not None:
+            roi.setPos(pos, finish=True, update=True)
+        if size is not None:
+            roi.setSize(size, finish=True, update=True)
+
     # -- DATA MANAGEMENT
 
-    def getROIData(self):
+    def getROIData(self, roi_name="ROI"):
         """returns data contained in a given ROI"""
-        pass
+        # check that roi name exists
+        if roi_name not in self.roi_list:
+            msg = "I'm afraid I can't do that : '%s' roi name not found."
+            warnings.warn(msg % roi_name)
+            return None, (None, None)
+
+        # get roi, image item and image data
+        roi = self.roi_list[roi_name]
+        data = self.current_data
+        image = self.current_image
+
+        # get the roi data
+        # use the convenient 'getArrayRegion' to retrieve selected image roi
+        Z, XY = roi.getArrayRegion(data, image, returnMappedCoords=True)
+
+        # demux X and Y from XY
+        X = XY[0, :, :]
+        Y = XY[1, :, :]
+
+        return Z, (X, Y)
 
     # -- COLORMAP
 
