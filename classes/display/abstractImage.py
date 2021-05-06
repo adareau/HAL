@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 12:30:23
+Modified : 2021-05-06 14:28:36
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -16,7 +16,7 @@ import pyqtgraph as pg
 # -- local
 from HAL.classes.display.abstract import AbstractDisplay
 from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
-
+from HAL.gui.misc import warn
 
 # %% FUNCTIONS
 
@@ -68,8 +68,8 @@ class AbstractImageDisplay(AbstractDisplay):
 
         # check that roi name is unique
         if roi_name in self.roi_list:
-            msg = "I'm afraid I can't do that : '%s' roi name is already used."
-            warnings.warn(msg % roi_name)
+            msg = "'%s' roi name is already used."
+            warn(msg % roi_name)
             return
 
         # create roi object
@@ -113,28 +113,35 @@ class AbstractImageDisplay(AbstractDisplay):
     def getROIPos(self, roi_name="ROI"):
         """returns a given roi position"""
         if roi_name not in self.roi_list:
-            msg = "I'm afraid I can't do that : '%s' roi name not found."
-            warnings.warn(msg % roi_name)
+            msg = "'%s' roi name not found."
+            warn(msg % roi_name)
             return [0, 0]
         return list(self.roi_list[roi_name].pos())
 
     def getROISize(self, roi_name="ROI"):
         """returns a given roi position"""
         if roi_name not in self.roi_list:
-            msg = "I'm afraid I can't do that : '%s' roi name not found."
-            warnings.warn(msg % roi_name)
+            msg = "'%s' roi name not found."
+            warn(msg % roi_name)
             return [0, 0]
         return list(self.roi_list[roi_name].size())
 
     def removeROI(self, roi_name="ROI"):
         """remove given roi"""
-        pass
+        if roi_name not in self.roi_list:
+            msg = "'%s' roi name not found."
+            warn(msg % roi_name)
+            return
+        roi = self.roi_list[roi_name]
+        self.image_plot.removeItem(roi.label)
+        self.image_plot.removeItem(roi)
+        self.roi_list.pop(roi_name)
 
     def updateROI(self, roi_name="ROI", pos=None, size=None):
         """updates a given ROI"""
         if roi_name not in self.roi_list:
-            msg = "I'm afraid I can't do that : '%s' roi name not found."
-            warnings.warn(msg % roi_name)
+            msg = "'%s' roi name not found."
+            warn(msg % roi_name)
             return
         roi = self.roi_list[roi_name]
         if pos is not None:
@@ -148,8 +155,8 @@ class AbstractImageDisplay(AbstractDisplay):
         """returns data contained in a given ROI"""
         # check that roi name exists
         if roi_name not in self.roi_list:
-            msg = "I'm afraid I can't do that : '%s' roi name not found."
-            warnings.warn(msg % roi_name)
+            msg = "'%s' roi name not found."
+            warn(msg % roi_name)
             return None, (None, None)
 
         # get roi, image item and image data

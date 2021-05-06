@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 13:36:32
+Modified : 2021-05-06 14:27:49
 
 Comments : Abstract classes for data display
 """
@@ -14,6 +14,7 @@ from HAL.classes.display.colormaps import IMPLEMENTED_COLORMAPS
 
 
 # %% CLASS DEFINITION
+
 
 class AbstractDisplay(object):
     """Abstract display object, to use as a model"""
@@ -65,7 +66,7 @@ class AbstractDisplay(object):
 
     def getROINames(self):
         """returns list of current roi"""
-        pass
+        return []
 
     def getROIPos(self):
         """returns a given roi position"""
@@ -78,6 +79,11 @@ class AbstractDisplay(object):
     def removeROI(self):
         """remove given roi"""
         pass
+
+    def clearROIs(self):
+        """clear all ROIs"""
+        for roi_name in self.getROINames():
+            self.removeROI(roi_name)
 
     # -- DATA MANAGEMENT
 

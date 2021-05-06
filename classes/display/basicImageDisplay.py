@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-06 13:38:31
+Modified : 2021-05-06 14:50:12
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -39,6 +39,8 @@ class BasicImageDisplay(AbstractImageDisplay):
         self.current_data  : current data for the displayed image
 
         """
+        # -- hidden
+        self._current_levels = (0, 1)
         # -- other attributes
         self.name = "Basic image display"
 
@@ -83,7 +85,7 @@ class BasicImageDisplay(AbstractImageDisplay):
         # update image
         self.current_image.updateImage(image=image, levels=levels)
         self.current_data = image
-
+        self._current_levels = levels
         # set colormap
         self.updateColormap(colormap)
 
@@ -92,7 +94,19 @@ class BasicImageDisplay(AbstractImageDisplay):
         pass
 
     def updateFit(
-        self, fit, selected_ROI=None,
+        self, fit, selected_ROI,
     ):
         """updates the fit display"""
-        pass
+
+        # -- get roi and fit data
+        # get roi data
+        Z, (X, Y) = self.getROIData(selected_ROI)
+        if Z is None:
+            return
+
+        # generate fit for roi
+        Zfit = fit.eval((X, Y))
+
+        # -- display
+        #TEMP
+        # self.current_image.updateImage(image=Zfit, levels=self._current_levels)

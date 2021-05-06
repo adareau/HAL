@@ -2,16 +2,19 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 13:37:37
+Modified : 2021-05-06 14:44:34
 
 Comments : Functions related to data visualization
 """
 
 # %% IMPORTS
-import numpy as np
 
+# -- global
+import numpy as np
 from PyQt5 import QtCore
 
+# -- local
+import HAL.gui.fitting as fitting
 
 # %% SETUP FUNCTIONS
 
@@ -100,3 +103,39 @@ def plotSelectedData(self):
         colormap=colormap_name,
         dataobject=data,
     )
+
+    # update fit
+    updateFitForSelectedData(self)
+
+
+def updateFitForSelectedData(self):
+    """
+    Load a saved fit for the selected data (if exist), and update
+    the display accordingly
+    """
+    # -- load saved fit
+    fit_collection = fitting.load_saved_fit(self)
+    if fit_collection is None:
+        return
+
+    # -- update / create rois
+    current_rois = self.display.getROINames()
+    for roi_name, roi_data in fit_collection.items():
+        # get pos and size
+        roi_pos = roi_data["pos"]["value"]
+        roi_size = roi_data["size"]["value"]
+        # create if does not exist
+        if roi_name not in current_rois:
+            fitting.addROI(self, roi_name=roi_name)
+        # update
+        self.display.updateROI(roi_name, pos=roi_pos, size=roi_size)
+
+    # -- update the fit
+    # FIXME : let the user choose the selected roi !!!
+    selected_roi = ""
+    # we take the first roi, if selected roi does not exist
+    if selected_roi not in fit_collection:
+        selected_roi = list(fit_collection.keys())[0]
+    # get selected fit
+    fit = fit_collection[selected_roi]['fit']
+    self.display.updateFit(fit, selected_roi)

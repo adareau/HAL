@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 13:35:13
+Modified : 2021-05-06 14:35:25
 
 Comments : Functions related to data fitting
 """
@@ -12,24 +12,14 @@ Comments : Functions related to data fitting
 # -- global
 import json
 import jsbeautifier as jsb
-import pyqtgraph as pg
-import numpy as np
-import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (
-    QInputDialog,
-    QAbstractItemView,
-    QStyle,
-    QListWidgetItem,
-    QMessageBox,
-)
 
 # -- local
 from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
+from HAL.classes.fit import implemented_fit_dic
 from HAL.classes.data.abstract import AbstractCameraPictureData
+from HAL.gui.misc import warn
 
 # %% TOOLS
 
@@ -54,7 +44,7 @@ def setupFitting(self):
 # %% ROI MANAGEMENT
 
 
-def addROI(self):
+def addROI(self, roi_name=None):
     """ adds a new roi to the current display"""
 
     # define roi style
@@ -64,9 +54,10 @@ def addROI(self):
     handle_hover_style = {"color": "#FFF73FFF", "width": 2}
 
     # define label style
-    n_roi = len(self.display.getROINames())
     label_color = "#3FFF53FF"
-    roi_name = "ROI %i" % n_roi
+    if roi_name is None:
+        n_roi = len(self.display.getROINames())
+        roi_name = "ROI %i" % n_roi
 
     # add roi
     self.display.addROI(
@@ -255,14 +246,76 @@ def saved_fit_exist(self, data_path=None):
 
     # if no path provided: use current data
     if data_path is None:
-        # TODO : migrate to a method in the display data class ?
-        data_object = self.mainScreen.current_data
+        data_object = self.display.getCurrentDataObject()
         data_path = Path(data_object.path)
 
     # generate saved fit path
     fit_file = _gen_saved_fit_path(self, data_path)
 
     return fit_file.is_file()
+
+
+def load_saved_fit(self, data_path=None):
+    """loads a saved fit"""
+
+    # -- load saved fit
+    # if no path provided: use current data
+    if data_path is None:
+        data_object = self.display.getCurrentDataObject()
+        data_path = Path(data_object.path)
+
+    # generate saved fit path
+    fit_file = _gen_saved_fit_path(self, data_path)
+
+    # if does not exist : return
+    if not fit_file.is_file():
+        return
+
+    # load
+    fit_json = json.loads(fit_file.read_text())
+
+    # -- analyze fit
+    # get fit info
+    if "__fit_info__" not in fit_json:
+        warn("no fit info found...")
+        return
+
+    fit_info = fit_json["__fit_info__"]
+    fit_name = fit_info["fit name"]
+    fit_version = fit_info["fit version"]
+
+    # check fit name
+    if fit_name not in implemented_fit_dic:
+        warn("saved fit '%s' is not implemented !" % fit_name)
+        return
+
+    # check fit version
+    fit_class = implemented_fit_dic[fit_name]
+    if fit_class()._version != fit_version:
+        msg = "saved fit version (%s) does not match " % fit_version
+        msg += "the current implemented version (%s) " % fit_class()._version
+        msg += "for the '%s' fit class" % fit_name
+        msg += "I will try to go on though..."
+        warn(msg)
+
+    # load
+    fit_collection = {}
+    for roi_name, roi_info in fit_json["collection"].items():
+        # get fit result
+        fit_res = roi_info["result"]
+        # generate a fit object
+        fit = fit_class()
+        fit.popt = fit_res["popt"]
+        fit.pcov = fit_res["pcov"]
+        fit.perr = fit_res["perr"]
+        # save
+        fit_collection[roi_name] = {
+            "pos": roi_info["pos"],
+            "size": roi_info["size"],
+            "fit": fit,
+        }
+
+    return fit_collection
 
 
 # == high level fit function
