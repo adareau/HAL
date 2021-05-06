@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 12:32:57
+Modified : 2021-05-06 13:35:13
 
 Comments : Functions related to data fitting
 """
@@ -273,8 +273,7 @@ def fit_data(self):
        fit the data, and save results"""
 
     # -- check current data object (for dimension)
-    # TODO : migrate to a method in the display data class ?
-    data_object = self.mainScreen.current_data
+    data_object = self.display.getCurrentDataObject()
     if data_object.dimension != 2:
         print("ERROR : fit only implemented for 2D data !")
         return

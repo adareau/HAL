@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 11:39:32
+Modified : 2021-05-06 13:37:37
 
 Comments : Functions related to data visualization
 """
@@ -14,6 +14,7 @@ from PyQt5 import QtCore
 
 
 # %% SETUP FUNCTIONS
+
 
 def setupDisplay(self):
     # -- setup data classes list selector
@@ -36,16 +37,6 @@ def setupDisplay(self):
     colormap_list = self.display.getColormaps()
     for cmap in colormap_list:
         self.colorMapComboBox.addItem(cmap)
-
-    # -- add some attributes to mainScreen
-    # (will be useful for easy access to some data)
-    # TODO : maybe we remove that in the future, and replace
-    #        it by methods / attributes linked to the data display
-    #        classes that will handle data visualization ?
-    self.mainScreen.roi_list = []
-    self.mainScreen.image_plot = None
-    self.mainScreen.current_data = None
-    self.mainScreen.current_image = None
 
 
 # %% DISPLAY FUNCTIONS
@@ -104,11 +95,8 @@ def plotSelectedData(self):
 
     # plot
     self.display.updatePlot(
-        image=data.data, levels=(scale_min, scale_max), colormap=colormap_name
+        image=data.data,
+        levels=(scale_min, scale_max),
+        colormap=colormap_name,
+        dataobject=data,
     )
-
-    # remove ROI
-    # FIXME: we should manage roi conservation when uploading a new image...
-    # maybe we should not clear the screen ?
-    # self.mainScreen.roi_list = []
-    self.mainScreen.current_data = data

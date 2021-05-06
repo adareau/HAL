@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 11:59:22
+Modified : 2021-05-06 13:36:32
 
 Comments : Abstract classes for data display
 """
@@ -24,6 +24,7 @@ class AbstractDisplay(object):
         self.screen = kwargs.get("screen", None)  # display widget
 
         # -- other attributes
+        self.current_data_object = None
         self.name = "AbstractDisplay"
         self.type = None  # 3D, 2D, meta...
 
@@ -83,6 +84,10 @@ class AbstractDisplay(object):
     def getROIData(self):
         """returns data contained in a given ROI"""
         pass
+
+    def getCurrentDataObject(self):
+        """returns current data"""
+        return self.current_data_object
 
     # -- MISC
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-06 12:12:36
+Modified : 2021-05-06 13:38:31
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -68,10 +68,13 @@ class BasicImageDisplay(AbstractImageDisplay):
         """clear all the data plot"""
         pass
 
-    def updatePlot(self, image=None, levels=(0, 1), colormap="Greiner"):
+    def updatePlot(
+        self, image=None, levels=(0, 1), colormap="Greiner", dataobject=None
+    ):
         """updates the data plot"""
         if image is None:
             return
+        self.current_data_object = dataobject
 
         # redefine limits
         self.image_plot.setLimits(
@@ -88,6 +91,8 @@ class BasicImageDisplay(AbstractImageDisplay):
         """resets fit display"""
         pass
 
-    def updateFit(self):
+    def updateFit(
+        self, fit, selected_ROI=None,
+    ):
         """updates the fit display"""
         pass
