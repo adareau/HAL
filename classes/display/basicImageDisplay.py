@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-06 14:50:12
+Modified : 2021-05-06 14:54:14
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -94,7 +94,7 @@ class BasicImageDisplay(AbstractImageDisplay):
         pass
 
     def updateFit(
-        self, fit, selected_ROI,
+        self, fit_dic, selected_ROI,
     ):
         """updates the fit display"""
 
@@ -105,8 +105,9 @@ class BasicImageDisplay(AbstractImageDisplay):
             return
 
         # generate fit for roi
+        fit = fit_dic[selected_ROI]
         Zfit = fit.eval((X, Y))
 
         # -- display
         #TEMP
-        # self.current_image.updateImage(image=Zfit, levels=self._current_levels)
+        self.current_image.updateImage(image=Zfit, levels=self._current_levels)

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 14:44:34
+Modified : 2021-05-06 14:53:47
 
 Comments : Functions related to data visualization
 """
@@ -137,5 +137,7 @@ def updateFitForSelectedData(self):
     if selected_roi not in fit_collection:
         selected_roi = list(fit_collection.keys())[0]
     # get selected fit
-    fit = fit_collection[selected_roi]['fit']
-    self.display.updateFit(fit, selected_roi)
+    fit_dic = {
+        roi_name: res["fit"] for roi_name, res in fit_collection.items()
+    }
+    self.display.updateFit(fit_dic, selected_roi)
