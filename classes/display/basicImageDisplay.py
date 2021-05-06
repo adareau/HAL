@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-06 11:36:48
+Modified : 2021-05-06 12:12:36
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -11,32 +11,36 @@ Comments : a basic (2D) image display. Can be used as an example when building
 # %% IMPORTS
 
 # -- global
-import numpy as np
 import pyqtgraph as pg
 
 # -- local
-from HAL.classes.display.abstract import AbstractDisplay
-from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
+from HAL.classes.display.abstractImage import AbstractImageDisplay
 
 
 # %% CLASS DEFINITION
 
 
-class BasicImageDisplay(AbstractDisplay):
-    """a basic (2D) image display"""
+class BasicImageDisplay(AbstractImageDisplay):
+    """a basic (2D) image display
+       NB : inherits a LOT of methods from AbstractImageDisplay().
+            Have a look at this class if you do not find a method here !
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        """ Initialization.
 
-        # -- attributes
-        self.roi_list = []
-        self.image_plot = None
-        self.current_image = None
-        self.current_data = None
+        Note that the AbstractImageDisplay() class initializes some methods,
+        related for instance to ROI management, and defines some attributes
+        that should be "populated" in the setup() method, such as :
 
+        self.image_plot    : plotItem containing the main image
+        self.current_image : imageItem of the main image
+        self.current_data  : current data for the displayed image
+
+        """
         # -- other attributes
         self.name = "Basic image display"
-        self.type = "2D"
 
     # -- DISPLAY MANAGEMENT
 
@@ -80,43 +84,10 @@ class BasicImageDisplay(AbstractDisplay):
         # set colormap
         self.updateColormap(colormap)
 
-    def updateColormap(self, colormap="Greiner"):
-        # set colormap
-        lut = get_pyqtgraph_lookuptable(colormap)
-        self.current_image.setLookupTable(lut)
-
     def clearFit(self):
         """resets fit display"""
         pass
 
     def updateFit(self):
         """updates the fit display"""
-        pass
-
-    # -- ROI MANAGEMENT
-
-    def addRoi(self):
-        """adds an roi"""
-        pass
-
-    def getRoiNames(self):
-        """returns list of current roi"""
-        pass
-
-    def getRoiPos(self):
-        """returns a given roi position"""
-        pass
-
-    def getRoiSize(self):
-        """returns a given roi position"""
-        pass
-
-    def removeRoi(self):
-        """remove given roi"""
-        pass
-
-    # -- DATA MANAGEMENT
-
-    def getRoiData(self):
-        """returns data contained in a given ROI"""
         pass

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-05 14:27:42
+Modified : 2021-05-06 12:01:37
 
 Comments : Functions related to data fitting
 """
@@ -55,14 +55,7 @@ def setupFitting(self):
 
 
 def addROI(self):
-    """
-    FIXME: this is a test with PyQtGraph ROIs, we will have the think the ROI
-    management when working on the fitting classes !
-    """
-    # -- add new ROI
-    if self.mainScreen.image_plot is None:
-        # no 'image plot' initialized, return !
-        return
+    """ adds a new roi to the current display"""
 
     # define roi style
     roi_style = {"color": "#3FFF53FF", "width": 2}
@@ -70,46 +63,20 @@ def addROI(self):
     handle_style = {"color": "#3FFF53FF", "width": 2}
     handle_hover_style = {"color": "#FFF73FFF", "width": 2}
 
-    # create roi object
-    new_roi = pg.RectROI(
-        pos=[0, 0],
-        size=[50, 50],
-        rotatable=False,
-        pen=roi_style,
-        hoverPen=roi_hover_style,
-        handlePen=handle_style,
-        handleHoverPen=handle_hover_style,
+    # define label style
+    n_roi = len(self.display.getROINames())
+    label_color = "#3FFF53FF"
+    roi_name = "ROI %i" % n_roi
+
+    # add roi
+    self.display.addROI(
+        roi_name=roi_name,
+        roi_style=roi_style,
+        roi_hover_style=roi_hover_style,
+        handle_style=handle_style,
+        handle_hover_style=handle_hover_style,
+        label_color=label_color,
     )
-
-    # add a label
-    n_roi = len(self.mainScreen.roi_list)
-    roi_label = pg.TextItem("ROI %i" % n_roi, color="#3FFF53FF")
-    roi_label.setPos(0, 0)
-    new_roi.label = roi_label  # link to roi !!
-    new_roi.number = n_roi
-
-    # TODO : make it such that the label follows the ROI !
-    # using sigRegionChanged
-    new_roi.sigRegionChanged.connect(_roi_changed)
-
-    # add scale handles
-    for pos in ([1, 0.5], [0, 0.5], [0.5, 0], [0.5, 1]):
-        new_roi.addScaleHandle(pos=pos, center=[0.5, 0.5])
-    for pos, center in zip(
-        ([0, 0], [1, 0], [1, 1], [0, 1]), ([1, 1], [0, 1], [0, 0], [1, 0])
-    ):
-        new_roi.addScaleHandle(pos=pos, center=center)
-
-    # add to current image plot
-    self.mainScreen.image_plot.addItem(new_roi)
-    self.mainScreen.image_plot.addItem(roi_label)
-    self.mainScreen.roi_list.append(new_roi)
-
-
-def _roi_changed(self):
-    # TODO : move self.label
-    position = self.pos()
-    self.label.setPos(position[0], position[1])
 
 
 # %% FIT
@@ -212,7 +179,7 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     fit_info["fit formula"] = fit.formula_help
     fit_info["fit parameters"] = fit.parameters_help
     fit_info["fit version"] = fit._version
-    fit_info["generated on"] = datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    fit_info["generated on"] = datetime.now().strftime("%y-%m-%d %H:%M:%S")
 
     # specific to 2D fits
     if isinstance(fit, Abstract2DFit):

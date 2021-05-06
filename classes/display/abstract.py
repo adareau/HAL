@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 11:35:38
+Modified : 2021-05-06 11:59:22
 
 Comments : Abstract classes for data display
 """
@@ -58,29 +58,29 @@ class AbstractDisplay(object):
 
     # -- ROI MANAGEMENT
 
-    def addRoi(self):
+    def addROI(self):
         """adds an roi"""
         pass
 
-    def getRoiNames(self):
+    def getROINames(self):
         """returns list of current roi"""
         pass
 
-    def getRoiPos(self):
+    def getROIPos(self):
         """returns a given roi position"""
         pass
 
-    def getRoiSize(self):
+    def getROISize(self):
         """returns a given roi position"""
         pass
 
-    def removeRoi(self):
+    def removeROI(self):
         """remove given roi"""
         pass
 
     # -- DATA MANAGEMENT
 
-    def getRoiData(self):
+    def getROIData(self):
         """returns data contained in a given ROI"""
         pass
 
