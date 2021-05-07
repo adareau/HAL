@@ -152,6 +152,9 @@ class Ui_mainWindow(object):
         self.fitTypeComboBox = QtWidgets.QComboBox(self.settingsFitTab)
         self.fitTypeComboBox.setGeometry(QtCore.QRect(98, 80, 121, 23))
         self.fitTypeComboBox.setObjectName("fitTypeComboBox")
+        self.backgroundCheckBox = QtWidgets.QCheckBox(self.settingsFitTab)
+        self.backgroundCheckBox.setGeometry(QtCore.QRect(130, 120, 101, 21))
+        self.backgroundCheckBox.setObjectName("backgroundCheckBox")
         self.settingsTabWidget.addTab(self.settingsFitTab, "")
         self.horizontalLayout_3.addWidget(self.settingsTabWidget)
         self.browserColumn.addLayout(self.horizontalLayout_3)
@@ -348,6 +351,8 @@ class Ui_mainWindow(object):
         self.actionv1s.setObjectName("actionv1s")
         self.actionl = QtWidgets.QAction(mainWindow)
         self.actionl.setObjectName("actionl")
+        self.actionlol = QtWidgets.QAction(mainWindow)
+        self.actionlol.setObjectName("actionlol")
         self.menubar.addAction(self.menuDataDisplay.menuAction())
 
         self.retranslateUi(mainWindow)
@@ -368,6 +373,7 @@ class Ui_mainWindow(object):
         self.fitButton.setText(_translate("mainWindow", "FIT"))
         self.label_10.setText(_translate("mainWindow", "fit type"))
         self.addRoiButton.setText(_translate("mainWindow", "add ROI"))
+        self.backgroundCheckBox.setText(_translate("mainWindow", "background"))
         self.settingsTabWidget.setTabText(self.settingsTabWidget.indexOf(self.settingsFitTab), _translate("mainWindow", "FIT"))
         self.runBrowserBox.setTitle(_translate("mainWindow", "Run Browser"))
         self.label_4.setText(_translate("mainWindow", "runs"))
@@ -389,4 +395,5 @@ class Ui_mainWindow(object):
         self.menuDataDisplay.setTitle(_translate("mainWindow", "Data Display"))
         self.actionv1s.setText(_translate("mainWindow", "v1s"))
         self.actionl.setText(_translate("mainWindow", "l"))
+        self.actionlol.setText(_translate("mainWindow", "lol"))
 from pyqtgraph import GraphicsLayoutWidget

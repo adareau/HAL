@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 14:55:34
+Modified : 2021-05-07 16:21:46
 
 Comments : Functions related to data fitting
 """
@@ -73,6 +73,36 @@ def addROI(self, roi_name=None):
     )
 
 
+# %% BACKGROUND MANAGEMENT
+
+
+def addBackground(self):
+    """ add a background"""
+
+    # define roi style
+    background_style = {"color": "#FF3F3FFF", "width": 2}
+    background_hover_style = {"color": "#FFF73FFF", "width": 2}
+    handle_style = {"color": "#FF3F3FFF", "width": 2}
+    handle_hover_style = {"color": "#FFF73FFF", "width": 2}
+
+    # define label style
+    label_color = "#FF3F3FFF"
+
+    # add roi
+    self.display.addBackground(
+        background_style=background_style,
+        background_hover_style=background_hover_style,
+        handle_style=handle_style,
+        handle_hover_style=handle_hover_style,
+        label_color=label_color,
+    )
+
+
+def removeBackground(self):
+    """removes the background"""
+    self.display.removeBackground()
+
+
 # %% FIT
 
 # == low level functions
@@ -83,7 +113,7 @@ def _fit_2D_data(self, Z, XY, data_object):
     # -- get selected fit
     selected_fit = self.fitTypeComboBox.currentText()
     if selected_fit not in self.fit_classes:
-        print("ERROR : fit '%s' is not implemented ?!" % selected_fit)
+        logger.error("fit '%s' is not implemented ?!" % selected_fit)
         return
     fit_class = self.fit_classes[selected_fit]
     # -- fit
@@ -176,6 +206,25 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
             "unit": fit.converted_count_unit,
             "comment": "converts image counts into physically meaning quantity (e.g. atom number)",
         }
+
+    # get background
+    background = getattr(self.display, "background", None)
+    if background is not None:
+        logger.debug("saving background")
+        back = {}
+        back["pos"] = {
+            "value": self.display.getBackgroundPos(),
+            "unit": "px",
+            "comment": "background position (lower left corner)",
+        }
+        back["size"] = {
+            "value": self.display.getBackgroundSize(),
+            "unit": "px",
+            "comment": "background size",
+        }
+        fit_info["background"] = back
+    else:
+        logger.debug("NOT saving background")
 
     # store
     fit_dic["__fit_info__"] = fit_info
@@ -272,7 +321,7 @@ def load_saved_fit(self, data_path=None):
 
     # if does not exist : return
     if not fit_file.is_file():
-        return
+        return None, None
 
     # load
     fit_json = json.loads(fit_file.read_text())
@@ -281,7 +330,7 @@ def load_saved_fit(self, data_path=None):
     # get fit info
     if "__fit_info__" not in fit_json:
         logger.warning("no fit info found...")
-        return
+        return None, None
 
     fit_info = fit_json["__fit_info__"]
     fit_name = fit_info["fit name"]
@@ -290,7 +339,7 @@ def load_saved_fit(self, data_path=None):
     # check fit name
     if fit_name not in implemented_fit_dic:
         logger.warning("saved fit '%s' is not implemented !" % fit_name)
-        return
+        return None, None
 
     # check fit version
     fit_class = implemented_fit_dic[fit_name]
@@ -318,7 +367,7 @@ def load_saved_fit(self, data_path=None):
             "fit": fit,
         }
 
-    return fit_collection
+    return fit_collection, fit_info
 
 
 # == high level fit function
@@ -330,13 +379,17 @@ def fit_data(self):
 
     # -- check current data object (for dimension)
     data_object = self.display.getCurrentDataObject()
+    if data_object is None:
+        logger.warning("select data first...")
+        return
+
     if data_object.dimension != 2:
-        print("ERROR : fit only implemented for 2D data !")
+        logger.warning("fit only implemented for 2D data !")
         return
 
     # -- loop on roi list
     if len(self.display.getROINames()) == 0:
-        print("ERROR : no ROI defined !!")
+        logger.warning("ERROR : no ROI defined !!")
         return
 
     fit_collection = []

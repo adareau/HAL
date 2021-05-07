@@ -303,6 +303,19 @@
              </rect>
             </property>
            </widget>
+           <widget class="QCheckBox" name="backgroundCheckBox">
+            <property name="geometry">
+             <rect>
+              <x>130</x>
+              <y>120</y>
+              <width>101</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>background</string>
+            </property>
+           </widget>
           </widget>
          </widget>
         </item>

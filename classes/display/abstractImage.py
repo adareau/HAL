@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 15:07:21
+Modified : 2021-05-07 16:05:54
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -40,10 +40,12 @@ class AbstractImageDisplay(AbstractDisplay):
 
         # -- specific attributes
         self.roi_list = {}
+        self.background = None
         self.image_plot = None
         self.current_image = None
         self.current_data = None
         self._current_colormap = "Greiner"
+        self._selected_ROI = None
 
         # -- other attributes
         self.name = "AbstractImageDisplay"
@@ -125,12 +127,12 @@ class AbstractImageDisplay(AbstractDisplay):
     def getROIPos(self, roi_name="ROI"):
         """returns a given roi position"""
         roi = self.getROI(roi_name)
-        return [0, 0] if roi is None else roi.pos()
+        return [0, 0] if roi is None else list(roi.pos())
 
     def getROISize(self, roi_name="ROI"):
         """returns a given roi position"""
         roi = self.getROI(roi_name)
-        return [0, 0] if roi is None else roi.size()
+        return [0, 0] if roi is None else list(roi.size())
 
     def removeROI(self, roi_name="ROI"):
         """remove given roi"""
@@ -174,6 +176,98 @@ class AbstractImageDisplay(AbstractDisplay):
         Y = XY[1, :, :]
 
         return Z, (X, Y)
+
+    # -- BACKGROUND MANAGEMENT
+
+    def addBackground(
+        self,
+        background_style=None,
+        background_hover_style=None,
+        handle_style=None,
+        handle_hover_style=None,
+        label_color="#000000FF",
+    ):
+        """adds a background"""
+        # check if background exists
+        if self.background is not None:
+            logger.debug("background already added : skip")
+            return
+
+        # check that plot is initialized
+        if self.image_plot is None:
+            logger.debug("no image defined : do not add background")
+            return
+
+        # create roi object
+        background = pg.RectROI(
+            pos=[0, 0],
+            size=[30, 30],
+            rotatable=False,
+            pen=background_style,
+            hoverPen=background_hover_style,
+            handlePen=handle_style,
+            handleHoverPen=handle_hover_style,
+        )
+
+        # add scale handles
+        for pos in ([1, 0.5], [0, 0.5], [0.5, 0], [0.5, 1]):
+            background.addScaleHandle(pos=pos, center=[0.5, 0.5])
+        for pos, center in zip(
+            ([0, 0], [1, 0], [1, 1], [0, 1]), ([1, 1], [0, 1], [0, 0], [1, 0])
+        ):
+            background.addScaleHandle(pos=pos, center=center)
+
+        # add a label
+        bck_label = pg.TextItem("Background", color=label_color)
+        bck_label.setPos(0, 0)
+        background.label = bck_label  # link to roi !!
+        background.name = "Background"
+
+        # make it such that the label follows the ROI !
+        # using sigRegionChanged
+        background.sigRegionChanged.connect(_roi_changed)
+        # when finished, call self.BackgroundChangedFinished
+        background.sigRegionChangeFinished.connect(
+            self.BackgroundChangedFinished
+        )
+
+        # add to current plot
+        self.image_plot.addItem(background)
+        self.image_plot.addItem(bck_label)
+        self.background = background
+
+    def removeBackground(self):
+        """remove background"""
+        if None not in (self.background, self.image_plot):
+            self.image_plot.removeItem(self.background.label)
+            self.image_plot.removeItem(self.background)
+            self.background = None
+
+    def updateBackground(self, pos=None, size=None):
+        """updates background"""
+        background = self.background
+        if background is None:
+            return
+        if pos is not None:
+            background.setPos(pos, finish=True, update=True)
+        if size is not None:
+            background.setSize(size, finish=True, update=True)
+
+    def getBackgroundPos(self):
+        """returns the background position"""
+        background = self.background
+        return [0, 0] if background is None else list(background.pos())
+
+    def getBackgroundSize(self):
+        """returns the background position"""
+        background = self.background
+        return [0, 0] if background is None else list(background.size())
+
+    def BackgroundChangedFinished(self):
+        # SHOULD BE IMPLEMENTED IN SPECIFIC CLASSES
+        # TRIGGERED WHEN THE BACKGROUND IS CHANGED
+        logger.debug("background changed !")
+        pass
 
     # -- COLORMAP
 

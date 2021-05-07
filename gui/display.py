@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 11:56:35
+Modified : 2021-05-07 16:30:21
 
 Comments : Functions related to data visualization
 """
@@ -10,6 +10,7 @@ Comments : Functions related to data visualization
 # %% IMPORTS
 
 # -- global
+import logging
 import numpy as np
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
@@ -17,6 +18,10 @@ from PyQt5.QtWidgets import QAction, QActionGroup
 
 # -- local
 import HAL.gui.fitting as fitting
+
+# -- logger
+logger = logging.getLogger(__name__)
+
 
 # %% SETUP FUNCTIONS
 
@@ -115,7 +120,7 @@ def updateColormap(self):
     self.display.updateColormap(colormap_name)
 
 
-def plotSelectedData(self):
+def plotSelectedData(self, update_fit=True):
     """
     loads the selected data, and plot it
     """
@@ -168,11 +173,12 @@ def plotSelectedData(self):
         levels=(scale_min, scale_max),
         colormap=colormap_name,
         dataobject=data,
-        selected_ROI=selected_roi
+        selected_ROI=selected_roi,
     )
 
     # update fit
-    updateFitForSelectedData(self)
+    if update_fit:
+        updateFitForSelectedData(self)
 
 
 def updateFitForSelectedData(self):
@@ -183,7 +189,7 @@ def updateFitForSelectedData(self):
     # -- clear current fit
     self.display.clearFit()
     # -- load saved fit
-    fit_collection = fitting.load_saved_fit(self)
+    fit_collection, fit_info = fitting.load_saved_fit(self)
     if fit_collection is None:
         return
 
@@ -198,6 +204,17 @@ def updateFitForSelectedData(self):
             fitting.addROI(self, roi_name=roi_name)
         # update
         self.display.updateROI(roi_name, pos=roi_pos, size=roi_size)
+
+    # -- update / create background
+    if "background" in list(fit_info.keys()):
+        self.backgroundCheckBox.setChecked(True)
+        fitting.addBackground(self)
+        pos = fit_info["background"]["pos"]["value"]
+        size = fit_info["background"]["size"]["value"]
+        self.display.updateBackground(pos=pos, size=size)
+    else:
+        self.backgroundCheckBox.setChecked(False)
+        fitting.removeBackground(self)
 
     # -- update the fit
     # FIXME : let the user choose the selected roi !!!

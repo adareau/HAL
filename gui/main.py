@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-07 14:52:23
+Modified : 2021-05-07 16:32:49
 
 Comments :
 """
@@ -56,9 +56,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # setup format
         fmt = "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s"
         # config
-        logging.basicConfig(
-            format=fmt, datefmt="%H:%M:%S", level=log_level
-        )
+        logging.basicConfig(format=fmt, datefmt="%H:%M:%S", level=log_level)
         # define logger
         self.logger = logging.getLogger(__name__)
         # print first log
@@ -158,10 +156,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         )
         # colormap scale min
         self.scaleMinEdit.editingFinished.connect(self._scaleMinEditChanged)
-
         # colormap scale max
         self.scaleMaxEdit.editingFinished.connect(self._scaleMaxEditChanged)
-
+        # autoscale
+        self.autoScaleCheckBox.stateChanged.connect(
+            self._autoScaleCheckBoxChanged
+        )
         # display type selector
         self.displaySelectionGroup.triggered.connect(
             self._displaySelectionChanged
@@ -188,9 +188,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.quickPlotButton.clicked.connect(self._quickPlotButtonClicked)
 
         # -- Fitting --
+        # add ROI
         self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
+        # fit button(s)
         self.fitButton.clicked.connect(self._fitButtonClicked)
         self.fitBrowserButton.clicked.connect(self._fitButtonClicked)
+        # background check box
+        self.backgroundCheckBox.stateChanged.connect(
+            self._backgroundCheckBoxChanged
+        )
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
@@ -246,16 +252,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         new_max = self.scaleMaxEdit.text()
         if not new_max.isnumeric():
             self.scaleMaxEdit.setText("65535")
-        display.plotSelectedData(self)
+        display.plotSelectedData(self, update_fit=False)
 
     def _scaleMinEditChanged(self):
         new_min = self.scaleMinEdit.text()
         if not new_min.isnumeric():
             self.scaleMinEdit.setText("0")
-        display.plotSelectedData(self)
+        display.plotSelectedData(self, update_fit=False)
 
     def _displaySelectionChanged(self, action):
         display.displaySelectionChanged(self, action)
+
+    def _autoScaleCheckBoxChanged(self):
+        display.plotSelectedData(self, update_fit=False)
 
     # -- DATA EXPLORER
 
@@ -289,6 +298,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
+
+    def _backgroundCheckBoxChanged(self):
+        if self.backgroundCheckBox.isChecked():
+            fitting.addBackground(self)
+        else:
+            fitting.removeBackground(self)
+        display.plotSelectedData(self, update_fit=False)
 
     # -- DEBUG
 

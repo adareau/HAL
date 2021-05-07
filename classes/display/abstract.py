@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 14:27:49
+Modified : 2021-05-07 15:09:28
 
 Comments : Abstract classes for data display
 """
@@ -84,6 +84,16 @@ class AbstractDisplay(object):
         """clear all ROIs"""
         for roi_name in self.getROINames():
             self.removeROI(roi_name)
+
+    # -- BACKGROUND MANAGEMENT
+
+    def addBackground(self):
+        """add a background"""
+        pass
+
+    def removeBackground(self):
+        """remove background"""
+        pass
 
     # -- DATA MANAGEMENT
 
