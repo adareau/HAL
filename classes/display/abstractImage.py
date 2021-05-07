@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 14:56:46
+Modified : 2021-05-07 15:07:21
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -109,44 +109,43 @@ class AbstractImageDisplay(AbstractDisplay):
         self.image_plot.addItem(roi_label)
         self.roi_list[roi_name] = new_roi
 
+    def getROI(self, roi_name="ROI"):
+        """returns a given roi"""
+        if roi_name not in self.roi_list:
+            msg = "'%s' roi name not found."
+            logger.warning(logger.warning(msg % roi_name))
+            return None
+        else:
+            return self.roi_list[roi_name]
+
     def getROINames(self):
         """returns list of current roi"""
         return list(self.roi_list.keys())
 
     def getROIPos(self, roi_name="ROI"):
         """returns a given roi position"""
-        if roi_name not in self.roi_list:
-            msg = "'%s' roi name not found."
-            logger.warning(msg % roi_name)
-            return [0, 0]
-        return list(self.roi_list[roi_name].pos())
+        roi = self.getROI(roi_name)
+        return [0, 0] if roi is None else roi.pos()
 
     def getROISize(self, roi_name="ROI"):
         """returns a given roi position"""
-        if roi_name not in self.roi_list:
-            msg = "'%s' roi name not found."
-            logger.warning(msg % roi_name)
-            return [0, 0]
-        return list(self.roi_list[roi_name].size())
+        roi = self.getROI(roi_name)
+        return [0, 0] if roi is None else roi.size()
 
     def removeROI(self, roi_name="ROI"):
         """remove given roi"""
-        if roi_name not in self.roi_list:
-            msg = "'%s' roi name not found."
-            logger.warning(msg % roi_name)
+        roi = self.getROI(roi_name)
+        if roi is None:
             return
-        roi = self.roi_list[roi_name]
         self.image_plot.removeItem(roi.label)
         self.image_plot.removeItem(roi)
         self.roi_list.pop(roi_name)
 
     def updateROI(self, roi_name="ROI", pos=None, size=None):
         """updates a given ROI"""
-        if roi_name not in self.roi_list:
-            msg = "'%s' roi name not found."
-            logger.warning(msg % roi_name)
+        roi = self.getROI(roi_name)
+        if roi is None:
             return
-        roi = self.roi_list[roi_name]
         if pos is not None:
             roi.setPos(pos, finish=True, update=True)
         if size is not None:
@@ -157,9 +156,8 @@ class AbstractImageDisplay(AbstractDisplay):
     def getROIData(self, roi_name="ROI"):
         """returns data contained in a given ROI"""
         # check that roi name exists
-        if roi_name not in self.roi_list:
-            msg = "'%s' roi name not found."
-            logger.warning(msg % roi_name)
+        roi = self.getROI(roi_name)
+        if roi is None:
             return None, (None, None)
 
         # get roi, image item and image data
