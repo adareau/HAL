@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-07 13:04:48
+Modified : 2021-05-07 14:09:30
 
 Comments : Abstract classes for data fitting
 """
@@ -309,8 +309,8 @@ class Abstract2DBellShaped(Abstract2DFit):
         super().__init__(**kwargs)
         self.name = "Abstract2DBellShaped"
 
-    def do_guess(self):
-        """guess fit parameters from preliminary data analysis. this is done
+    def guess_center_size_ampl_offset(self):
+        """guess some parameters from preliminary data analysis. this is done
            by fitting the integrated data along the two axes using a Gaussian
            shape"""
 
@@ -381,9 +381,16 @@ class Abstract2DBellShaped(Abstract2DFit):
         zr = Z.ravel()
         imax = np.argmin((cx - xr) ** 2 + (cy - yr) ** 2)
         amplitude = zr[imax]
-        # guess
-        p0 = [offset, amplitude, sx, sy, cx, cy]
-        self.guess = p0
+        # return
+        res = {
+            "offset": offset,
+            "amplitude": amplitude,
+            "sx": sx,
+            "sy": sy,
+            "cx": cx,
+            "cy": cy,
+        }
+        return res
 
 
 # %% TESTS

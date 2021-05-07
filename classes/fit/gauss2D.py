@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-05 15:16:46
+Modified : 2021-05-07 14:11:49
 
 Comments : implements a 2D Gauss fit
 """
@@ -52,6 +52,26 @@ class Gauss2DFit(Abstract2DBellShaped):
 
     def _fitfunc(self, x, *p):
         return Gauss2D(x, *p)
+
+    def do_guess(self):
+        """guess fit parameters. use the guess_center_size_ampl_offset()
+           method defined in the Abstract2DBellShaped class"""
+
+        # guess amplitude / offset / center / size
+        res = self.guess_center_size_ampl_offset()
+
+        # adapt to the current fit function
+        p0 = [
+            res["offset"],
+            res["amplitude"],
+            res["sx"],
+            res["sy"],
+            res["cx"],
+            res["cy"],
+        ]
+
+        # save guess
+        self.guess = p0
 
     def compute_values(self):
         """compute some physical values from the fit optimal parameters"""
