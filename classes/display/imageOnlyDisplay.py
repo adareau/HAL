@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 11:52:23
+Modified : 2021-05-07 16:40:47
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -12,6 +12,7 @@ Comments : a basic (2D) image display. Can be used as an example when building
 
 # -- global
 import pyqtgraph as pg
+import numpy as np
 
 # -- local
 from HAL.classes.display.abstractImage import AbstractImageDisplay
@@ -41,6 +42,7 @@ class ImageOnlyDisplay(AbstractImageDisplay):
         """
         # -- hidden
         self._current_levels = (0, 1)
+        self._data_in = None
         # -- other attributes
         self.name = "Image only"
 
@@ -88,12 +90,44 @@ class ImageOnlyDisplay(AbstractImageDisplay):
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
+
+        # get background
+        if self.background is not None:
+            background, _ = self.background.getArrayRegion(
+                image, self.current_image, returnMappedCoords=True
+            )
+            background_value = np.mean(background)
+        else:
+            background_value = 0
+
         # update image
-        self.current_image.updateImage(image=image, levels=levels)
-        self.current_data = image
+        self.current_image.updateImage(
+            image=image - background_value, levels=levels
+        )
+        self.current_data = image - background_value
+        self._data_in = image
         self._current_levels = levels
         # set colormap
         self.updateColormap(colormap)
+
+    def BackgroundChangedFinished(self):
+        """triggered when the background area was moved"""
+        if self._data_in is None:
+            return
+        # get current values / data
+        image = self._data_in
+        levels = self._current_levels
+        colormap = self._current_colormap
+        selected_ROI = self._selected_ROI
+        dataobject = self.current_data_object
+        # update plot
+        self.updatePlot(
+            image=image,
+            levels=levels,
+            colormap=colormap,
+            dataobject=dataobject,
+            selected_ROI=selected_ROI,
+        )
 
     def clearFit(self):
         """resets fit display"""
