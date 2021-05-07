@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-04 09:30:49
-Modified : 2021-05-06 12:31:14
+Modified : 2021-05-07 14:58:12
 
 Comments : developer functions, meant to test / debug the gui
 """
@@ -10,6 +10,7 @@ Comments : developer functions, meant to test / debug the gui
 # %% IMPORTS
 
 # -- GLOBAL
+import logging
 from datetime import datetime
 from PyQt5.QtCore import Qt
 
@@ -18,13 +19,16 @@ import HAL.gui.filebrowser as filebrowser
 import HAL.gui.dataexplorer as dataexplorer
 import HAL.gui.fitting as fitting
 
+# -- logger
+logger = logging.getLogger(__name__)
+
 # %% FUNCTIONS
 
 
 def open_image(self):
     """directly selects a given year/month/day in the filebrowser, and then
     a given image"""
-    print(">> TESTING : open_image")
+    logger.debug('open_image()')
 
     # -- image selection
     year = 2020
@@ -48,7 +52,7 @@ def open_image(self):
 def open_image_and_fit(self):
     """directly selects a given year/month/day in the filebrowser, and then
     a given image"""
-    print(">> TESTING : open_image_and_fit")
+    logger.debug('open_image_and_fit()')
 
     # -- open image
     open_image(self)

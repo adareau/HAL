@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 12:05:06
+Modified : 2021-05-07 14:56:46
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -10,13 +10,15 @@ Comments : Abstract classes for data display, dedicated to image display !
 # %% IMPORTS
 
 # -- global
-import warnings
+import logging
 import pyqtgraph as pg
 
 # -- local
 from HAL.classes.display.abstract import AbstractDisplay
 from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
-from HAL.gui.misc import warn
+
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% FUNCTIONS
 
@@ -70,7 +72,7 @@ class AbstractImageDisplay(AbstractDisplay):
         # check that roi name is unique
         if roi_name in self.roi_list:
             msg = "'%s' roi name is already used."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return
 
         # create roi object
@@ -115,7 +117,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """returns a given roi position"""
         if roi_name not in self.roi_list:
             msg = "'%s' roi name not found."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return [0, 0]
         return list(self.roi_list[roi_name].pos())
 
@@ -123,7 +125,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """returns a given roi position"""
         if roi_name not in self.roi_list:
             msg = "'%s' roi name not found."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return [0, 0]
         return list(self.roi_list[roi_name].size())
 
@@ -131,7 +133,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """remove given roi"""
         if roi_name not in self.roi_list:
             msg = "'%s' roi name not found."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return
         roi = self.roi_list[roi_name]
         self.image_plot.removeItem(roi.label)
@@ -142,7 +144,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """updates a given ROI"""
         if roi_name not in self.roi_list:
             msg = "'%s' roi name not found."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return
         roi = self.roi_list[roi_name]
         if pos is not None:
@@ -157,7 +159,7 @@ class AbstractImageDisplay(AbstractDisplay):
         # check that roi name exists
         if roi_name not in self.roi_list:
             msg = "'%s' roi name not found."
-            warn(msg % roi_name)
+            logger.warning(msg % roi_name)
             return None, (None, None)
 
         # get roi, image item and image data

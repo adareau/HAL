@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:10:40
-Modified : 2021-05-06 10:32:05
+Modified : 2021-05-07 14:59:58
 
 Comments : Variables and functions related to colormaps, used by the display
            classes
@@ -11,13 +11,16 @@ Comments : Variables and functions related to colormaps, used by the display
 # %% IMPORTS
 
 # -- global
-import warnings
+import logging
 import pyqtgraph as pg
 import numpy as np
 from matplotlib import cm
 
 # -- local
 from HAL.classes.display.colormaps.custom import colormap_dic
+
+# -- logger
+logger = logging.getLogger(__name__)
 
 
 # %% GLOBAL VARIABLES
@@ -78,7 +81,7 @@ def get_pyqtgraph_lookuptable(colormap_name):
         # if not implemented, we take the first colormap
         # and issue a warning
         msg = "'%s' colormap is not implement, use '%s' instead."
-        warnings.warn(msg % (colormap_name, IMPLEMENTED_COLORMAPS[0]))
+        logger.warning(msg % (colormap_name, IMPLEMENTED_COLORMAPS[0]))
         colormap_name = IMPLEMENTED_COLORMAPS[0]
 
     # -- generate the lookuptable

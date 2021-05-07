@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 14:35:25
+Modified : 2021-05-07 14:55:34
 
 Comments : Functions related to data fitting
 """
@@ -10,6 +10,7 @@ Comments : Functions related to data fitting
 # %% IMPORTS
 
 # -- global
+import logging
 import json
 import jsbeautifier as jsb
 from datetime import datetime
@@ -19,7 +20,9 @@ from pathlib import Path
 from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
 from HAL.classes.fit import implemented_fit_dic
 from HAL.classes.data.abstract import AbstractCameraPictureData
-from HAL.gui.misc import warn
+
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% TOOLS
 
@@ -277,7 +280,7 @@ def load_saved_fit(self, data_path=None):
     # -- analyze fit
     # get fit info
     if "__fit_info__" not in fit_json:
-        warn("no fit info found...")
+        logger.warning("no fit info found...")
         return
 
     fit_info = fit_json["__fit_info__"]
@@ -286,7 +289,7 @@ def load_saved_fit(self, data_path=None):
 
     # check fit name
     if fit_name not in implemented_fit_dic:
-        warn("saved fit '%s' is not implemented !" % fit_name)
+        logger.warning("saved fit '%s' is not implemented !" % fit_name)
         return
 
     # check fit version
@@ -296,7 +299,7 @@ def load_saved_fit(self, data_path=None):
         msg += "the current implemented version (%s) " % fit_class()._version
         msg += "for the '%s' fit class" % fit_name
         msg += "I will try to go on though..."
-        warn(msg)
+        logger.warning(msg)
 
     # load
     fit_collection = {}

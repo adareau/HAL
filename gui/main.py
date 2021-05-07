@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-07 11:14:01
+Modified : 2021-05-07 14:52:23
 
 Comments :
 """
@@ -11,6 +11,8 @@ Comments :
 
 # -- global
 import sys
+import logging
+
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QShortcut
@@ -41,8 +43,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # == INITIALIZATIONS
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, debug=False):
         super(MainWindow, self).__init__(parent)
+
+        # -- SETUP LOGGER
+        # setup log level
+        self.__DEBUG__ = debug  # debug mode
+        if self.__DEBUG__:
+            log_level = logging.DEBUG
+        else:
+            log_level = logging.WARNING
+        # setup format
+        fmt = "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s"
+        # config
+        logging.basicConfig(
+            format=fmt, datefmt="%H:%M:%S", level=log_level
+        )
+        # define logger
+        self.logger = logging.getLogger(__name__)
+        # print first log
+        self.logger.debug("HAL started")
 
         # -- FIRST
         # load settings
@@ -301,6 +321,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 # %% RUN
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(debug=True)
     window.main()
     app.exec_()
