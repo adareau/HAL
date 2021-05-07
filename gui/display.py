@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-06 14:53:47
+Modified : 2021-05-07 11:24:16
 
 Comments : Functions related to data visualization
 """
@@ -12,6 +12,8 @@ Comments : Functions related to data visualization
 # -- global
 import numpy as np
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QAction, QActionGroup
 
 # -- local
 import HAL.gui.fitting as fitting
@@ -28,11 +30,47 @@ def setupDisplay(self):
     self.scaleMaxEdit.setText("65535")
 
     # -- initialize display
-    # TODO update the menu !
-    display_list = list(self.display_classes.keys())
 
-    # setup display
-    display_class = self.display_classes["Basic image display"]
+    # - display mode list
+    # get list of implemented display types
+    # we use a set {...} in order to get the values once
+    display_type_set = {disp().type for disp in self.display_classes.values()}
+    # update the menu "Data Display" accordingly
+    menu = self.menuDataDisplay
+    self.menu_data_display_cat_list = {}
+    for display_type in display_type_set:
+        new_menu = menu.addMenu(display_type)  # add menu
+        self.menu_data_display_cat_list[display_type] = new_menu  # store
+
+    # chose default display
+    default_display = "Basic image display"
+    if default_display not in self.display_classes:
+        default_display = list(self.display_classes)[0]
+
+    # add actions corresponding to available displays
+    # we make it such that only one action can be selected
+    # cf. https://stackoverflow.com/a/48447711
+    displaySelectionGroup = QActionGroup(menu)  # group for display selection
+    for display_name, display in self.display_classes.items():
+        display_type = display().type
+        displaySubmenu = self.menu_data_display_cat_list[display_type]
+        action = QAction(
+            display_name,
+            displaySubmenu,
+            checkable=True,
+            checked=(display_name == default_display),
+        )
+        # the display class is stored in the action data for later access
+        action.setData(display)
+        displaySubmenu.addAction(action)
+        displaySelectionGroup.addAction(action)
+
+    # set the group to be exclusive, and store it in self
+    displaySelectionGroup.setExclusive(True)
+    self.displaySelectionGroup = displaySelectionGroup
+
+    # - setup display
+    display_class = self.display_classes[default_display]
     self.display = display_class(screen=self.mainScreen)
     self.display.setup()
 
@@ -43,6 +81,27 @@ def setupDisplay(self):
 
 
 # %% DISPLAY FUNCTIONS
+
+
+def displaySelectionChanged(self, action):
+    """
+    triggered when the display type selection was changed
+    """
+    # get the new requested display class
+    display_class = action.data()
+
+    # setup display
+    self.display = display_class(screen=self.mainScreen)
+    self.display.setup()
+
+    # setup colormaps
+    colormap_list = self.display.getColormaps()
+    self.colorMapComboBox.clear()
+    for cmap in colormap_list:
+        self.colorMapComboBox.addItem(cmap)
+
+    # refresh display
+    plotSelectedData(self)
 
 
 def updateColormap(self):

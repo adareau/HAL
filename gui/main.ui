@@ -684,24 +684,12 @@
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDataView">
+   <widget class="QMenu" name="menuDataDisplay">
     <property name="title">
-     <string>Data View</string>
+     <string>Data Display</string>
     </property>
-    <widget class="QMenu" name="menu2D">
-     <property name="title">
-      <string>2D</string>
-     </property>
-    </widget>
-    <widget class="QMenu" name="menu3D">
-     <property name="title">
-      <string>3D</string>
-     </property>
-    </widget>
-    <addaction name="menu2D"/>
-    <addaction name="menu3D"/>
    </widget>
-   <addaction name="menuDataView"/>
+   <addaction name="menuDataDisplay"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionv1s">
@@ -712,6 +700,11 @@
   <action name="actionl">
    <property name="text">
     <string>l</string>
+   </property>
+  </action>
+  <action name="actionlol">
+   <property name="text">
+    <string>lol</string>
    </property>
   </action>
  </widget>

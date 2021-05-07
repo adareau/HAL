@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-06 13:49:45
+Modified : 2021-05-07 11:14:01
 
 Comments :
 """
@@ -142,6 +142,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # colormap scale max
         self.scaleMaxEdit.editingFinished.connect(self._scaleMaxEditChanged)
 
+        # display type selector
+        self.displaySelectionGroup.triggered.connect(
+            self._displaySelectionChanged
+        )
+
         # -- Data explorer --
 
         # - meta data management
@@ -228,6 +233,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         if not new_min.isnumeric():
             self.scaleMinEdit.setText("0")
         display.plotSelectedData(self)
+
+    def _displaySelectionChanged(self, action):
+        display.displaySelectionChanged(self, action)
 
     # -- DATA EXPLORER
 
