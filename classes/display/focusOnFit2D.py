@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 12:22:16
+Modified : 2021-05-07 12:58:19
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -55,10 +55,10 @@ class FocusOnFit2D(AbstractImageDisplay):
 
         # -- create plot layout
         # add plots
-        roi_plot = self.screen.addPlot(1, 2, title="ROI DATA")
-        fit_plot = self.screen.addPlot(2, 2, title="ROI FIT")
-        err_plot = self.screen.addPlot(3, 2, title="FIT ERR")
-        im_plot = self.screen.addPlot(1, 1, rowspan=3, title="DATA")
+        roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
+        fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
+        err_plot = self.screen.addPlot(3, 2, title="Error")
+        im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
 
         # stretch
         layout = self.screen.ci.layout
@@ -138,7 +138,7 @@ class FocusOnFit2D(AbstractImageDisplay):
         image = np.zeros((10, 10))
         self.current_fit_image.updateImage(image=image)
         self.current_err_image.updateImage(image=image)
-        # self.current_fit_image.updateImage(image=image)
+        self.err_plot.setTitle('Error')
 
     def updateFit(
         self, fit_dic, selected_ROI,
@@ -180,6 +180,8 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.current_err_image.updateImage(
             image=Zerr, levels=(-err_ampl, err_ampl)
         )
+        new_title = 'Error : range = ± %.2g' % err_ampl
+        self.err_plot.setTitle(new_title)
         self.updateColormap(
             colormap="RdBu", image=self.current_err_image, update_current=False
         )
