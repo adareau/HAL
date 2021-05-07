@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 16:08:07
+Modified : 2021-05-07 16:46:51
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -108,10 +108,11 @@ class BasicImageDisplay(AbstractImageDisplay):
         self.current_data_object = dataobject
 
         # redefine limits
+        '''
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
-
+        '''
         # get background
         if self.background is not None:
             background, _ = self.background.getArrayRegion(
