@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-06 16:15:44
+Modified : 2021-05-07 12:05:06
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -41,7 +41,7 @@ class AbstractImageDisplay(AbstractDisplay):
         self.image_plot = None
         self.current_image = None
         self.current_data = None
-        self._current_colormap = 'Greiner'
+        self._current_colormap = "Greiner"
 
         # -- other attributes
         self.name = "AbstractImageDisplay"
@@ -177,10 +177,13 @@ class AbstractImageDisplay(AbstractDisplay):
 
     # -- COLORMAP
 
-    def updateColormap(self, colormap="Greiner", image=None):
+    def updateColormap(
+        self, colormap="Greiner", image=None, update_current=True
+    ):
         # set colormap
         lut = get_pyqtgraph_lookuptable(colormap)
         if image is None:
             image = self.current_image
         image.setLookupTable(lut)
-        self._current_colormap = colormap
+        if update_current:
+            self._current_colormap = colormap

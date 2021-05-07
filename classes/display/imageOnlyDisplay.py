@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 11:29:42
+Modified : 2021-05-07 11:52:23
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -12,7 +12,6 @@ Comments : a basic (2D) image display. Can be used as an example when building
 
 # -- global
 import pyqtgraph as pg
-import numpy as np
 
 # -- local
 from HAL.classes.display.abstractImage import AbstractImageDisplay
@@ -73,7 +72,12 @@ class ImageOnlyDisplay(AbstractImageDisplay):
         pass
 
     def updatePlot(
-        self, image=None, levels=(0, 1), colormap="Greiner", dataobject=None
+        self,
+        image=None,
+        levels=(0, 1),
+        colormap="Greiner",
+        dataobject=None,
+        selected_ROI=None,
     ):
         """updates the data plot"""
         if image is None:

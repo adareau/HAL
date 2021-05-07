@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 11:24:16
+Modified : 2021-05-07 11:56:35
 
 Comments : Functions related to data visualization
 """
@@ -43,7 +43,7 @@ def setupDisplay(self):
         self.menu_data_display_cat_list[display_type] = new_menu  # store
 
     # chose default display
-    default_display = "Basic image display"
+    default_display = "Basic 2D"  # FIXME migrate to config ?
     if default_display not in self.display_classes:
         default_display = list(self.display_classes)[0]
 
@@ -138,6 +138,13 @@ def plotSelectedData(self):
     # load
     data.load()
 
+    # -- get the selected roi
+    # FIXME : let the user choose the selected roi !!!
+    selected_roi = "ROI 0"
+    current_rois = self.display.getROINames()
+    if current_rois and selected_roi not in current_rois:
+        selected_roi = current_rois[0]
+
     # -- plot
     # TODO: we should ensure that the selected data type
     # matches the current display object type! For instance,
@@ -161,6 +168,7 @@ def plotSelectedData(self):
         levels=(scale_min, scale_max),
         colormap=colormap_name,
         dataobject=data,
+        selected_ROI=selected_roi
     )
 
     # update fit
@@ -172,6 +180,8 @@ def updateFitForSelectedData(self):
     Load a saved fit for the selected data (if exist), and update
     the display accordingly
     """
+    # -- clear current fit
+    self.display.clearFit()
     # -- load saved fit
     fit_collection = fitting.load_saved_fit(self)
     if fit_collection is None:

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 11:52:01
+Modified : 2021-05-07 12:22:16
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -21,7 +21,7 @@ from HAL.classes.display.abstractImage import AbstractImageDisplay
 # %% CLASS DEFINITION
 
 
-class BasicImageDisplay(AbstractImageDisplay):
+class FocusOnFit2D(AbstractImageDisplay):
     """a basic (2D) image display
        NB : inherits a LOT of methods from AbstractImageDisplay().
             Have a look at this class if you do not find a method here !
@@ -42,8 +42,9 @@ class BasicImageDisplay(AbstractImageDisplay):
         """
         # -- hidden
         self._current_levels = (0, 1)
+
         # -- other attributes
-        self.name = "Basic 2D"
+        self.name = "Focus on fit 2D"
 
     # -- DISPLAY MANAGEMENT
 
@@ -54,15 +55,14 @@ class BasicImageDisplay(AbstractImageDisplay):
 
         # -- create plot layout
         # add plots
-        im_plot = self.screen.addPlot(1, 1)
-        fit_plot = self.screen.addPlot(2, 2)
-        cx_plot = self.screen.addPlot(2, 1)
-        cy_plot = self.screen.addPlot(1, 2)
+        roi_plot = self.screen.addPlot(1, 2, title="ROI DATA")
+        fit_plot = self.screen.addPlot(2, 2, title="ROI FIT")
+        err_plot = self.screen.addPlot(3, 2, title="FIT ERR")
+        im_plot = self.screen.addPlot(1, 1, rowspan=3, title="DATA")
 
         # stretch
         layout = self.screen.ci.layout
-        layout.setColumnStretchFactor(1, 3)
-        layout.setRowStretchFactor(1, 3)
+        layout.setColumnStretchFactor(1, 1)
 
         # configure subplot
         im_plot.setAspectLocked(lock=True, ratio=1)
@@ -72,8 +72,8 @@ class BasicImageDisplay(AbstractImageDisplay):
         # store
         self.image_plot = im_plot
         self.fit_plot = fit_plot
-        self.cx_plot = cx_plot
-        self.cy_plot = cy_plot
+        self.roi_plot = roi_plot
+        self.err_plot = err_plot
 
         # -- init image item
         # main image
@@ -81,10 +81,20 @@ class BasicImageDisplay(AbstractImageDisplay):
         im_plot.addItem(img)
         self.current_image = img
 
+        # roi image
+        roi_img = pg.ImageItem()
+        roi_plot.addItem(roi_img)
+        self.current_roi_image = roi_img
+
         # fit image
         fit_img = pg.ImageItem()
         fit_plot.addItem(fit_img)
         self.current_fit_image = fit_img
+
+        # err image
+        err_img = pg.ImageItem()
+        err_plot.addItem(err_img)
+        self.current_err_image = err_img
 
     def clearPlot(self):
         """clear all the data plot"""
@@ -114,12 +124,21 @@ class BasicImageDisplay(AbstractImageDisplay):
         # set colormap
         self.updateColormap(colormap)
 
+        # update roi (so that the roi is refreshed even if no fit is loaded)
+        if selected_ROI is not None:
+            Z, _ = self.getROIData(selected_ROI)
+            if Z is not None:
+                # roi
+                self.current_roi_image.updateImage(image=Z, levels=levels)
+                self.updateColormap(
+                    colormap=colormap, image=self.current_roi_image,
+                )
+
     def clearFit(self):
-        """resets fit display"""
-        self.cx_plot.clear()
-        self.cy_plot.clear()
         image = np.zeros((10, 10))
         self.current_fit_image.updateImage(image=image)
+        self.current_err_image.updateImage(image=image)
+        # self.current_fit_image.updateImage(image=image)
 
     def updateFit(
         self, fit_dic, selected_ROI,
@@ -136,33 +155,31 @@ class BasicImageDisplay(AbstractImageDisplay):
         fit = fit_dic[selected_ROI]
         Zfit = fit.eval((X, Y))
 
-        # -- plot cuts
-        # coordinates cuts
-        x = X[:, 0]
-        y = Y[0, :]
-
-        # get argmax
-        i, j = np.unravel_index(Zfit.argmax(), Zfit.shape)
-
-        # plot x cut
-        self.cx_plot.clear()
-        self.cx_plot.plot(x, Z[:, j], symbol="+", size=1, symbolSize=5)
-        self.cx_plot.plot(
-            x, Zfit[:, j], pen=pg.mkPen(color=(255, 0, 0), width=2)
-        )
-
-        # plot y cut
-        self.cy_plot.clear()
-        self.cy_plot.plot(Z[i, :], y, symbol="+", size=1, symbolSize=5)
-        self.cy_plot.plot(
-            Zfit[i, :], y, pen=pg.mkPen(color=(255, 0, 0), width=2)
-        )
+        # error
+        Zerr = Z - Zfit
 
         # -- display
+        # roi
+        self.current_roi_image.updateImage(
+            image=Z, levels=self._current_levels
+        )
+        self.updateColormap(
+            colormap=self._current_colormap, image=self.current_roi_image
+        )
+
         # fit
         self.current_fit_image.updateImage(
             image=Zfit, levels=self._current_levels
         )
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_fit_image
+        )
+
+        # err
+        err_ampl = np.max(np.abs(Zerr))
+        self.current_err_image.updateImage(
+            image=Zerr, levels=(-err_ampl, err_ampl)
+        )
+        self.updateColormap(
+            colormap="RdBu", image=self.current_err_image, update_current=False
         )
