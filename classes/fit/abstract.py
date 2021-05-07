@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-05 15:12:59
+Modified : 2021-05-07 13:04:48
 
 Comments : Abstract classes for data fitting
 """
@@ -279,6 +279,24 @@ class Abstract2DFit(AbstractFit):
                 }
                 values.append(param)
 
+        # min / max
+        param = {
+            "name": "max",
+            "value": np.max(Z),
+            "display": "%.3g",
+            "unit": "",
+            "comment": "maximum count value in ROI",
+        }
+        values.append(param)
+
+        param = {
+            "name": "min",
+            "value": np.min(Z),
+            "display": "%.3g",
+            "unit": "",
+            "comment": "maximum count value in ROI",
+        }
+        values.append(param)
         return values
 
 

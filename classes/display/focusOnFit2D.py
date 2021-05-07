@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 12:58:19
+Modified : 2021-05-07 13:07:16
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -54,11 +54,18 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.screen.clear()
 
         # -- create plot layout
-        # add plots
-        roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
-        fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
-        err_plot = self.screen.addPlot(3, 2, title="Error")
-        im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
+        if False:  # old version
+            # add plots
+            roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
+            fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
+            err_plot = self.screen.addPlot(3, 2, title="Error")
+            im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
+        else:  # new version
+            # add plots
+            roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
+            fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
+            err_plot = self.screen.addPlot(2, 2, title="Error")
+            im_plot = self.screen.addPlot(1, 2, title="Data (all)")
 
         # stretch
         layout = self.screen.ci.layout
