@@ -633,6 +633,19 @@
            <string>STATS</string>
           </property>
          </widget>
+         <widget class="QToolButton" name="quickPlotXToolButton">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>90</y>
+            <width>28</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>X</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">
          <attribute name="title">

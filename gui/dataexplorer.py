@@ -2,13 +2,16 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-11 15:58:12
+Modified : 2021-05-11 17:02:51
 
 Comments : Functions related to (meta)data exploration
 """
 
 # %% IMPORTS
+
+# -- global
 import json
+import logging
 from pathlib import Path
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
@@ -19,8 +22,14 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
+    QAction,
+    QActionGroup,
+    QMenu,
+    QToolButton
 )
 
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% GLOBAL
 TITLE_STR = "[%s]\n"
@@ -55,6 +64,18 @@ def setupDataExplorer(self):
     self.setList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     self.setList.setSelectionMode(QAbstractItemView.ExtendedSelection)
     self.setList.setIconSize(QSize(15, 15))
+
+    # -- data selection in quickplot
+    # - X
+    # define menu and selection group
+    menuX = QMenu()
+    actionGroupX = QActionGroup(menuX)
+    actionGroupX.setExclusive(True)
+    # store for future access
+    self.quickPlotXToolButton.actionGroup = actionGroupX
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotXToolButton.setMenu(menuX)
+    self.quickPlotXToolButton.setPopupMode(QToolButton.InstantPopup)
 
 
 # %% META DATA MANAGEMENT
@@ -243,6 +264,32 @@ def refreshMetaDataList(self):
             index = box.findText(current_selection)
             if index != -1:
                 box.setCurrentIndex(index)
+
+    # -- tool buttons
+    tool_buttons = [self.quickPlotXToolButton, ]
+    for button in tool_buttons:
+        # get action group
+        actionGroup = button.actionGroup
+        # currently checked action
+        current_action = actionGroup.checkedAction()
+        logger.debug(current_action)
+        # get menu and clear
+        menu = button.menu()
+        menu.clear()
+        # populate
+        for name in metadata_names:
+            # get list of parameter names
+            meta = metadata_dic[name]
+            numeric_param_list = meta.get_numeric_keys()
+            if not numeric_param_list:
+                continue
+            # add submenu, and populate
+            submenu = menu.addMenu(name)
+            for par_name in numeric_param_list:
+                action = QAction(par_name, menu, checkable=True)
+                action.setData((name, par_name))
+                submenu.addAction(action)
+                actionGroup.addAction(action)
 
 
 # %% SET MANAGEMENT
