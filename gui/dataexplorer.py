@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-11 17:02:51
+Modified : 2021-05-11 17:26:53
 
 Comments : Functions related to (meta)data exploration
 """
@@ -76,6 +76,16 @@ def setupDataExplorer(self):
     # associate the menu with the corresponding toolbutton
     self.quickPlotXToolButton.setMenu(menuX)
     self.quickPlotXToolButton.setPopupMode(QToolButton.InstantPopup)
+    # - Y
+    # define menu and selection group
+    menuY = QMenu()
+    actionGroupY = QActionGroup(menuY)
+    actionGroupY.setExclusive(True)
+    # store for future access
+    self.quickPlotYToolButton.actionGroup = actionGroupY
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotYToolButton.setMenu(menuY)
+    self.quickPlotYToolButton.setPopupMode(QToolButton.InstantPopup)
 
 
 # %% META DATA MANAGEMENT
@@ -266,13 +276,15 @@ def refreshMetaDataList(self):
                 box.setCurrentIndex(index)
 
     # -- tool buttons
-    tool_buttons = [self.quickPlotXToolButton, ]
+    tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
     for button in tool_buttons:
         # get action group
         actionGroup = button.actionGroup
         # currently checked action
         current_action = actionGroup.checkedAction()
         logger.debug(current_action)
+        if current_action is not None:
+            logger.debug(current_action.data())
         # get menu and clear
         menu = button.menu()
         menu.clear()

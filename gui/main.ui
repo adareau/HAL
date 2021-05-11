@@ -646,6 +646,19 @@
            <string>X</string>
           </property>
          </widget>
+         <widget class="QToolButton" name="quickPlotYToolButton">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>120</y>
+            <width>28</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Y</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">
          <attribute name="title">
