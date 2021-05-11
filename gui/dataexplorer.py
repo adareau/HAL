@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-23 15:49:33
+Modified : 2021-05-11 15:58:12
 
 Comments : Functions related to (meta)data exploration
 """
@@ -43,7 +43,7 @@ def setupDataExplorer(self):
     # add all metadata classes names
     for metadata in self.metadata_classes:
         item = QListWidgetItem()
-        item.setText(metadata.name)
+        item.setText(metadata().name)
         self.metaDataList.addItem(item)
     # select all
     self.metaDataList.blockSignals(True)
@@ -160,25 +160,27 @@ def displayMetaData(self):
     ]
     # we store names in a sorted way
     metadata_names = [
-        meta.name
+        meta().name
         for meta in self.metadata_classes
-        if meta.name in selected_metadata
+        if meta().name in selected_metadata
     ]
     # values are then sorted in a dict
-    metadata = {}
-    for meta in self.metadata_classes:
+    metadata_dic = {}
+    for meta_class in self.metadata_classes:
+        meta = meta_class()
         meta.path = path
         meta.analyze()
-        metadata[meta.name] = meta.data
+        metadata_dic[meta.name] = meta
 
     # -- store
-    self.metadata = metadata
+    self.metadata = metadata_dic
 
     # -- display and store available metadata
     # init
     text = ""
     for name in metadata_names:
-        param_list = metadata[name]
+        meta = metadata_dic[name]
+        param_list = meta.data
         if not param_list:
             # not displayed if empty
             continue
@@ -216,11 +218,11 @@ def refreshMetaDataList(self):
     ]
     # we store names in a sorted way
     metadata_names = [
-        meta.name
+        meta().name
         for meta in self.metadata_classes
-        if meta.name in selected_metadata
+        if meta().name in selected_metadata
     ]
-    metadata = self.metadata
+    metadata_dic = self.metadata
 
     # -- combo box elements
     combo_boxes = [self.quickPlotXComboBox, self.quickPlotYComboBox]
@@ -229,13 +231,13 @@ def refreshMetaDataList(self):
         current_selection = box.currentText()
         box.clear()
         for name in metadata_names:
-            param_list = metadata[name]
-            if not param_list:
+            meta = metadata_dic[name]
+            numeric_param_list = meta.get_numeric_keys()
+            if not numeric_param_list:
                 continue
-            for par in param_list:
-                # TODO : filter numeric ?? ??
-                display_name = "%s > %s" % (name, par["name"])
-                box.addItem(display_name, (name, par["name"]))
+            for par_name in numeric_param_list:
+                display_name = "%s > %s" % (name, par_name)
+                box.addItem(display_name, (name, par_name))
         # restore
         if current_selection:
             index = box.findText(current_selection)

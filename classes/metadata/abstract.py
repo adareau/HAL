@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-11 15:30:29
+Modified : 2021-05-11 15:46:23
 
 Comments : Abstract classes for data handling
 """
@@ -10,6 +10,7 @@ Comments : Abstract classes for data handling
 
 # -- global
 import logging
+from numbers import Number
 from pathlib import Path
 
 # -- logger
@@ -76,7 +77,6 @@ class AbstractMetaData(object):
             "display": "%.3g",
             "unit": "",
             "comment": "",
-            "plottable": True,
         }
         checked_param.update(param)
 
@@ -88,6 +88,9 @@ class AbstractMetaData(object):
         """gather metadata"""
         pass
 
-    def getKeys(self):
-        """return the list of keys"""
-        return []
+    def get_numeric_keys(self):
+        """return the list of names of the 'numeric' parameters"""
+        numeric_keys = [
+            p["name"] for p in self._data if isinstance(p["value"], Number)
+        ]
+        return numeric_keys
