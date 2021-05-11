@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-22 13:21:31
+Modified : 2021-05-11 15:30:45
 
 Comments : Abstract classes for data handling
 """
@@ -93,4 +93,6 @@ if __name__ == "__main__":
 
     data = FileData(path)
     data.analyze()
+    print([d['name'] for d in data.data])
+    print('---')
     print(data.data)
