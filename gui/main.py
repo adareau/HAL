@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-07 16:32:49
+Modified : 2021-05-12 09:40:54
 
 Comments :
 """
@@ -26,6 +26,7 @@ import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
 import HAL.gui.testing as testing
 import HAL.gui.misc as misc
+import HAL.gui.menubar as menubar
 
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
@@ -112,6 +113,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         quickplot.setupQuickPlot(self)
         # -- Fitting
         fitting.setupFitting(self)
+        # -- Menu Bar
+        menubar.setupMenubar(self)
 
     def connectActions(self):
 
@@ -197,6 +200,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.backgroundCheckBox.stateChanged.connect(
             self._backgroundCheckBoxChanged
         )
+
+        # -- Menu Bar --
+        self.menuAbout.gotoGithubAction.triggered.connect(self._gotoGithub)
+        self.menuAbout.onlineHelpAction.triggered.connect(self._getOnlineHelp)
 
         # -- DEBUG --
         self.debugButton.clicked.connect(self._DEBUG)
@@ -305,6 +312,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         else:
             fitting.removeBackground(self)
         display.plotSelectedData(self, update_fit=False)
+
+    # -- MENUBAR
+
+    def _gotoGithub(self):
+        menubar.gotoGithub(self)
+
+    def _getOnlineHelp(self):
+        menubar.getOnlineHelp(self)
 
     # -- DEBUG
 
