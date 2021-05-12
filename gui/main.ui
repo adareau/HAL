@@ -574,52 +574,6 @@
            <string>PLOT</string>
           </property>
          </widget>
-         <widget class="QLabel" name="label_8">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>20</y>
-            <width>17</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>X :</string>
-          </property>
-         </widget>
-         <widget class="QComboBox" name="quickPlotXComboBox">
-          <property name="geometry">
-           <rect>
-            <x>43</x>
-            <y>20</y>
-            <width>176</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_9">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>49</y>
-            <width>16</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Y :</string>
-          </property>
-         </widget>
-         <widget class="QComboBox" name="quickPlotYComboBox">
-          <property name="geometry">
-           <rect>
-            <x>43</x>
-            <y>49</y>
-            <width>176</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
          <widget class="QPushButton" name="quickStatsButton">
           <property name="geometry">
            <rect>
@@ -632,6 +586,49 @@
           <property name="text">
            <string>STATS</string>
           </property>
+         </widget>
+         <widget class="QWidget" name="formLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>20</y>
+            <width>191</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <property name="verticalSpacing">
+            <number>5</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QToolButton" name="quickPlotXToolButton">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="quickPlotYToolButton">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="quickPlotXLabel">
+             <property name="text">
+              <string>quickPlotXLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="quickPlotYLabel">
+             <property name="text">
+              <string>quickPlotYLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">

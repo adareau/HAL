@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-07 16:32:49
+Modified : 2021-05-12 11:38:26
 
 Comments :
 """
@@ -26,6 +26,7 @@ import HAL.gui.quickplot as quickplot
 import HAL.gui.fitting as fitting
 import HAL.gui.testing as testing
 import HAL.gui.misc as misc
+import HAL.gui.menubar as menubar
 
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
@@ -34,6 +35,87 @@ from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
 from HAL.classes.fit import implemented_fit_dic
 from HAL.classes.display import implemented_display_dic
+
+
+# %% CALLBACK DEFINITIONS
+# for the sake of readability, we define all the
+# callbacks in a list of tuples, with the following form :
+#    ("widget", "signal", "callback")
+# where "widget" is the name of the widget object, "signal"
+# is a string containing the signal name, and "callback" the name
+# of the callback function. All the callbacks are then automatically
+# set in a loop.
+#
+# Example :
+# --------
+# adding ("todayButton", "clicked", "_todayButtonClicked") to
+# the callback list will result in a callback definition leading to
+# the same result as the following :
+#
+# self.todayButton.clicked.connect(self._todayButtonClicked)
+
+# We disable black formatting : some lines will to too long, but
+# this is better for readability IMHO
+# fmt: off
+CALLBACK_LIST = [
+
+    # -- FILE BROWSER --
+    # year / month / day lists
+    ("yearList", "itemSelectionChanged", "_yearListSelectionChanged"),
+    ("monthList", "itemSelectionChanged", "_monthListSelectionChanged"),
+    ("dayList", "itemSelectionChanged", "_dayListSelectionChanged"),
+    # seq / run lists
+    ("seqList", "itemSelectionChanged", "_seqListSelectionChanged"),
+    ("runList", "itemSelectionChanged", "_runListSelectionChanged"),
+    # buttons
+    ("refreshRunListButton", "clicked", "_refreshRunListButtonClicked"),
+    ("todayButton", "clicked", "_todayButtonClicked"),
+    ("dateEdit", "dateChanged", "_dateEditClicked"),
+
+    # -- DATA DISPLAY --
+    # select data type
+    ("dataTypeComboBox", "currentIndexChanged", "_dataTypeComboBoxSelectionChanged"),
+    # select colormap
+    ("colorMapComboBox", "currentIndexChanged", "_colorMapComboBoxSelectionChanged"),
+    # colormap scale
+    ("scaleMinEdit", "editingFinished", "_scaleMinEditChanged"),
+    ("scaleMaxEdit", "editingFinished", "_scaleMaxEditChanged"),
+    ("autoScaleCheckBox", "stateChanged", "_autoScaleCheckBoxChanged"),
+    # display type selector
+    ("displaySelectionGroup", "triggered", "_displaySelectionChanged"),
+
+    # -- DATA EXPLORER --
+    # meta data management
+    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
+    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
+    # sets management
+    ("newSetButton", "clicked", "_newSetButtonClicked"),
+    ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
+    ("favSetButton", "clicked", "_favSetButtonClicked"),
+    ("setList", "doubleClicked", "_setListDoubleClicked"),
+    # quickplot
+    ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
+    ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+
+    # -- FITTING --
+    # ROI
+    ("addRoiButton", "clicked", "_addRoiButtonClicked"),
+    # background
+    ("backgroundCheckBox", "stateChanged", "_backgroundCheckBoxChanged"),
+
+    # fit buttons
+    ("fitButton", "clicked", "_fitButtonClicked"),
+    ("fitBrowserButton", "clicked", "_fitButtonClicked"),
+
+    # -- MENU BAR --
+    ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
+    ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
+
+    # -- DEBUG --
+    ("debugButton", "clicked", "_DEBUG"),
+]
+# fmt: on
 
 
 # %% DEFINE GUI CLASS
@@ -112,94 +194,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         quickplot.setupQuickPlot(self)
         # -- Fitting
         fitting.setupFitting(self)
+        # -- Menu Bar
+        menubar.setupMenubar(self)
 
     def connectActions(self):
+        # automatic definition of callbacks
+        # from the CALLBACK_LIST, defined at the top of this file !
+        global CALLBACK_LIST
+        for callback in CALLBACK_LIST:
+            widget_name, signal_name, callback_name = callback
+            widget = getattr(self, widget_name)
+            signal = getattr(widget, signal_name)
+            callback = getattr(self, callback_name)
+            signal.connect(callback)
 
-        # -- File Browser --
-        # year
-        self.yearList.itemSelectionChanged.connect(
-            self._yearListSelectionChanged
-        )
-        # month
-        self.monthList.itemSelectionChanged.connect(
-            self._monthListSelectionChanged
-        )
-        # day
-        self.dayList.itemSelectionChanged.connect(
-            self._dayListSelectionChanged
-        )
-        # sequences
-        self.seqList.itemSelectionChanged.connect(
-            self._seqListSelectionChanged
-        )
-        # runs
-        self.runList.itemSelectionChanged.connect(
-            self._runListSelectionChanged
-        )
-        # buttons
-        self.refreshRunListButton.clicked.connect(
-            self._refreshRunListButtonClicked
-        )
-        self.todayButton.clicked.connect(self._todayButtonClicked)
-        # calendar
-        self.dateEdit.dateChanged.connect(self._dateEditClicked)
-
-        # -- Data visualization --
-
-        # select data type
-        self.dataTypeComboBox.currentIndexChanged.connect(
-            self._dataTypeComboBoxSelectionChanged
-        )
-        # select colormap
-        self.colorMapComboBox.currentIndexChanged.connect(
-            self._colorMapComboBoxSelectionChanged
-        )
-        # colormap scale min
-        self.scaleMinEdit.editingFinished.connect(self._scaleMinEditChanged)
-        # colormap scale max
-        self.scaleMaxEdit.editingFinished.connect(self._scaleMaxEditChanged)
-        # autoscale
-        self.autoScaleCheckBox.stateChanged.connect(
-            self._autoScaleCheckBoxChanged
-        )
-        # display type selector
-        self.displaySelectionGroup.triggered.connect(
-            self._displaySelectionChanged
-        )
-
-        # -- Data explorer --
-
-        # - meta data management
-        self.metaDataList.itemSelectionChanged.connect(
-            self._metaDataListSelectionChanged
-        )
-        # - sets management
-
-        # new set
-        self.newSetButton.clicked.connect(self._newSetButtonClicked)
-        # delete set
-        self.deleteSetButton.clicked.connect(self._deleteSetButtonClicked)
-        # add to favorite
-        self.favSetButton.clicked.connect(self._favSetButtonClicked)
-        # rename
-        self.setList.doubleClicked.connect(self._setListDoubleClicked)
-
-        # - quickplot
-        self.quickPlotButton.clicked.connect(self._quickPlotButtonClicked)
-
-        # -- Fitting --
-        # add ROI
-        self.addRoiButton.clicked.connect(self._addRoiButtonClicked)
-        # fit button(s)
-        self.fitButton.clicked.connect(self._fitButtonClicked)
-        self.fitBrowserButton.clicked.connect(self._fitButtonClicked)
-        # background check box
-        self.backgroundCheckBox.stateChanged.connect(
-            self._backgroundCheckBoxChanged
-        )
-
-        # -- DEBUG --
-        self.debugButton.clicked.connect(self._DEBUG)
+        return
 
     # == CALLBACKS
 
@@ -223,6 +232,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         display.plotSelectedData(self)
         # metadata
         dataexplorer.displayMetaData(self)
+        dataexplorer.refreshMetaDataList(self)
+        # quickplot
+        quickplot.refreshMetaDataList(self)
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
@@ -271,6 +283,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _metaDataListSelectionChanged(self):
         dataexplorer.displayMetaData(self)
         dataexplorer.refreshMetaDataList(self)
+        quickplot.refreshMetaDataList(self)
 
     def _newSetButtonClicked(self):
         dataexplorer.addNewSet(self)
@@ -286,6 +299,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotButtonClicked(self):
         quickplot.plotData(self)
+
+    def _quickPlotSelectionChanged(self):
+        quickplot.quickPlotSelectionChanged(self)
+
 
     # -- FITTING
 
@@ -305,6 +322,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         else:
             fitting.removeBackground(self)
         display.plotSelectedData(self, update_fit=False)
+
+    # -- MENUBAR
+
+    def _gotoGithub(self):
+        menubar.gotoGithub(self)
+
+    def _getOnlineHelp(self):
+        menubar.getOnlineHelp(self)
 
     # -- DEBUG
 

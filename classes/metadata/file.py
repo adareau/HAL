@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-22 13:21:31
+Modified : 2021-05-11 15:47:27
 
 Comments : Abstract classes for data handling
 """
@@ -35,6 +35,7 @@ class FileData(AbstractMetaData):
             "value": self.path.name,
             "display": "%s",
             "unit": "",
+            "plottable": False,
             "comment": "file name",
         }
         data.append(param)
@@ -45,6 +46,7 @@ class FileData(AbstractMetaData):
             "value": self.path.parent.name,
             "display": "%s",
             "unit": "",
+            "plottable": False,
             "comment": "parent folder",
         }
         data.append(param)
@@ -54,18 +56,20 @@ class FileData(AbstractMetaData):
         mtime = datetime.fromtimestamp(tmstp)
         param = {
             "name": "date",
-            "value": mtime.strftime('%Y-%m-%d'),
+            "value": mtime.strftime("%Y-%m-%d"),
             "display": "%s",
             "unit": "",
+            "plottable": False,
             "comment": "last modification date",
         }
         data.append(param)
 
         param = {
             "name": "time",
-            "value": mtime.strftime('%H:%M:%S'),
+            "value": mtime.strftime("%H:%M:%S"),
             "display": "%s",
             "unit": "",
+            "plottable": False,
             "comment": "last modification date",
         }
         data.append(param)
@@ -78,6 +82,7 @@ class FileData(AbstractMetaData):
             "value": size * b_to_Mb,
             "display": "%.3g",
             "unit": "Mb",
+            "plottable": True,
             "comment": "size in mega bytes",
         }
         data.append(param)
@@ -93,4 +98,7 @@ if __name__ == "__main__":
 
     data = FileData(path)
     data.analyze()
-    print(data.data)
+    print([d["name"] for d in data.data])
+    print("---")
+    # print(data.data)
+    print(data.get_numeric_keys())

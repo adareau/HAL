@@ -2,13 +2,16 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-23 15:49:33
+Modified : 2021-05-12 12:13:48
 
 Comments : Functions related to (meta)data exploration
 """
 
 # %% IMPORTS
+
+# -- global
 import json
+import logging
 from pathlib import Path
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
@@ -19,8 +22,17 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
+    QAction,
+    QActionGroup,
+    QMenu,
+    QToolButton,
 )
 
+# -- local
+import HAL.gui.quickplot as quickplot
+
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% GLOBAL
 TITLE_STR = "[%s]\n"
@@ -43,7 +55,7 @@ def setupDataExplorer(self):
     # add all metadata classes names
     for metadata in self.metadata_classes:
         item = QListWidgetItem()
-        item.setText(metadata.name)
+        item.setText(metadata().name)
         self.metaDataList.addItem(item)
     # select all
     self.metaDataList.blockSignals(True)
@@ -73,7 +85,7 @@ def _loadSetMetaData(self, path_list, data_list=None):
         # get requested names
         requested_names = [d[0] for d in data_list]
         metadata_classes = [
-            m for m in self.metadata_classes if m.name in requested_names
+            m for m in self.metadata_classes if m().name in requested_names
         ]
 
     # -- prepare lists
@@ -88,7 +100,8 @@ def _loadSetMetaData(self, path_list, data_list=None):
     for i, path in enumerate(path_list):
         path = Path(path)
         # loop on metadata classes
-        for meta in metadata_classes:
+        for meta_class in metadata_classes:
+            meta = meta_class()
             meta.path = path
             meta.analyze()
             # check all gathered parameters
@@ -120,6 +133,8 @@ def getMetaData(self, data_list=None):
     # get corresponding paths
     dataset_list = {}
     for set in selected_datasets:
+        if set is None:
+            continue
         if set.is_file():
             set_json = json.loads(set.read_text())
             if "paths" in set_json:
@@ -160,25 +175,27 @@ def displayMetaData(self):
     ]
     # we store names in a sorted way
     metadata_names = [
-        meta.name
+        meta().name
         for meta in self.metadata_classes
-        if meta.name in selected_metadata
+        if meta().name in selected_metadata
     ]
     # values are then sorted in a dict
-    metadata = {}
-    for meta in self.metadata_classes:
+    metadata_dic = {}
+    for meta_class in self.metadata_classes:
+        meta = meta_class()
         meta.path = path
         meta.analyze()
-        metadata[meta.name] = meta.data
+        metadata_dic[meta.name] = meta
 
     # -- store
-    self.metadata = metadata
+    self.metadata = metadata_dic
 
     # -- display and store available metadata
     # init
     text = ""
     for name in metadata_names:
-        param_list = metadata[name]
+        meta = metadata_dic[name]
+        param_list = meta.data
         if not param_list:
             # not displayed if empty
             continue
@@ -201,46 +218,13 @@ def displayMetaData(self):
 
     self.metaDataText.setPlainText(text)
 
-    # -- refresh dataexplorer metadata list
-    refreshMetaDataList(self)
-
 
 def refreshMetaDataList(self):
     """
     Updates all the GUI elements that allows the selection of metadata
     """
-    # -- get data
-    # get selected metadata
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
-    # we store names in a sorted way
-    metadata_names = [
-        meta.name
-        for meta in self.metadata_classes
-        if meta.name in selected_metadata
-    ]
-    metadata = self.metadata
-
-    # -- combo box elements
-    combo_boxes = [self.quickPlotXComboBox, self.quickPlotYComboBox]
-    for box in combo_boxes:
-        # get current selection
-        current_selection = box.currentText()
-        box.clear()
-        for name in metadata_names:
-            param_list = metadata[name]
-            if not param_list:
-                continue
-            for par in param_list:
-                # TODO : filter numeric ?? ??
-                display_name = "%s > %s" % (name, par["name"])
-                box.addItem(display_name, (name, par["name"]))
-        # restore
-        if current_selection:
-            index = box.findText(current_selection)
-            if index != -1:
-                box.setCurrentIndex(index)
+    # FIXME : either we remove this, or we use it to update ALL GUI elements
+    pass
 
 
 # %% SET MANAGEMENT
