@@ -1,1 +1,1 @@
-pyuic5 gui/main.ui > gui/MainUI.py
+pyuic5 HAL/gui/main.ui > HAL/gui/MainUI.py
