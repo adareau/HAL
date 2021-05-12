@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-12 11:21:36
+Modified : 2021-05-12 11:38:26
 
 Comments :
 """
@@ -87,6 +87,7 @@ CALLBACK_LIST = [
     # -- DATA EXPLORER --
     # meta data management
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
+    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     # sets management
     ("newSetButton", "clicked", "_newSetButtonClicked"),
     ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
@@ -94,6 +95,8 @@ CALLBACK_LIST = [
     ("setList", "doubleClicked", "_setListDoubleClicked"),
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
+    ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
 
     # -- FITTING --
     # ROI
@@ -229,6 +232,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         display.plotSelectedData(self)
         # metadata
         dataexplorer.displayMetaData(self)
+        dataexplorer.refreshMetaDataList(self)
+        # quickplot
+        quickplot.refreshMetaDataList(self)
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
@@ -277,6 +283,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _metaDataListSelectionChanged(self):
         dataexplorer.displayMetaData(self)
         dataexplorer.refreshMetaDataList(self)
+        quickplot.refreshMetaDataList(self)
 
     def _newSetButtonClicked(self):
         dataexplorer.addNewSet(self)
@@ -292,6 +299,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotButtonClicked(self):
         quickplot.plotData(self)
+
+    def _quickPlotSelectionChanged(self):
+        quickplot.quickPlotSelectionChanged(self)
+
 
     # -- FITTING
 

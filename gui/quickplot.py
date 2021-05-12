@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-04-30 14:05:31
+Modified : 2021-05-12 12:11:23
 
 Comments : Functions related to quick data analysis
 """
@@ -10,6 +10,7 @@ Comments : Functions related to quick data analysis
 # %% IMPORTS
 
 # -- global
+import logging
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtCore import Qt, QSize
@@ -20,11 +21,18 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
+    QMenu,
+    QAction,
+    QActionGroup,
+    QToolButton,
 )
-
 
 # -- local
 import HAL.gui.dataexplorer as dataexplorer
+
+# -- logger
+logger = logging.getLogger(__name__)
+
 
 # %% TOOLS
 
@@ -41,7 +49,118 @@ def _isnumber(x):
 
 
 def setupQuickPlot(self):
-    pass
+    # -- data selection in quickplot
+    # - X
+    # define menu and selection group
+    menuX = QMenu()
+    actionGroupX = QActionGroup(menuX)
+    actionGroupX.setExclusive(True)
+    # store for future access
+    self.quickPlotXToolButtonActionGroup = actionGroupX
+    self.quickPlotXToolButton.actionGroup = actionGroupX
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotXToolButton.setMenu(menuX)
+    self.quickPlotXToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.quickPlotXLabel.setText("no selection")
+    self.quickPlotXToolButton.label = self.quickPlotXLabel
+
+    # - Y
+    # define menu and selection group
+    menuY = QMenu()
+    actionGroupY = QActionGroup(menuY)
+    actionGroupY.setExclusive(True)
+    # store for future access
+    self.quickPlotYToolButtonActionGroup = actionGroupY
+    self.quickPlotYToolButton.actionGroup = actionGroupY
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotYToolButton.setMenu(menuY)
+    self.quickPlotYToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.quickPlotYLabel.setText("no selection")
+    self.quickPlotYToolButton.label = self.quickPlotYLabel
+
+
+# %% CALLBACKS
+
+
+def quickPlotSelectionChanged(self):
+    """Called when the quickPlot ToolButtons selection is changed"""
+    logger.debug("quick plot selection changed")
+    # -- refresh string
+    tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
+    for button in tool_buttons:
+        # get action group
+        actionGroup = button.actionGroup
+        # currently checked action
+        current_action = actionGroup.checkedAction()
+        if current_action is None:
+            button.label.setText("no selection")
+        else:
+            name, par_name = current_action.data()
+            button.label.setText("%s ⏵ %s" % (name, par_name))
+
+
+def refreshMetaDataList(self):
+    """
+    Updates all the quickplot elements that allow the selection of metadata
+    """
+    # -- get data
+    # get selected metadata
+    selected_metadata = [
+        item.text() for item in self.metaDataList.selectedItems()
+    ]
+    # we store names in a sorted way
+    metadata_names = [
+        meta().name
+        for meta in self.metadata_classes
+        if meta().name in selected_metadata
+    ]
+    metadata_dic = self.metadata
+
+    # -- tool buttons
+    tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
+    for button in tool_buttons:
+        # get action group
+        actionGroup = button.actionGroup
+        # currently checked action
+        current_action = actionGroup.checkedAction()
+        if current_action is not None:
+            current_data = current_action.data()
+        else:
+            current_data = ("", "")
+        # get menu and clear
+        menu = button.menu()
+        menu.clear()
+        # remove all actions
+        for action in actionGroup.actions():
+            actionGroup.removeAction(action)
+        # populate
+        for name in metadata_names:
+            # get list of parameter names
+            meta = metadata_dic[name]
+            numeric_param_list = meta.get_numeric_keys()
+            if not numeric_param_list:
+                continue
+            # add submenu, and populate
+            submenu = menu.addMenu(name)
+            for par_name in numeric_param_list:
+                action = QAction(
+                    par_name,
+                    menu,
+                    checkable=True,
+                    checked=current_data == (name, par_name),
+                )
+                action.setData((name, par_name))
+                submenu.addAction(action)
+                actionGroup.addAction(action)
+        # update label
+        current_action = actionGroup.checkedAction()
+        if current_action is None:
+            button.label.setText("no selection")
+        else:
+            name, par_name = current_action.data()
+            button.label.setText("%s ⏵ %s" % (name, par_name))
 
 
 # %% PLOT FUNCTIONS
@@ -53,11 +172,18 @@ def plotData(self):
     """
     # -- load metadata
     # get selected metadata fields
-    x_data_name = self.quickPlotXComboBox.currentData()
-    y_data_name = self.quickPlotYComboBox.currentData()
-    data_list = [x_data_name, y_data_name]
-    if x_data_name is None or y_data_name is None:
+    checkedDataX = self.quickPlotXToolButton.actionGroup.checkedAction()
+    checkedDataY = self.quickPlotYToolButton.actionGroup.checkedAction()
+    if None in [checkedDataX, checkedDataY]:
+        logger.debug('plotData() : data selection missing')
         return
+
+    # get data names
+    # it is stored in the data() field of the quickPlot ToolButtons actions
+    # in the form (meta_data_name, parameter_name)
+    x_data_name = checkedDataX.data()
+    y_data_name = checkedDataY.data()
+    data_list = [x_data_name, y_data_name]
 
     # load metadata
     metadata = dataexplorer.getMetaData(self, data_list=data_list)

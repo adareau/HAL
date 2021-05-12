@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-11 17:26:53
+Modified : 2021-05-12 12:08:23
 
 Comments : Functions related to (meta)data exploration
 """
@@ -25,8 +25,11 @@ from PyQt5.QtWidgets import (
     QAction,
     QActionGroup,
     QMenu,
-    QToolButton
+    QToolButton,
 )
+
+# -- local
+import HAL.gui.quickplot as quickplot
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -65,28 +68,6 @@ def setupDataExplorer(self):
     self.setList.setSelectionMode(QAbstractItemView.ExtendedSelection)
     self.setList.setIconSize(QSize(15, 15))
 
-    # -- data selection in quickplot
-    # - X
-    # define menu and selection group
-    menuX = QMenu()
-    actionGroupX = QActionGroup(menuX)
-    actionGroupX.setExclusive(True)
-    # store for future access
-    self.quickPlotXToolButton.actionGroup = actionGroupX
-    # associate the menu with the corresponding toolbutton
-    self.quickPlotXToolButton.setMenu(menuX)
-    self.quickPlotXToolButton.setPopupMode(QToolButton.InstantPopup)
-    # - Y
-    # define menu and selection group
-    menuY = QMenu()
-    actionGroupY = QActionGroup(menuY)
-    actionGroupY.setExclusive(True)
-    # store for future access
-    self.quickPlotYToolButton.actionGroup = actionGroupY
-    # associate the menu with the corresponding toolbutton
-    self.quickPlotYToolButton.setMenu(menuY)
-    self.quickPlotYToolButton.setPopupMode(QToolButton.InstantPopup)
-
 
 # %% META DATA MANAGEMENT
 
@@ -104,7 +85,7 @@ def _loadSetMetaData(self, path_list, data_list=None):
         # get requested names
         requested_names = [d[0] for d in data_list]
         metadata_classes = [
-            m for m in self.metadata_classes if m.name in requested_names
+            m for m in self.metadata_classes if m().name in requested_names
         ]
 
     # -- prepare lists
@@ -119,7 +100,8 @@ def _loadSetMetaData(self, path_list, data_list=None):
     for i, path in enumerate(path_list):
         path = Path(path)
         # loop on metadata classes
-        for meta in metadata_classes:
+        for meta_class in metadata_classes:
+            meta = meta_class()
             meta.path = path
             meta.analyze()
             # check all gathered parameters
@@ -234,74 +216,13 @@ def displayMetaData(self):
 
     self.metaDataText.setPlainText(text)
 
-    # -- refresh dataexplorer metadata list
-    refreshMetaDataList(self)
-
 
 def refreshMetaDataList(self):
     """
     Updates all the GUI elements that allows the selection of metadata
     """
-    # -- get data
-    # get selected metadata
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
-    # we store names in a sorted way
-    metadata_names = [
-        meta().name
-        for meta in self.metadata_classes
-        if meta().name in selected_metadata
-    ]
-    metadata_dic = self.metadata
-
-    # -- combo box elements
-    combo_boxes = [self.quickPlotXComboBox, self.quickPlotYComboBox]
-    for box in combo_boxes:
-        # get current selection
-        current_selection = box.currentText()
-        box.clear()
-        for name in metadata_names:
-            meta = metadata_dic[name]
-            numeric_param_list = meta.get_numeric_keys()
-            if not numeric_param_list:
-                continue
-            for par_name in numeric_param_list:
-                display_name = "%s > %s" % (name, par_name)
-                box.addItem(display_name, (name, par_name))
-        # restore
-        if current_selection:
-            index = box.findText(current_selection)
-            if index != -1:
-                box.setCurrentIndex(index)
-
-    # -- tool buttons
-    tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
-    for button in tool_buttons:
-        # get action group
-        actionGroup = button.actionGroup
-        # currently checked action
-        current_action = actionGroup.checkedAction()
-        logger.debug(current_action)
-        if current_action is not None:
-            logger.debug(current_action.data())
-        # get menu and clear
-        menu = button.menu()
-        menu.clear()
-        # populate
-        for name in metadata_names:
-            # get list of parameter names
-            meta = metadata_dic[name]
-            numeric_param_list = meta.get_numeric_keys()
-            if not numeric_param_list:
-                continue
-            # add submenu, and populate
-            submenu = menu.addMenu(name)
-            for par_name in numeric_param_list:
-                action = QAction(par_name, menu, checkable=True)
-                action.setData((name, par_name))
-                submenu.addAction(action)
-                actionGroup.addAction(action)
+    # FIXME : either we remove this, or we use it to update ALL GUI elements
+    pass
 
 
 # %% SET MANAGEMENT
