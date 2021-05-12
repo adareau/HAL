@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-12 12:13:48
+Modified : 2021-05-12 16:45:47
 
 Comments : Functions related to (meta)data exploration
 """
@@ -12,6 +12,8 @@ Comments : Functions related to (meta)data exploration
 # -- global
 import json
 import logging
+import time
+from collections import OrderedDict
 from pathlib import Path
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
@@ -72,73 +74,156 @@ def setupDataExplorer(self):
 # %% META DATA MANAGEMENT
 
 
-def _loadSetMetaData(self, path_list, data_list=None):
+def _loadFileMetaData(self, path):
     """
-    Subfunction, used for instance by getMetaData. Loads the selected metaData
-    from the list of paths (i.e., for one dataset)
+    Subfunction, loads the metadata linked to one file
     """
-    # -- prepare metadata classes
-    if data_list is None:
-        # then load all
-        metadata_classes = self.metadata_classes
-    else:
-        # get requested names
-        requested_names = [d[0] for d in data_list]
-        metadata_classes = [
-            m for m in self.metadata_classes if m().name in requested_names
-        ]
+    # -- get metadata
+    # get selected metadata sources
+    selected_metadata = [
+        item.text() for item in self.metaDataList.selectedItems()
+    ]
 
-    # -- prepare lists
-    metadata = {}
-    for d in data_list:  # FIXME handle case where data_list is None : take all
-        if d[0] not in metadata:
-            metadata[d[0]] = {}
-        metadata[d[0]][d[1]] = [None for p in path_list]
+    # values are then sorted in an ordered dict
+    metadata_dic = OrderedDict()
+    for meta_class in self.metadata_classes:
+        # init metadata object
+        meta = meta_class()
+        # only keep the selected ones
+        if meta.name not in selected_metadata:
+            continue
+        # load metadata
+        meta.path = path
+        meta.analyze()
+        # store in dic
+        metadata_dic[meta.name] = meta
 
-    # -- collect
-    # loop on all files
-    for i, path in enumerate(path_list):
-        path = Path(path)
-        # loop on metadata classes
-        for meta_class in metadata_classes:
-            meta = meta_class()
-            meta.path = path
-            meta.analyze()
-            # check all gathered parameters
-            for param in meta.data:
-                pname = param["name"]
-                if pname in metadata[meta.name]:
-                    # if parameter name is requested : store it
-                    pvalue = param["value"]
-                    metadata[meta.name][pname][i] = pvalue
-                    # store info
-                    if "%s_info" % pname not in metadata[meta.name]:
-                        metadata[meta.name]["%s_info" % pname] = param
-
-    return metadata
+    return metadata_dic
 
 
-def getMetaData(self, data_list=None):
+def updateMetadataCache(self, reset_cache=False):
     """
-    For each selected set (and selected run), gather
-    the metadata listed in data_list (name, param_name)
-
-    LOW LEVEL FUNCTION, will be called by plotting / stats functions !
+    Updates the metadata cache
     """
-    # -- prepare datasets lists
+    # logger.debug("update metadata cache")
+
+    # -- reset ?
+    if reset_cache:
+        self.metadata_cache = {}
+
+    # -- get list of selected runs and datasets
+    # total selection
+    all_selected_files = set()
+
+    # add the current selection
+    for item in self.runList.selectedItems():
+        all_selected_files.add(item.data(Qt.UserRole))
+
     # get selected datasets
     selected_datasets = [
         item.data(Qt.UserRole) for item in self.setList.selectedItems()
     ]
     # get corresponding paths
     dataset_list = {}
-    for set in selected_datasets:
-        if set is None:
+    for dataset in selected_datasets:
+        if dataset is None:
             continue
-        if set.is_file():
-            set_json = json.loads(set.read_text())
-            if "paths" in set_json:
-                dataset_list[set.stem] = set_json["paths"]
+        if dataset.is_file():
+            set_json = json.loads(dataset.read_text())
+            for path in set_json.get("paths", []):
+                all_selected_files.add(Path(path))
+
+    # -- remove from cache
+    for cached_file in list(self.metadata_cache.keys()):
+        if cached_file not in all_selected_files:
+            self.metadata_cache.pop(cached_file)
+
+    # -- update cache
+    n_files = len(all_selected_files)
+    for i_file, file_to_cache in enumerate(all_selected_files):
+        if file_to_cache in self.metadata_cache:
+            # ignore
+            continue
+        file_metadata = _loadFileMetaData(self, file_to_cache)
+        self.metadata_cache[file_to_cache] = file_metadata
+
+    # logger.debug("Files in cache : %i" % len(self.metadata_cache))
+
+    # -- update available metadata lists
+    # init new list
+    meta_names = [m().name for m in self.metadata_classes]
+    available_metadata = OrderedDict([(m, set()) for m in meta_names])
+    available_numeric_metadata = OrderedDict([(m, set()) for m in meta_names])
+    # loop
+    for cached_file, metadata in self.metadata_cache.items():
+        for name, meta in metadata.items():
+            keys = {p["name"] for p in meta.data}
+            num_keys = {k for k in meta.get_numeric_keys()}
+            available_metadata[name] |= keys  # set union !!
+            available_numeric_metadata[name] |= num_keys  # set union !!
+
+    # store
+    self.available_metadata = available_metadata
+    self.available_numeric_metadata = available_numeric_metadata
+
+    # -- update gui elements
+    quickplot.refreshMetaDataList(self)
+
+
+def _generateMetadaListFromCache(self, path_list):
+    """
+    Subfunction, generates a list of metadata from cache
+    """
+    # -- initialize output dictionnary, populated with 'None'
+    meta_dic = {}
+    for meta_name, meta_param_list in self.available_metadata.items():
+        meta_dic[meta_name] = {}
+        for param_name in meta_param_list:
+            meta_dic[meta_name][param_name] = [None for p in path_list]
+
+    # -- populate from cache
+    for i_file, file_path in enumerate(path_list):
+        # if file not cached : skip
+        # NB : this should not happen, due to the way the programm is
+        #      structured...
+        if file_path not in self.metadata_cache:
+            logger.warning("file %s not cached" % file_path)
+            continue
+        # get cached metadata
+        cached_metadata = self.metadata_cache[file_path]
+        for meta_name, meta in cached_metadata.items():
+            for param in meta.data:
+                # store value
+                meta_dic[meta_name][param["name"]][i_file] = param["value"]
+                # store param to get info
+                meta_dic[meta_name]["_%s_info" % param["name"]] = param
+
+    return meta_dic
+
+
+def getSelectionMetaDataFromCache(self, update_cache=False):
+    """
+    returns a dictionnary of metadata lists for all the selected runs and
+    datasets
+    """
+    # -- update cache if requested
+    if update_cache:
+        self.updateMetadataCache()
+
+    # -- get run selections
+    # get selected datasets
+    selected_datasets = [
+        item.data(Qt.UserRole) for item in self.setList.selectedItems()
+    ]
+    # get corresponding paths
+    dataset_list = {}
+    for dataset in selected_datasets:
+        if dataset is None:
+            continue
+        if dataset.is_file():
+            set_json = json.loads(dataset.read_text())
+            json_paths = [Path(p) for p in set_json.get("paths", [])]
+            dataset_list[dataset.stem] = json_paths
 
     # add the current selection
     selected_runs = [
@@ -147,10 +232,10 @@ def getMetaData(self, data_list=None):
     if len(selected_runs) > 1:
         dataset_list["current selection"] = selected_runs
 
-    # -- load metadata
+    # -- generate metadata lists from cache
     metadata = {}
-    for setname, paths in dataset_list.items():
-        metadata[setname] = _loadSetMetaData(self, paths, data_list)
+    for set_name, path_list in dataset_list.items():
+        metadata[set_name] = _generateMetadaListFromCache(self, path_list)
 
     return metadata
 
@@ -169,32 +254,12 @@ def displayMetaData(self):
     path = item.data(Qt.UserRole)
 
     # -- get metadata
-    # get selected metadata
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
-    # we store names in a sorted way
-    metadata_names = [
-        meta().name
-        for meta in self.metadata_classes
-        if meta().name in selected_metadata
-    ]
-    # values are then sorted in a dict
-    metadata_dic = {}
-    for meta_class in self.metadata_classes:
-        meta = meta_class()
-        meta.path = path
-        meta.analyze()
-        metadata_dic[meta.name] = meta
+    metadata_dic = _loadFileMetaData(self, path)  # returns an ordered dic
 
-    # -- store
-    self.metadata = metadata_dic
-
-    # -- display and store available metadata
+    # -- display metadata
     # init
     text = ""
-    for name in metadata_names:
-        meta = metadata_dic[name]
+    for name, meta in metadata_dic.items():
         param_list = meta.data
         if not param_list:
             # not displayed if empty
@@ -217,14 +282,6 @@ def displayMetaData(self):
             text += param_str
 
     self.metaDataText.setPlainText(text)
-
-
-def refreshMetaDataList(self):
-    """
-    Updates all the GUI elements that allows the selection of metadata
-    """
-    # FIXME : either we remove this, or we use it to update ALL GUI elements
-    pass
 
 
 # %% SET MANAGEMENT

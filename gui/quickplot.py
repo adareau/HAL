@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-12 12:11:23
+Modified : 2021-05-12 16:35:32
 
 Comments : Functions related to quick data analysis
 """
@@ -86,7 +86,6 @@ def setupQuickPlot(self):
 
 def quickPlotSelectionChanged(self):
     """Called when the quickPlot ToolButtons selection is changed"""
-    logger.debug("quick plot selection changed")
     # -- refresh string
     tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
     for button in tool_buttons:
@@ -106,17 +105,7 @@ def refreshMetaDataList(self):
     Updates all the quickplot elements that allow the selection of metadata
     """
     # -- get data
-    # get selected metadata
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
-    # we store names in a sorted way
-    metadata_names = [
-        meta().name
-        for meta in self.metadata_classes
-        if meta().name in selected_metadata
-    ]
-    metadata_dic = self.metadata
+    metadata_list = self.available_numeric_metadata
 
     # -- tool buttons
     tool_buttons = [self.quickPlotXToolButton, self.quickPlotYToolButton]
@@ -136,15 +125,13 @@ def refreshMetaDataList(self):
         for action in actionGroup.actions():
             actionGroup.removeAction(action)
         # populate
-        for name in metadata_names:
-            # get list of parameter names
-            meta = metadata_dic[name]
-            numeric_param_list = meta.get_numeric_keys()
-            if not numeric_param_list:
+        for name, param_list in metadata_list.items():
+            # if empty list : stop
+            if not param_list:
                 continue
             # add submenu, and populate
             submenu = menu.addMenu(name)
-            for par_name in numeric_param_list:
+            for par_name in param_list:
                 action = QAction(
                     par_name,
                     menu,
@@ -186,7 +173,10 @@ def plotData(self):
     data_list = [x_data_name, y_data_name]
 
     # load metadata
-    metadata = dataexplorer.getMetaData(self, data_list=data_list)
+    metadata = dataexplorer.getSelectionMetaDataFromCache(self)
+    if len(metadata) == 0:
+        logger.debug('plotData() : no dataset selected')
+        return
 
     # -- PLOT
     # - prepare figure
@@ -233,18 +223,22 @@ def plotData(self):
     # - figure setup
     # x label
     x_meta, x_name = x_data_name
-    x_info = data[x_meta]["%s_info" % x_name]
-    x_label = x_info["name"]
-    if x_info["unit"]:
-        x_label += " (%s)" % x_info["unit"]
+    x_label = '%s - %s' % x_data_name
+    x_info = data[x_meta].get("_%s_info" % x_name, None)
+    if x_info is not None:
+        unit = x_info.get("unit", "")
+        if unit:
+            x_label += " (%s)" % unit
     ax.set_xlabel(x_label)
 
     # y label
     y_meta, y_name = y_data_name
-    y_info = data[y_meta]["%s_info" % y_name]
-    y_label = y_info["name"]
-    if y_info["unit"]:
-        y_label += " (%s)" % y_info["unit"]
+    y_label = '%s - %s' % y_data_name
+    y_info = data[y_meta].get("_%s_info" % y_name, None)
+    if y_info is not None:
+        unit = y_info.get("unit", "")
+        if unit:
+            y_label += " (%s)" % unit
     ax.set_ylabel(y_label)
 
     # grid and legend
