@@ -2,13 +2,16 @@
 """
 Author   : Alexandre
 Created  : 2021-05-05 10:24:37
-Modified : 2021-05-07 14:53:42
+Modified : 2021-05-12 10:01:44
 
 Comments : miscellaneous functions, that would not fit anywhere else
 """
 
 # %% IMPORTS
 import logging
+import time
+import webbrowser
+import pyautogui
 from PyQt5.QtCore import Qt
 
 
@@ -18,11 +21,25 @@ from PyQt5.QtCore import Qt
 def _konami(self):
     logger = logging.getLogger(__name__)
     logger.debug("KONAMI !!!!")
+    konami_url = "https://www.youtube.com/watch?v=z9Uz1icjwrM"
+    try:
+        webbrowser.open_new_tab(konami_url)
+        time.sleep(3)
+        pyautogui.press("space")
+    except Exception as e:
+        logger.error(e)
 
 
 def _dave(self):
     logger = logging.getLogger(__name__)
     logger.warning("I'm sorry Dave, I'm affraid I can't do that.")
+    dave_url = "https://www.youtube.com/watch?v=7qnd-hdmgfk"
+    try:
+        webbrowser.open_new_tab(dave_url)
+        time.sleep(3)
+        pyautogui.press("space")
+    except Exception as e:
+        logger.error(e)
 
 
 # -- SHORTHAND
@@ -64,7 +81,7 @@ def analyse_keylog(self):
     lkl = len(kl)
     for seq in KEY_SEQUENCES.keys():
         lseq = len(seq)
-        if kl[lkl - lseq:] == seq:
+        if kl[lkl - lseq :] == seq:
             KEY_SEQUENCES[seq](self)  # trigger action
             self._kl = []  # reset
             break
