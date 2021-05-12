@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-12 09:26:01
-Modified : 2021-05-12 09:54:04
+Modified : 2021-05-12 11:15:52
 
 Comments : Functions related to the window menubar
 """
@@ -36,13 +36,13 @@ def setupMenubar(self):
     gotoGithubAction = QAction("Github repository", menuAbout)
     gotoGithubAction.setToolTip("Go to HAL Github repository")
     menuAbout.addAction(gotoGithubAction)
-    menuAbout.gotoGithubAction = gotoGithubAction
+    self.menuAboutGotoGithubAction = gotoGithubAction
     # add "HELP"
     onlineHelpAction = QAction("Online Help", menuAbout)
     onlineHelpAction.setToolTip("Find help online")
     onlineHelpAction.setShortcut(QKeySequence("CTRL+H"))
     menuAbout.addAction(onlineHelpAction)
-    menuAbout.onlineHelpAction = onlineHelpAction
+    self.menuAboutOnlineHelpAction = onlineHelpAction
 
 
 # %% CALLBACKS
