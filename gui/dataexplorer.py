@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-12 12:08:23
+Modified : 2021-05-12 12:13:48
 
 Comments : Functions related to (meta)data exploration
 """
@@ -133,6 +133,8 @@ def getMetaData(self, data_list=None):
     # get corresponding paths
     dataset_list = {}
     for set in selected_datasets:
+        if set is None:
+            continue
         if set.is_file():
             set_json = json.loads(set.read_text())
             if "paths" in set_json:
