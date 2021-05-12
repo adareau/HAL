@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-12 11:38:26
+Modified : 2021-05-12 15:37:44
 
 Comments :
 """
@@ -12,11 +12,13 @@ Comments :
 # -- global
 import sys
 import logging
+import time
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QShortcut
 from pathlib import Path
+from collections import OrderedDict
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
@@ -64,9 +66,10 @@ CALLBACK_LIST = [
     ("yearList", "itemSelectionChanged", "_yearListSelectionChanged"),
     ("monthList", "itemSelectionChanged", "_monthListSelectionChanged"),
     ("dayList", "itemSelectionChanged", "_dayListSelectionChanged"),
-    # seq / run lists
+    # seq / run / sets lists
     ("seqList", "itemSelectionChanged", "_seqListSelectionChanged"),
     ("runList", "itemSelectionChanged", "_runListSelectionChanged"),
+    ("setList", "itemSelectionChanged", "_setListSelectionChanged"),
     # buttons
     ("refreshRunListButton", "clicked", "_refreshRunListButtonClicked"),
     ("todayButton", "clicked", "_todayButtonClicked"),
@@ -164,10 +167,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # connect callbacks
         self.connectActions()
 
+        # -- Metadata cache
+        # cache
+        self.metadata_cache = {}
+        # init "lists" of available meta data
+        # those are in fact "sets", so that the fields are only
+        # counted once
+        meta_names = [m().name for m in implemented_metadata]
+        ordered_dic_init = [(m, set()) for m in meta_names]
+        self.available_metadata = OrderedDict(ordered_dic_init)
+        self.available_numeric_metadata = OrderedDict(ordered_dic_init)
+
         # -- Other initializations
         self.dummy = Dummy()
         self.current_folder = None
-        self.metadata = {}
         self.current_fig = None
 
         # -- Hidden
@@ -176,6 +189,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
         self._kl = []
+        self._t0 = 0
 
         # -- Keyboard shortcuts
         self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
@@ -232,13 +246,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         display.plotSelectedData(self)
         # metadata
         dataexplorer.displayMetaData(self)
-        dataexplorer.refreshMetaDataList(self)
-        # quickplot
-        quickplot.refreshMetaDataList(self)
+        dataexplorer.updateMetadataCache(self)
 
     def _seqListSelectionChanged(self):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
+        dataexplorer.updateMetadataCache(self)
+
+    def _setListSelectionChanged(self):
+        dataexplorer.updateMetadataCache(self)
 
     def _dateEditClicked(self):
         filebrowser.dateEditClicked(self)
@@ -282,7 +298,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _metaDataListSelectionChanged(self):
         dataexplorer.displayMetaData(self)
-        dataexplorer.refreshMetaDataList(self)
+        dataexplorer.updateMetadataCache(self, reset_cache=True)
         quickplot.refreshMetaDataList(self)
 
     def _newSetButtonClicked(self):
@@ -302,7 +318,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotSelectionChanged(self):
         quickplot.quickPlotSelectionChanged(self)
-
 
     # -- FITTING
 
@@ -337,6 +352,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
         testing.open_image(self)
+
+    def _tic(self, msg=None, name=""):
+        if msg is not None:
+            logger = logging.getLogger(name)
+            logger.debug(msg)
+        self._t0 = time.time()
+
+    def _toc(self, name=""):
+        tf = time.time()
+        logger = logging.getLogger(name)
+        logger.debug("DONE in %.2f seconds" % (tf - self._t0))
 
     # == KEYBOARD SHORTCUTS
 
