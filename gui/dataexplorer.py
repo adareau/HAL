@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-12 16:45:47
+Modified : 2021-05-12 16:52:57
 
 Comments : Functions related to (meta)data exploration
 """
@@ -260,7 +260,10 @@ def displayMetaData(self):
     # init
     text = ""
     for name, meta in metadata_dic.items():
+        # get param list
         param_list = meta.data
+        # exclude 'hidden' parameters
+        param_list = [p for p in param_list if not p['hidden']]
         if not param_list:
             # not displayed if empty
             continue

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-11 15:47:27
+Modified : 2021-05-12 16:56:04
 
 Comments : Abstract classes for data handling
 """
@@ -35,7 +35,6 @@ class FileData(AbstractMetaData):
             "value": self.path.name,
             "display": "%s",
             "unit": "",
-            "plottable": False,
             "comment": "file name",
         }
         data.append(param)
@@ -46,20 +45,20 @@ class FileData(AbstractMetaData):
             "value": self.path.parent.name,
             "display": "%s",
             "unit": "",
-            "plottable": False,
             "comment": "parent folder",
         }
         data.append(param)
 
-        # modification time
+        # -- modification time
         tmstp = self.path.stat().st_mtime
+
+        # store in "strings" for display
         mtime = datetime.fromtimestamp(tmstp)
         param = {
             "name": "date",
             "value": mtime.strftime("%Y-%m-%d"),
             "display": "%s",
             "unit": "",
-            "plottable": False,
             "comment": "last modification date",
         }
         data.append(param)
@@ -69,7 +68,18 @@ class FileData(AbstractMetaData):
             "value": mtime.strftime("%H:%M:%S"),
             "display": "%s",
             "unit": "",
-            "plottable": False,
+            "comment": "last modification date",
+        }
+        data.append(param)
+
+        # store timestamp for plotting / analysis (but 'hidden' !)
+        param = {
+            "name": "timestamp",
+            "value": tmstp,
+            "display": "%i",
+            "unit": "",
+            "hidden": True,
+            "special": "timestamp",
             "comment": "last modification date",
         }
         data.append(param)
@@ -82,7 +92,6 @@ class FileData(AbstractMetaData):
             "value": size * b_to_Mb,
             "display": "%.3g",
             "unit": "Mb",
-            "plottable": True,
             "comment": "size in mega bytes",
         }
         data.append(param)
