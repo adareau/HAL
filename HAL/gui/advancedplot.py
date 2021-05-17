@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 13:06:08
+Modified : 2021-05-17 14:09:04
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -11,6 +11,10 @@ Comments : Implement the "Advanced data analysis"
 
 # -- global
 import logging
+import re
+import pyqtgraph as pg
+import numpy as np
+from matplotlib import cm
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QRegExpValidator
@@ -23,6 +27,7 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
+import HAL.gui.dataexplorer as dataexplorer
 from HAL.classes.display import LiveMetaData
 
 # -- logger
@@ -33,7 +38,7 @@ logger = logging.getLogger(__name__)
 NAME_SEPARATION_CHARACTER = "."
 NAME_REGEXP_FORMAT = "\w*"
 VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
-
+VARIABLE_SPLIT_FORMAT = "^([\w_\-:\s]*)\.([\w_\-:\s]*)$"
 
 # %% CUSTOM CLASSES
 
@@ -55,6 +60,24 @@ class TableItemCompleter(QtWidgets.QStyledItemDelegate):
         validator = QRegExpValidator(rx)
         editor.setValidator(validator)
         return editor
+
+
+# %% TOOL
+
+def gimmeColor(i=0):
+    """returns a color from the defined color cycle"""
+    # TODO : allow the user to define the color cycle ?
+    # -- get the colormap from matplotlib
+    cmap = cm.get_cmap("Set1")
+    cmap._init()
+    clist = cmap._lut[:-1]
+
+    # -- get color
+    color = clist[i % len(clist)]
+    color_RGB = color[:-1] * 255
+    out = tuple([int(c) for c in color_RGB])
+
+    return tuple(color_RGB)
 
 
 # %% SETUP FUNCTIONS
@@ -140,13 +163,40 @@ def refreshMetaDataList(self):
     table.blockSignals(False)
 
 
-def checkVariableDeclaration(self):
-    """checks that the variable declaration is sound, and issue warnings"""
+def mapVariables(self, metadata_dic):
+    global VARIABLE_SPLIT_FORMAT
+    """map the variables names to their values, using the declarations from
+      the variableDeclarationTable"""
     # -- get table object and row number
     table = self.variableDeclarationTable
     n_row = table.rowCount()
-    print(n_row)
-    # --
+
+    # -- loop on all rows
+    mapped_variables = {}
+    for row in range(n_row):
+        # get variable names
+        name = table.item(row, 0).text()
+        varname = table.item(row, 1).text()
+        if not varname or not name:
+            continue
+        # parse the requested variable name
+        res = re.match(VARIABLE_SPLIT_FORMAT, varname)
+        if not res:
+            logger.warning("varname '%s' could not be parsed !" % varname)
+            continue
+        meta_name, meta_parname = res.groups()
+        # check that medata is present
+        if meta_name not in metadata_dic:
+            logger.debug("metadata class name '%s' not found" % meta_name)
+            continue
+        if meta_parname not in metadata_dic[meta_name]:
+            msg = "parameter name '%s' not found for metadata class '%s'"
+            logger.debug(msg % (meta_parname, meta_name))
+            continue
+        # return
+        mapped_variables[name] = metadata_dic[meta_name][meta_parname]
+
+    return mapped_variables
 
 
 def refreshMetadataLivePlot(self):
@@ -158,8 +208,35 @@ def refreshMetadataLivePlot(self):
         logger.debug("NOT A LiveMetaData INSTANCE")
         return
 
+    # -- get metadata list
+    metadata = dataexplorer.getSelectionMetaDataFromCache(self)
+
     # -- refresh
-    logger.debug("GO ON !")
+    # TEMP: quick and dirty implementation, to test
+    screen = self.mainScreen
+    screen.clear()
+    subplot = screen.addPlot(0, 0)
+    subplot.addLegend()
+    iplot = 0
+    for setname, metadata_dic in metadata.items():
+        mapped_variables = mapVariables(self, metadata_dic)
+        if mapped_variables.keys() >= {"x", "y"}:
+            color = gimmeColor(iplot)
+            iplot += 1
+            isort = np.argsort(mapped_variables["x"])
+            x = np.array(mapped_variables["x"])
+            y = np.array(mapped_variables["y"])
+            pitem = pg.PlotDataItem(
+                x[isort],
+                y[isort],
+                pen=color,
+                symbolBrush=color,
+                symbolPen=color,
+                symbol="o",
+                symbolSize=8,
+                name=setname,
+            )
+            subplot.addItem(pitem)
 
 
 # %% CALLBACKS
@@ -167,8 +244,8 @@ def refreshMetadataLivePlot(self):
 
 def variableDeclarationChanged(self, item):
     """called when the content of the variable declaration table is changed"""
-    # -- check the declaration
-    checkVariableDeclaration(self)
+    # -- refresh display
+    refreshMetadataLivePlot(self)
 
 
 def exportToMatplotlib(self):
