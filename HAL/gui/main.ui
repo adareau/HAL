@@ -580,7 +580,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -660,6 +660,29 @@
          <attribute name="title">
           <string>Advanced Analysis</string>
          </attribute>
+         <widget class="QTableWidget" name="variableDeclarationTable">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>250</width>
+            <height>151</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="exportToMatplotlibButton">
+          <property name="geometry">
+           <rect>
+            <x>270</x>
+            <y>140</y>
+            <width>91</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>to matplotlib</string>
+          </property>
+         </widget>
         </widget>
        </widget>
       </item>

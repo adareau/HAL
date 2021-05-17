@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-12 15:37:44
+Modified : 2021-05-17 10:14:19
 
 Comments :
 """
@@ -29,6 +29,7 @@ import HAL.gui.fitting as fitting
 import HAL.gui.testing as testing
 import HAL.gui.misc as misc
 import HAL.gui.menubar as menubar
+import HAL.gui.advancedplot as advancedplot
 
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
@@ -100,6 +101,10 @@ CALLBACK_LIST = [
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+
+    # -- ADVANCED DATA ANALYSIS / PLOT
+    ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
+    ("exportToMatplotlibButton", "clicked", "_exportToMatplotlibButtonClicked"),
 
     # -- FITTING --
     # ROI
@@ -206,6 +211,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.setupDataExplorer(self)
         # -- Quick Plot
         quickplot.setupQuickPlot(self)
+        # -- Advanced Plot
+        advancedplot.setupAdvancedPlot(self)
         # -- Fitting
         fitting.setupFitting(self)
         # -- Menu Bar
@@ -318,6 +325,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotSelectionChanged(self):
         quickplot.quickPlotSelectionChanged(self)
+
+    # -- ADVANCED DATA ANALYSIS / PLOT
+
+    def _variableDeclarationChanged(self, item):
+        advancedplot.variableDeclarationChanged(self, item)
+
+    def _exportToMatplotlibButtonClicked(self):
+        advancedplot.exportToMatplotlib(self)
 
     # -- FITTING
 

@@ -329,6 +329,14 @@ class Ui_mainWindow(object):
         self.dataAnalysisTabWidget.addTab(self.quickAnalysisTab, "")
         self.advancedAnalysisTab = QtWidgets.QWidget()
         self.advancedAnalysisTab.setObjectName("advancedAnalysisTab")
+        self.variableDeclarationTable = QtWidgets.QTableWidget(self.advancedAnalysisTab)
+        self.variableDeclarationTable.setGeometry(QtCore.QRect(10, 10, 250, 151))
+        self.variableDeclarationTable.setObjectName("variableDeclarationTable")
+        self.variableDeclarationTable.setColumnCount(0)
+        self.variableDeclarationTable.setRowCount(0)
+        self.exportToMatplotlibButton = QtWidgets.QPushButton(self.advancedAnalysisTab)
+        self.exportToMatplotlibButton.setGeometry(QtCore.QRect(270, 140, 91, 23))
+        self.exportToMatplotlibButton.setObjectName("exportToMatplotlibButton")
         self.dataAnalysisTabWidget.addTab(self.advancedAnalysisTab, "")
         self.screenColumn.addWidget(self.dataAnalysisTabWidget)
         self.horizontalLayout.addLayout(self.screenColumn)
@@ -376,7 +384,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(1)
-        self.dataAnalysisTabWidget.setCurrentIndex(0)
+        self.dataAnalysisTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -411,6 +419,7 @@ class Ui_mainWindow(object):
         self.quickPlotXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
         self.quickPlotYLabel.setText(_translate("mainWindow", "quickPlotYLabel"))
         self.dataAnalysisTabWidget.setTabText(self.dataAnalysisTabWidget.indexOf(self.quickAnalysisTab), _translate("mainWindow", "Quick Analysis"))
+        self.exportToMatplotlibButton.setText(_translate("mainWindow", "to matplotlib"))
         self.dataAnalysisTabWidget.setTabText(self.dataAnalysisTabWidget.indexOf(self.advancedAnalysisTab), _translate("mainWindow", "Advanced Analysis"))
         self.label_7.setText(_translate("mainWindow", "Metadata sources :"))
         self.menuDataDisplay.setTitle(_translate("mainWindow", "Data Display"))
