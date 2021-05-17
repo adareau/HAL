@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 15:09:42
+Modified : 2021-05-17 16:20:29
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -73,6 +73,14 @@ class NumberValidator(QtWidgets.QStyledItemDelegate):
 # %% TOOL
 
 
+def _isnumber(x):
+    try:
+        float(x)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
 def gimmeColor(i=0):
     """returns a color from the defined color cycle"""
     # TODO : allow the user to define the color cycle ?
@@ -87,6 +95,24 @@ def gimmeColor(i=0):
     out = tuple([int(c) for c in color_RGB])
 
     return tuple(color_RGB)
+
+
+def gimmeSymbol(i=0):
+    symb_list = [
+        "o",
+        "t",
+        "s",
+        "p",
+        "h",
+        "star",
+        "t1",
+        "t3",
+        "t2",
+        "+",
+        "d",
+        "x",
+    ]
+    return symb_list[i % len(symb_list)]
 
 
 # %% SETUP FUNCTIONS
@@ -247,10 +273,54 @@ def mapVariables(self, metadata_dic):
             msg = "parameter name '%s' not found for metadata class '%s'"
             logger.debug(msg % (meta_parname, meta_name))
             continue
-        # return
+        # store
         mapped_variables[name] = metadata_dic[meta_name][meta_parname]
+        # store info
+        info_key = "_" + meta_parname + "_info"
+        if info_key in metadata_dic[meta_name]:
+            name_info = "_%s_info" % name
+            mapped_variables[name_info] = metadata_dic[meta_name][info_key]
 
     return mapped_variables
+
+
+def parseSubplotContent(self):
+    """
+    Parses the content of the subplotContentTable. The content to plot
+    has to be given in the following form :
+
+    '(var_1, var_2); (var_3, var_4)'
+
+    where the variable names match the format defined in the global variable
+    'NAME_REGEXP_FORMAT'. White spaces are ignored.
+    """
+    global NAME_REGEXP_FORMAT
+
+    # -- get table
+    table = self.subplotContentTable
+    n_row = table.rowCount()
+
+    # -- get content
+    requested_content = {}
+    var_fmt = NAME_REGEXP_FORMAT
+    regexp_format = "^\((%s)\,(%s)\)$" % (var_fmt, var_fmt)
+    for row in range(n_row):
+        requested_content[row] = []
+        item = table.item(row, 0)
+        # if None : skip
+        if item is None:
+            continue
+        # otherwise, analyze content
+        content_str = item.text()
+        tuple_list = content_str.split(";")
+        for tup in tuple_list:
+            tup = tup.replace(" ", "")  # remove white spaces
+            res = re.match(regexp_format, tup)
+            if res:
+                x, y = res.groups()
+                requested_content[row].append((x, y))
+
+    return requested_content
 
 
 def refreshMetadataLivePlot(self):
@@ -265,32 +335,98 @@ def refreshMetadataLivePlot(self):
     # -- get metadata list
     metadata = dataexplorer.getSelectionMetaDataFromCache(self)
 
-    # -- refresh
-    # TEMP: quick and dirty implementation, to test
-    screen = self.mainScreen
-    screen.clear()
-    subplot = screen.addPlot(0, 0)
-    subplot.addLegend()
-    iplot = 0
-    for setname, metadata_dic in metadata.items():
-        mapped_variables = mapVariables(self, metadata_dic)
-        if mapped_variables.keys() >= {"x", "y"}:
-            color = gimmeColor(iplot)
-            iplot += 1
-            isort = np.argsort(mapped_variables["x"])
-            x = np.array(mapped_variables["x"])
-            y = np.array(mapped_variables["y"])
-            pitem = pg.PlotDataItem(
-                x[isort],
-                y[isort],
-                pen=color,
-                symbolBrush=color,
-                symbolPen=color,
-                symbol="o",
-                symbolSize=8,
-                name=setname,
-            )
-            subplot.addItem(pitem)
+    # -- clear all plots
+    for subplot in self.live_display_subplots:
+        for plot_item in subplot.plotted_data:
+            subplot.removeItem(plot_item)
+        subplot.plotted_data = []
+
+    # -- get requested content
+    requested_content = parseSubplotContent(self)
+
+    # -- plot
+    for subplot_number, content in requested_content.items():
+        subplot = self.live_display_subplots[subplot_number]
+        i_plot = 0
+        info = {
+            "x": {"name": "x", "unit": ""},
+            "y": {"name": "y", "unit": ""},
+        }
+        for setname, metadata_dic in metadata.items():
+            mapped_variables = mapVariables(self, metadata_dic)
+            n_content = len(content)
+            for i_content, c in enumerate(content):
+                # get keys
+                kx, ky = c
+                # update name, just in case
+                for ax, k in zip(["x", "y"], [kx, ky]):
+                    if info[ax]["name"] == ax:
+                        info[ax]["name"] = k
+                if kx not in mapped_variables or ky not in mapped_variables:
+                    continue
+                # get values
+                x_raw = np.array(mapped_variables[kx])
+                y_raw = np.array(mapped_variables[ky])
+                # remove None
+                x = []
+                y = []
+                for (xx, yy) in zip(x_raw, y_raw):
+                    if None in [xx, yy]:
+                        continue
+                    x.append(xx)
+                    y.append(yy)
+                # if empty: continue
+                if not x:
+                    continue
+                # get info
+                for ax, k in zip(["x", "y"], [kx, ky]):
+                    info_key = "_%s_info" % k
+                    if info_key in mapped_variables:
+                        info[ax]["name"] = mapped_variables[info_key]["name"]
+                        info[ax]["unit"] = mapped_variables[info_key]["unit"]
+
+                # sort
+                x = np.array(x)
+                y = np.array(y)
+                isort = np.argsort(x)
+                x = x[isort]
+                y = y[isort]
+
+                # setname
+                if n_content > 1:
+                    # then we append the name of the y content
+                    # to the displayed name
+                    name = "%s (%s)" % (setname, info["y"]["name"])
+                else:
+                    name = setname
+                # plot
+                symbol = gimmeSymbol(i_content)
+                color = gimmeColor(i_plot)
+                data_item = pg.PlotDataItem(
+                    x,
+                    y,
+                    pen=color,
+                    symbolBrush=color,
+                    symbolPen=color,
+                    symbol=symbol,
+                    symbolSize=8,
+                    name=name,
+                )
+                subplot.addItem(data_item)
+                subplot.plotted_data.append(data_item)
+
+                # -- end of content loop --
+
+            # increment plot
+            i_plot += 1
+
+            # -- end of set loop --
+
+        # -- get last item info to update axis labels
+        for ax, loc in zip(["x", "y"], ["bottom", "left"]):
+            name = info[ax]["name"]
+            unit = info[ax]["unit"]
+            subplot.setLabel(loc, name, units=unit)
 
 
 # %% CALLBACKS
@@ -340,16 +476,27 @@ def updateSubplotLayout(self):
         rs = int(rowspan_str)
         cs = int(colspan_str)
         new_subplot = screen.addPlot(row=r, col=c, rowspan=rs, colspan=cs)
+        new_subplot.plotted_data = []  # will be used to store plot items !
+        new_subplot.addLegend()
         self.live_display_subplots.append(new_subplot)
 
-    # -- reset subplotContentTable
+    # -- update subplotContentTable
+    # save current content
     table = self.subplotContentTable
+    n_row = table.rowCount()
+    saved_content = {}
+    for row in range(n_row):
+        item = table.item(row, 0)
+        if item is not None:
+            saved_content[row] = item.text()
+    # clear
     table.clearContents()
+    # update
     n_row = len(self.live_display_subplots)
     table.setRowCount(n_row)
     for row in range(n_row):
-        table.setItem(row, 0, QTableWidgetItem("(x, y); "))
-
+        new_content = saved_content.get(row, "(x, y); ")
+        table.setItem(row, 0, QTableWidgetItem(new_content))
 
 
 def resetSubplotLayout(self):
