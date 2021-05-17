@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-12 16:52:57
+Modified : 2021-05-17 10:50:51
 
 Comments : Functions related to (meta)data exploration
 """
@@ -32,6 +32,7 @@ from PyQt5.QtWidgets import (
 
 # -- local
 import HAL.gui.quickplot as quickplot
+import HAL.gui.advancedplot as advancedplot
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -168,6 +169,7 @@ def updateMetadataCache(self, reset_cache=False):
 
     # -- update gui elements
     quickplot.refreshMetaDataList(self)
+    advancedplot.refreshMetaDataList(self)
 
 
 def _generateMetadaListFromCache(self, path_list):
@@ -263,7 +265,7 @@ def displayMetaData(self):
         # get param list
         param_list = meta.data
         # exclude 'hidden' parameters
-        param_list = [p for p in param_list if not p['hidden']]
+        param_list = [p for p in param_list if not p["hidden"]]
         if not param_list:
             # not displayed if empty
             continue

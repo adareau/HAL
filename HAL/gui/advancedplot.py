@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 10:42:52
+Modified : 2021-05-17 10:53:51
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -25,6 +25,10 @@ from PyQt5.QtWidgets import (
 
 # -- logger
 logger = logging.getLogger(__name__)
+
+
+# %% GLOBAL VARIABLES
+NAME_SEPARATION_CHARACTER = "."
 
 
 # %% CUSTOM CLASS FOR AUTOCOMPLETION
@@ -80,7 +84,38 @@ def setupAdvancedPlot(self):
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
 
 
-def _checkVariableDeclaration(self):
+def refreshMetaDataList(self):
+    """
+    updates the variable declaration suggestions
+    """
+    global NAME_SEPARATION_CHARACTER
+
+    # -- get data
+    metadata_list = self.available_numeric_metadata
+
+    # -- generate the suggestion list
+    suggestion_list = []
+    naming_format = "%s" + NAME_SEPARATION_CHARACTER + "%s"
+    for name, param_list in metadata_list.items():
+        for par_name in sorted(param_list):
+            new_suggestion = naming_format % (name, par_name)
+            suggestion_list.append(new_suggestion)
+
+    # -- apply to all rows
+    table = self.variableDeclarationTable
+    # block signals to avoid calling the variableDeclarationChanged() callback
+    table.blockSignals(True)
+    n_row = table.rowCount()
+    for row in range(n_row):
+        current_item = table.item(row, 1)
+        new_item = QTableWidgetItem(current_item.text())
+        new_item.setData(Qt.UserRole, suggestion_list)
+        table.setItem(row, 1, new_item)
+    # unblock signals
+    table.blockSignals(False)
+
+
+def checkVariableDeclaration(self):
     """checks that the variable declaration is sound, and issue warnings"""
     # -- get table object and row number
     table = self.variableDeclarationTable
@@ -95,7 +130,7 @@ def _checkVariableDeclaration(self):
 def variableDeclarationChanged(self, item):
     """called when the content of the variable declaration table is changed"""
     # -- check the declaration
-    _checkVariableDeclaration(self)
+    checkVariableDeclaration(self)
 
 
 def exportToMatplotlib(self):
