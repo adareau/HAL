@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 10:53:51
+Modified : 2021-05-17 11:26:53
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -12,7 +12,8 @@ Comments : Implement the "Advanced data analysis"
 # -- global
 import logging
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QHeaderView,
@@ -29,20 +30,28 @@ logger = logging.getLogger(__name__)
 
 # %% GLOBAL VARIABLES
 NAME_SEPARATION_CHARACTER = "."
+NAME_REGEXP_FORMAT = "\w*"
+VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
 
 
-# %% CUSTOM CLASS FOR AUTOCOMPLETION
+# %% CUSTOM CLASSES
+
+# -- delegate for table autocompletion and validation
 # cf. https://stackoverflow.com/q/60750357
-
 
 class TableItemCompleter(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index):
         editor = QLineEdit(parent)
-        completionlist = index.data(Qt.UserRole)
+        # auto completion
+        completionlist, regexp_format = index.data(Qt.UserRole)
         autoCompleter = QCompleter(completionlist, parent)
         autoCompleter.setCaseSensitivity(Qt.CaseInsensitive)
         autoCompleter.setFilterMode(Qt.MatchContains)
         editor.setCompleter(autoCompleter)
+        # validation
+        rx = QRegExp(regexp_format)
+        validator = QRegExpValidator(rx)
+        editor.setValidator(validator)
         return editor
 
 
@@ -50,6 +59,8 @@ class TableItemCompleter(QtWidgets.QStyledItemDelegate):
 
 
 def setupAdvancedPlot(self):
+    global NAME_REGEXP_FORMAT, VARIABLE_REGEXP_FORMAT
+
     # -- Variable declaration table
     table = self.variableDeclarationTable
     # init columnt and row number
@@ -75,9 +86,20 @@ def setupAdvancedPlot(self):
     # init the completer with empty list
     n_row = table.rowCount()
     for rows in range(n_row):
+        # row 0 : name
         comp_list = [""]
+        regexp = NAME_REGEXP_FORMAT
+        data = (comp_list, regexp)
         item = QTableWidgetItem("")
-        item.setData(Qt.UserRole, comp_list)
+        item.setData(Qt.UserRole, data)
+        table.setItem(rows, 0, item)
+
+        # row 1 : variable
+        comp_list = [""]
+        regexp = VARIABLE_REGEXP_FORMAT
+        data = (comp_list, regexp)
+        item = QTableWidgetItem("")
+        item.setData(Qt.UserRole, data)
         table.setItem(rows, 1, item)
 
 
@@ -88,7 +110,7 @@ def refreshMetaDataList(self):
     """
     updates the variable declaration suggestions
     """
-    global NAME_SEPARATION_CHARACTER
+    global NAME_SEPARATION_CHARACTER, VARIABLE_REGEXP_FORMAT
 
     # -- get data
     metadata_list = self.available_numeric_metadata
@@ -106,10 +128,11 @@ def refreshMetaDataList(self):
     # block signals to avoid calling the variableDeclarationChanged() callback
     table.blockSignals(True)
     n_row = table.rowCount()
+    data = (suggestion_list, VARIABLE_REGEXP_FORMAT)
     for row in range(n_row):
         current_item = table.item(row, 1)
         new_item = QTableWidgetItem(current_item.text())
-        new_item.setData(Qt.UserRole, suggestion_list)
+        new_item.setData(Qt.UserRole, data)
         table.setItem(row, 1, new_item)
     # unblock signals
     table.blockSignals(False)
