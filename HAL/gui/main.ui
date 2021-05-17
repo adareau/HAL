@@ -673,14 +673,60 @@
          <widget class="QPushButton" name="exportToMatplotlibButton">
           <property name="geometry">
            <rect>
-            <x>270</x>
-            <y>140</y>
+            <x>9</x>
+            <y>164</y>
             <width>91</width>
             <height>23</height>
            </rect>
           </property>
           <property name="text">
            <string>to matplotlib</string>
+          </property>
+         </widget>
+         <widget class="QTableWidget" name="subplotContentTable">
+          <property name="geometry">
+           <rect>
+            <x>489</x>
+            <y>10</y>
+            <width>271</width>
+            <height>151</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QTableWidget" name="subplotSetupTable">
+          <property name="geometry">
+           <rect>
+            <x>290</x>
+            <y>10</y>
+            <width>181</width>
+            <height>111</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="updateSubplotLayoutButton">
+          <property name="geometry">
+           <rect>
+            <x>290</x>
+            <y>130</y>
+            <width>51</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>update</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="resetSubplotLayoutButton">
+          <property name="geometry">
+           <rect>
+            <x>350</x>
+            <y>130</y>
+            <width>51</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>reset</string>
           </property>
          </widget>
         </widget>

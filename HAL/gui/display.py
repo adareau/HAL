@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-17 13:07:08
+Modified : 2021-05-17 14:51:37
 
 Comments : Functions related to data visualization
 """
@@ -122,6 +122,7 @@ def displaySelectionChanged(self, action):
 
     # refresh display
     plotSelectedData(self)
+    advancedplot.updateSubplotLayout(self)
     advancedplot.refreshMetadataLivePlot(self)
 
 

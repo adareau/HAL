@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-17 14:17:12
+Modified : 2021-05-17 15:08:19
 
 Comments :
 """
@@ -105,6 +105,9 @@ CALLBACK_LIST = [
     # -- ADVANCED DATA ANALYSIS / PLOT
     ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
     ("exportToMatplotlibButton", "clicked", "_exportToMatplotlibButtonClicked"),
+    ("updateSubplotLayoutButton", "clicked", "_updateSubplotLayoutButtonClicked"),
+    ("resetSubplotLayoutButton", "clicked", "_resetSubplotLayoutButtonClicked"),
+    ("subplotContentTable", "itemChanged", "_subplotContentTableChanged"),
 
     # -- FITTING --
     # ROI
@@ -182,6 +185,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         ordered_dic_init = [(m, set()) for m in meta_names]
         self.available_metadata = OrderedDict(ordered_dic_init)
         self.available_numeric_metadata = OrderedDict(ordered_dic_init)
+        # live display subplots
+        self.live_display_subplots = []
 
         # -- Other initializations
         self.dummy = Dummy()
@@ -333,6 +338,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _exportToMatplotlibButtonClicked(self):
         advancedplot.exportToMatplotlib(self)
+
+    def _updateSubplotLayoutButtonClicked(self):
+        advancedplot.updateSubplotLayout(self)
+
+    def _resetSubplotLayoutButtonClicked(self):
+        advancedplot.resetSubplotLayout(self)
+
+    def _subplotContentTableChanged(self, item):
+        advancedplot.subplotContentChanged(self, item)
 
     # -- FITTING
 

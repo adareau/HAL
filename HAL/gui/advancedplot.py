@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 14:09:04
+Modified : 2021-05-17 15:09:42
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -17,7 +17,7 @@ import numpy as np
 from matplotlib import cm
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QRegExp
-from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtGui import QRegExpValidator, QIntValidator
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QHeaderView,
@@ -62,7 +62,16 @@ class TableItemCompleter(QtWidgets.QStyledItemDelegate):
         return editor
 
 
+class NumberValidator(QtWidgets.QStyledItemDelegate):
+    def createEditor(self, parent, option, index):
+        editor = QLineEdit(parent)
+        validator = QIntValidator(0, 256)
+        editor.setValidator(validator)
+        return editor
+
+
 # %% TOOL
+
 
 def gimmeColor(i=0):
     """returns a color from the defined color cycle"""
@@ -126,6 +135,51 @@ def setupAdvancedPlot(self):
         item = QTableWidgetItem("")
         item.setData(Qt.UserRole, data)
         table.setItem(rows, 1, item)
+
+    # -- subplot setup table
+    table = self.subplotSetupTable
+    # init columnt and row number
+    table.setColumnCount(4)
+    table.setRowCount(8)
+    # labels
+    table.setHorizontalHeaderLabels(["col", "row", "cspan", "rspan"])
+    # selection mode
+    # table.setSelectionBehavior(QAbstractItemView.SelectRows)
+    table.setSelectionMode(QAbstractItemView.SingleSelection)
+    # set row height
+    header = table.verticalHeader()
+    header.setDefaultSectionSize(10)
+    header.setSectionResizeMode(QHeaderView.Fixed)
+    # show row numbers
+    header.setVisible(True)
+    # column width
+    table.setColumnWidth(0, 30)
+    table.setColumnWidth(1, 30)
+    table.setColumnWidth(2, 40)
+    table.setColumnWidth(3, 40)
+    header = table.horizontalHeader()
+    header.setSectionResizeMode(QHeaderView.Fixed)
+    # set completer
+    table.setItemDelegate(NumberValidator())
+    # init
+    table.setItem(0, 0, QTableWidgetItem("0"))
+    table.setItem(0, 1, QTableWidgetItem("0"))
+    table.setItem(0, 2, QTableWidgetItem("1"))
+    table.setItem(0, 3, QTableWidgetItem("1"))
+
+    # -- subplot content table
+    table = self.subplotContentTable
+    # init columnt and row number
+    table.setColumnCount(1)
+    table.setRowCount(1)
+    # selection mode
+    table.setSelectionMode(QAbstractItemView.SingleSelection)
+    # set row height
+    header = table.verticalHeader()
+    header.setDefaultSectionSize(10)
+    header.setVisible(True)
+    table.setColumnWidth(0, 250)
+    table.setItem(0, 0, QTableWidgetItem("(x, y); "))
 
 
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
@@ -251,3 +305,68 @@ def variableDeclarationChanged(self, item):
 def exportToMatplotlib(self):
     """ Placeholder. TODO : implement"""
     logger.debug("export to MPL !")
+
+
+def updateSubplotLayout(self):
+    """updates the subplot layout !"""
+    # -- check whether the current display is an instance of LiveMetaData
+    if not isinstance(self.display, LiveMetaData):
+        return
+
+    # -- reset current layout
+    screen = self.mainScreen
+    screen.clear()
+    self.live_display_subplots = []
+
+    # -- get layout information
+    table = self.subplotSetupTable
+    n_row = table.rowCount()
+    for row in range(n_row):
+        # skip if one item not defined
+        if None in [table.item(row, i) for i in range(4)]:
+            continue
+        # get row content
+        col_str = table.item(row, 0).text()
+        row_str = table.item(row, 1).text()
+        colspan_str = table.item(row, 2).text()
+        rowspan_str = table.item(row, 3).text()
+        # skip if one column is empty
+        if "" in [col_str, row_str, colspan_str, rowspan_str]:
+            print("skip %i" % row)
+            continue
+        # init subplot
+        r = int(row_str)
+        c = int(col_str)
+        rs = int(rowspan_str)
+        cs = int(colspan_str)
+        new_subplot = screen.addPlot(row=r, col=c, rowspan=rs, colspan=cs)
+        self.live_display_subplots.append(new_subplot)
+
+    # -- reset subplotContentTable
+    table = self.subplotContentTable
+    table.clearContents()
+    n_row = len(self.live_display_subplots)
+    table.setRowCount(n_row)
+    for row in range(n_row):
+        table.setItem(row, 0, QTableWidgetItem("(x, y); "))
+
+
+
+def resetSubplotLayout(self):
+    """resets the subplot layout !"""
+    # clear
+    table = self.subplotSetupTable
+    table.clearContents()
+    # re-init
+    table.setItem(0, 0, QTableWidgetItem("0"))
+    table.setItem(0, 1, QTableWidgetItem("0"))
+    table.setItem(0, 2, QTableWidgetItem("1"))
+    table.setItem(0, 3, QTableWidgetItem("1"))
+    # update subplot accordingly
+    updateSubplotLayout(self)
+
+
+def subplotContentChanged(self, item):
+    """called when the subplot content table is changed"""
+    # -- refresh display
+    refreshMetadataLivePlot(self)
