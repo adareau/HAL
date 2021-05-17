@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-17 10:50:51
+Modified : 2021-05-17 13:04:34
 
 Comments : Functions related to (meta)data exploration
 """
@@ -170,6 +170,7 @@ def updateMetadataCache(self, reset_cache=False):
     # -- update gui elements
     quickplot.refreshMetaDataList(self)
     advancedplot.refreshMetaDataList(self)
+    advancedplot.refreshMetadataLivePlot(self)
 
 
 def _generateMetadaListFromCache(self, path_list):

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 16:30:21
+Modified : 2021-05-17 13:07:08
 
 Comments : Functions related to data visualization
 """
@@ -18,6 +18,8 @@ from PyQt5.QtWidgets import QAction, QActionGroup
 
 # -- local
 import HAL.gui.fitting as fitting
+import HAL.gui.advancedplot as advancedplot
+from HAL.classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -70,6 +72,19 @@ def setupDisplay(self):
         displaySubmenu.addAction(action)
         displaySelectionGroup.addAction(action)
 
+    # special case : the "live meta data" class
+    # this is a basically empty class, used when we
+    # switch to the "live metadata" display
+    action = QAction(
+        "Live metadata plot",
+        menu,
+        checkable=True,
+        checked=(display_name == default_display),
+    )
+    action.setData(LiveMetaData)
+    menu.addAction(action)
+    displaySelectionGroup.addAction(action)
+
     # set the group to be exclusive, and store it in self
     displaySelectionGroup.setExclusive(True)
     self.displaySelectionGroup = displaySelectionGroup
@@ -107,6 +122,7 @@ def displaySelectionChanged(self, action):
 
     # refresh display
     plotSelectedData(self)
+    advancedplot.refreshMetadataLivePlot(self)
 
 
 def updateColormap(self):

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 11:26:53
+Modified : 2021-05-17 13:06:08
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -23,6 +23,7 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
+from HAL.classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
 
 # -- delegate for table autocompletion and validation
 # cf. https://stackoverflow.com/q/60750357
+
 
 class TableItemCompleter(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index):
@@ -145,6 +147,19 @@ def checkVariableDeclaration(self):
     n_row = table.rowCount()
     print(n_row)
     # --
+
+
+def refreshMetadataLivePlot(self):
+    """if the current display mode is set to LiveMetaData, refresh the plot"""
+    logger.debug("refresh metadata display")
+
+    # -- check whether the current display is an instance of LiveMetaData
+    if not isinstance(self.display, LiveMetaData):
+        logger.debug("NOT A LiveMetaData INSTANCE")
+        return
+
+    # -- refresh
+    logger.debug("GO ON !")
 
 
 # %% CALLBACKS
