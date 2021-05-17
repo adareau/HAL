@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 16:20:29
+Modified : 2021-05-17 17:19:06
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -14,6 +14,7 @@ import logging
 import re
 import pyqtgraph as pg
 import numpy as np
+import json
 from matplotlib import cm
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QRegExp
@@ -24,6 +25,7 @@ from PyQt5.QtWidgets import (
     QCompleter,
     QLineEdit,
     QTableWidgetItem,
+    QInputDialog,
 )
 
 # -- local
@@ -39,6 +41,7 @@ NAME_SEPARATION_CHARACTER = "."
 NAME_REGEXP_FORMAT = "\w*"
 VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
 VARIABLE_SPLIT_FORMAT = "^([\w_\-:\s]*)\.([\w_\-:\s]*)$"
+CONF_SAVE_SUFOLDER = "advanced_plot_saved_configurations"
 
 # %% CUSTOM CLASSES
 
@@ -119,7 +122,7 @@ def gimmeSymbol(i=0):
 
 
 def setupAdvancedPlot(self):
-    global NAME_REGEXP_FORMAT, VARIABLE_REGEXP_FORMAT
+    global NAME_REGEXP_FORMAT, VARIABLE_REGEXP_FORMAT, CONF_SAVE_SUFOLDER
 
     # -- Variable declaration table
     table = self.variableDeclarationTable
@@ -198,6 +201,7 @@ def setupAdvancedPlot(self):
     # init columnt and row number
     table.setColumnCount(1)
     table.setRowCount(1)
+    table.setHorizontalHeaderLabels(["plot content"])
     # selection mode
     table.setSelectionMode(QAbstractItemView.SingleSelection)
     # set row height
@@ -207,6 +211,17 @@ def setupAdvancedPlot(self):
     table.setColumnWidth(0, 250)
     table.setItem(0, 0, QTableWidgetItem("(x, y); "))
 
+    # -- init saved configs
+    saved_config_folder = self._settings_folder / CONF_SAVE_SUFOLDER
+    self.advancedPlotSelectionBox.addItem("----", userData=None)
+    for content in saved_config_folder.iterdir():
+        if not content.is_file():
+            continue
+        print(content)
+        if content.suffix == ".json":
+            self.advancedPlotSelectionBox.addItem(
+                content.stem, userData=content
+            )
 
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
 
@@ -325,11 +340,9 @@ def parseSubplotContent(self):
 
 def refreshMetadataLivePlot(self):
     """if the current display mode is set to LiveMetaData, refresh the plot"""
-    logger.debug("refresh metadata display")
 
     # -- check whether the current display is an instance of LiveMetaData
     if not isinstance(self.display, LiveMetaData):
-        logger.debug("NOT A LiveMetaData INSTANCE")
         return
 
     # -- get metadata list
@@ -468,7 +481,6 @@ def updateSubplotLayout(self):
         rowspan_str = table.item(row, 3).text()
         # skip if one column is empty
         if "" in [col_str, row_str, colspan_str, rowspan_str]:
-            print("skip %i" % row)
             continue
         # init subplot
         r = int(row_str)
@@ -517,3 +529,142 @@ def subplotContentChanged(self, item):
     """called when the subplot content table is changed"""
     # -- refresh display
     refreshMetadataLivePlot(self)
+
+
+# %% LOADING / SAVING CONFIGURATIONS
+
+
+def _saveCurrentConfig(self, out_name="config.json"):
+    global CONF_SAVE_SUFOLDER
+    # -- prepare config dict
+    config = {}
+    # - variable declaration
+    # prepare list
+    variable_declaration = []
+    table = self.variableDeclarationTable
+    n_row = table.rowCount()
+    for row in range(n_row):
+        # get variable names
+        name = table.item(row, 0).text()
+        varname = table.item(row, 1).text()
+        if not varname or not name:
+            continue
+        variable_declaration.append((name, varname))
+    # store
+    config["variable declaration"] = variable_declaration
+
+    # - plot config
+    # prepare list
+    plot_config = []
+    table = self.subplotSetupTable
+    n_row = table.rowCount()
+    for row in range(n_row):
+        # skip if one item not defined
+        if None in [table.item(row, i) for i in range(4)]:
+            continue
+        # get row content
+        col_str = table.item(row, 0).text()
+        row_str = table.item(row, 1).text()
+        colspan_str = table.item(row, 2).text()
+        rowspan_str = table.item(row, 3).text()
+        # skip if one column is empty
+        if "" in [col_str, row_str, colspan_str, rowspan_str]:
+            continue
+        plot_config.append((col_str, row_str, colspan_str, rowspan_str))
+    # store
+    config["plot config"] = plot_config
+
+    # - plot content
+    # prepare list
+    plot_content = []
+    table = self.subplotContentTable
+    n_row = table.rowCount()
+    for row in range(n_row):
+        item = table.item(row, 0)
+        # if None : skip
+        if item is None:
+            plot_content.append("")
+        else:
+            plot_content.append(item.text())
+    # store
+    config["plot content"] = plot_content
+
+    # -- write
+    out_folder = self._settings_folder / CONF_SAVE_SUFOLDER
+    out_folder.mkdir(exist_ok=True)
+    out_file = out_folder / out_name
+    out_file.write_text(json.dumps(config))
+
+
+def advancedPlotSaveButtonClicked(self):
+    """saves the current config, overwrite currently selected"""
+    pass
+
+
+def advancedPlotSaveAsButtonClicked(self):
+    """saves the current config, asks for the name"""
+    name, ok = QInputDialog.getText(
+        self, "save plot config as", "Enter config name:", text="config"
+    )
+    if ok:
+        _saveCurrentConfig(self, out_name=name + ".json")
+
+
+def advancedPlotDeleteButtonClicked(self):
+    pass
+
+
+def advancedPlotSelectionBoxSelectionChanged(self):
+    """loads a saved configuration"""
+    # -- get current item data
+    data = self.advancedPlotSelectionBox.currentData()
+    if data is None:
+        return
+
+    # -- load config
+    # is it a file ?
+    if not data.is_file():
+        return
+    # load json
+    json_in = json.loads(data.read_text())
+    # check requested fields
+    requested = ['variable declaration', 'plot config', 'plot content']
+    for req in requested:
+        if req not in json_in:
+            return
+
+    # -- update
+    # - variable declaration
+    table = self.variableDeclarationTable
+    table.blockSignals(True)
+    # clear
+    for row in range(table.rowCount()):
+        table.item(row, 0).setText("")
+        table.item(row, 1).setText("")
+    # populate
+    for row, content in enumerate(json_in['variable declaration']):
+        table.item(row, 0).setText(content[0])
+        table.item(row, 1).setText(content[1])
+    table.blockSignals(False)
+
+    # - plot config
+    table = self.subplotSetupTable
+    table.blockSignals(True)
+    table.clearContents()
+    for row, content in enumerate(json_in['plot config']):
+        for i, c in enumerate(content):
+            table.setItem(row, i, QTableWidgetItem(c))
+    table.blockSignals(False)
+    updateSubplotLayout(self)
+
+    # - plot content
+    table = self.subplotContentTable
+    table.blockSignals(True)
+    table.clearContents()
+    table.setRowCount(len(json_in['plot content']))
+    for row, content in enumerate(json_in['plot content']):
+        table.setItem(row, 0, QTableWidgetItem(content))
+    table.blockSignals(False)
+
+    refreshMetadataLivePlot(self)
+

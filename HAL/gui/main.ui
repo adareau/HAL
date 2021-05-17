@@ -664,7 +664,7 @@
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>10</y>
+            <y>32</y>
             <width>250</width>
             <height>151</height>
            </rect>
@@ -673,8 +673,8 @@
          <widget class="QPushButton" name="exportToMatplotlibButton">
           <property name="geometry">
            <rect>
-            <x>9</x>
-            <y>164</y>
+            <x>667</x>
+            <y>4</y>
             <width>91</width>
             <height>23</height>
            </rect>
@@ -687,7 +687,7 @@
           <property name="geometry">
            <rect>
             <x>489</x>
-            <y>10</y>
+            <y>32</y>
             <width>271</width>
             <height>151</height>
            </rect>
@@ -697,7 +697,7 @@
           <property name="geometry">
            <rect>
             <x>290</x>
-            <y>10</y>
+            <y>32</y>
             <width>181</width>
             <height>111</height>
            </rect>
@@ -707,7 +707,7 @@
           <property name="geometry">
            <rect>
             <x>290</x>
-            <y>130</y>
+            <y>150</y>
             <width>51</width>
             <height>23</height>
            </rect>
@@ -720,7 +720,7 @@
           <property name="geometry">
            <rect>
             <x>350</x>
-            <y>130</y>
+            <y>150</y>
             <width>51</width>
             <height>23</height>
            </rect>
@@ -728,6 +728,60 @@
           <property name="text">
            <string>reset</string>
           </property>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>0</y>
+            <width>339</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QComboBox" name="advancedPlotSelectionBox"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="advancedPlotSaveButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>save</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="advancedPlotSaveAsButton">
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>save as...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="advancedPlotDeleteButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>delete</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
        </widget>

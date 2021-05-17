@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-17 15:08:19
+Modified : 2021-05-17 17:03:10
 
 Comments :
 """
@@ -108,6 +108,10 @@ CALLBACK_LIST = [
     ("updateSubplotLayoutButton", "clicked", "_updateSubplotLayoutButtonClicked"),
     ("resetSubplotLayoutButton", "clicked", "_resetSubplotLayoutButtonClicked"),
     ("subplotContentTable", "itemChanged", "_subplotContentTableChanged"),
+    ("advancedPlotSaveButton", "clicked", "_advancedPlotSaveButtonClicked"),
+    ("advancedPlotSaveAsButton", "clicked", "_advancedPlotSaveAsButtonClicked"),
+    ("advancedPlotDeleteButton", "clicked", "_advancedPlotDeleteButtonClicked"),
+    ("advancedPlotSelectionBox", "currentIndexChanged", "_advancedPlotSelectionBoxSelectionChanged"),
 
     # -- FITTING --
     # ROI
@@ -155,6 +159,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # print first log
         self.logger.debug("HAL started")
 
+        # -- Hidden
+        self._version = "0.0"
+        self._name = "HAL"
+        self._url = "https://github.com/adareau/HAL"
+        self._settings_folder = Path().home() / ".HAL"
+        self._kl = []
+        self._t0 = 0
+
         # -- FIRST
         # load settings
         self.settings = Settings()
@@ -192,14 +204,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dummy = Dummy()
         self.current_folder = None
         self.current_fig = None
-
-        # -- Hidden
-        self._version = "0.0"
-        self._name = "HAL"
-        self._url = "https://github.com/adareau/HAL"
-        self._settings_folder = Path().home() / ".HAL"
-        self._kl = []
-        self._t0 = 0
 
         # -- Keyboard shortcuts
         self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
@@ -347,6 +351,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _subplotContentTableChanged(self, item):
         advancedplot.subplotContentChanged(self, item)
+
+    def _advancedPlotSaveButtonClicked(self):
+        advancedplot.advancedPlotSaveButtonClicked(self)
+
+    def _advancedPlotSaveAsButtonClicked(self):
+        advancedplot.advancedPlotSaveAsButtonClicked(self)
+
+    def _advancedPlotDeleteButtonClicked(self):
+        advancedplot.advancedPlotDeleteButtonClicked(self)
+
+    def _advancedPlotSelectionBoxSelectionChanged(self):
+        advancedplot.advancedPlotSelectionBoxSelectionChanged(self)
 
     # -- FITTING
 
