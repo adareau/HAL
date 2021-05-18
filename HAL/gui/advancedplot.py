@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-17 17:19:06
+Modified : 2021-05-18 15:56:33
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -26,6 +26,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QTableWidgetItem,
     QInputDialog,
+    QMessageBox,
 )
 
 # -- local
@@ -217,11 +218,11 @@ def setupAdvancedPlot(self):
     for content in saved_config_folder.iterdir():
         if not content.is_file():
             continue
-        print(content)
         if content.suffix == ".json":
             self.advancedPlotSelectionBox.addItem(
                 content.stem, userData=content
             )
+
 
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
 
@@ -534,6 +535,26 @@ def subplotContentChanged(self, item):
 # %% LOADING / SAVING CONFIGURATIONS
 
 
+def _refreshAvailableConfigs(self):
+    # -- save current selection and clear
+    current_selection = self.advancedPlotSelectionBox.currentText()
+    self.advancedPlotSelectionBox.blockSignals(True)
+    self.advancedPlotSelectionBox.setCurrentIndex(0)
+    self.advancedPlotSelectionBox.clear()
+    # -- get list of saved configs
+    saved_config_folder = self._settings_folder / CONF_SAVE_SUFOLDER
+    self.advancedPlotSelectionBox.addItem("----", userData=None)
+    for content in saved_config_folder.iterdir():
+        if not content.is_file():
+            continue
+        if content.suffix == ".json":
+            self.advancedPlotSelectionBox.addItem(
+                content.stem, userData=content
+            )
+    # -- retrieve saved selection (if still exists)
+    self.advancedPlotSelectionBox.blockSignals(False)
+    self.advancedPlotSelectionBox.setCurrentText(current_selection)
+
 def _saveCurrentConfig(self, out_name="config.json"):
     global CONF_SAVE_SUFOLDER
     # -- prepare config dict
@@ -598,7 +619,20 @@ def _saveCurrentConfig(self, out_name="config.json"):
 
 def advancedPlotSaveButtonClicked(self):
     """saves the current config, overwrite currently selected"""
-    pass
+    # -- get current selection
+    data = self.advancedPlotSelectionBox.currentData()
+    # if data is None : ask for a name
+    if data is None or not data.is_file():
+        advancedPlotSaveAsButtonClicked(self)
+    # otherwise, overwrite current selection
+    out_name = data.name
+    msg = "overwrite existing config '%s' ?" % data.stem
+    answer = QMessageBox.question(
+        self, "save plot config", msg, QMessageBox.Yes | QMessageBox.No
+    )
+    if answer == QMessageBox.Yes:
+        _saveCurrentConfig(self, out_name=out_name)
+        _refreshAvailableConfigs(self)
 
 
 def advancedPlotSaveAsButtonClicked(self):
@@ -608,10 +642,25 @@ def advancedPlotSaveAsButtonClicked(self):
     )
     if ok:
         _saveCurrentConfig(self, out_name=name + ".json")
+        _refreshAvailableConfigs(self)
 
 
 def advancedPlotDeleteButtonClicked(self):
-    pass
+    """delete the current config"""
+    # -- get current selection
+    data = self.advancedPlotSelectionBox.currentData()
+    #  check that the config still exists
+    if data is None or not data.is_file():
+        return
+    # otherwise, overwrite current selection
+    out_name = data.name
+    msg = "delete existing config '%s' ?" % data.stem
+    answer = QMessageBox.question(
+        self, "delete config", msg, QMessageBox.Yes | QMessageBox.No
+    )
+    if answer == QMessageBox.Yes:
+        data.unlink()
+        _refreshAvailableConfigs(self)
 
 
 def advancedPlotSelectionBoxSelectionChanged(self):
@@ -628,7 +677,7 @@ def advancedPlotSelectionBoxSelectionChanged(self):
     # load json
     json_in = json.loads(data.read_text())
     # check requested fields
-    requested = ['variable declaration', 'plot config', 'plot content']
+    requested = ["variable declaration", "plot config", "plot content"]
     for req in requested:
         if req not in json_in:
             return
@@ -642,7 +691,7 @@ def advancedPlotSelectionBoxSelectionChanged(self):
         table.item(row, 0).setText("")
         table.item(row, 1).setText("")
     # populate
-    for row, content in enumerate(json_in['variable declaration']):
+    for row, content in enumerate(json_in["variable declaration"]):
         table.item(row, 0).setText(content[0])
         table.item(row, 1).setText(content[1])
     table.blockSignals(False)
@@ -651,7 +700,7 @@ def advancedPlotSelectionBoxSelectionChanged(self):
     table = self.subplotSetupTable
     table.blockSignals(True)
     table.clearContents()
-    for row, content in enumerate(json_in['plot config']):
+    for row, content in enumerate(json_in["plot config"]):
         for i, c in enumerate(content):
             table.setItem(row, i, QTableWidgetItem(c))
     table.blockSignals(False)
@@ -661,10 +710,9 @@ def advancedPlotSelectionBoxSelectionChanged(self):
     table = self.subplotContentTable
     table.blockSignals(True)
     table.clearContents()
-    table.setRowCount(len(json_in['plot content']))
-    for row, content in enumerate(json_in['plot content']):
+    table.setRowCount(len(json_in["plot content"]))
+    for row, content in enumerate(json_in["plot content"]):
         table.setItem(row, 0, QTableWidgetItem(content))
     table.blockSignals(False)
 
     refreshMetadataLivePlot(self)
-
