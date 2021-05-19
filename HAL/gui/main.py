@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-19 12:18:04
+Modified : 2021-05-19 15:31:54
 
 Comments :
 """
@@ -114,6 +114,7 @@ CALLBACK_LIST = [
     ("advancedPlotSelectionBox", "currentIndexChanged", "_advancedPlotSelectionBoxSelectionChanged"),
     ("exportDataButton", "clicked", "_exportDataButtonClicked"),
     ("advancedStatButton", "clicked", "_advancedStatButtonClicked"),
+    ("advancedPlotResetButton", "clicked", "_advancedPlotResetButtonClicked"),
 
     # -- FITTING --
     # ROI
@@ -372,6 +373,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _advancedStatButtonClicked(self):
         advancedplot.advancedStatButtonClicked(self)
 
+    def _advancedPlotResetButtonClicked(self):
+        advancedplot.advancedPlotResetButtonClicked(self)
 
     # -- FITTING
 

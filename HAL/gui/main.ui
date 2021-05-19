@@ -683,37 +683,11 @@
          <widget class="QTableWidget" name="subplotSetupTable">
           <property name="geometry">
            <rect>
-            <x>290</x>
+            <x>280</x>
             <y>32</y>
-            <width>181</width>
-            <height>111</height>
+            <width>191</width>
+            <height>101</height>
            </rect>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="updateSubplotLayoutButton">
-          <property name="geometry">
-           <rect>
-            <x>290</x>
-            <y>150</y>
-            <width>51</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>update</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="resetSubplotLayoutButton">
-          <property name="geometry">
-           <rect>
-            <x>350</x>
-            <y>150</y>
-            <width>51</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>reset</string>
           </property>
          </widget>
          <widget class="QWidget" name="horizontalLayoutWidget">
@@ -800,6 +774,75 @@
               <string>to matplotlib</string>
              </property>
             </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="verticalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>280</x>
+            <y>130</y>
+            <width>191</width>
+            <height>61</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>layout</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="updateSubplotLayoutButton">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>update</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="resetSubplotLayoutButton">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>reset</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QPushButton" name="advancedPlotResetButton">
+               <property name="text">
+                <string>reset all</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>

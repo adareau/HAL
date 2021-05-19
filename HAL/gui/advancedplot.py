@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-19 12:19:11
+Modified : 2021-05-19 15:30:58
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -44,6 +44,11 @@ PLOT_FORMULA_REGEXP_FORMAT = "[\w\+\-.\*/\(\)]*"  # to allow math formulaes
 VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
 VARIABLE_SPLIT_FORMAT = "^([\w_\-:\s]*)\.([\w_\-:\s]*)$"
 CONF_SAVE_SUFOLDER = "advanced_plot_saved_configurations"
+
+TITLE_STR = "[%s]\n"
+VAR_STR = "  > %s\n"
+PREFIX_CORE = "    ├─ "
+PREFIX_LAST = "    └─ "
 
 # %% CUSTOM CLASSES
 
@@ -342,6 +347,9 @@ def parseSubplotContent(self):
     return requested_content
 
 
+# %% PLOT DATA
+
+
 def refreshMetadataLivePlot(self):
     """if the current display mode is set to LiveMetaData, refresh the plot"""
 
@@ -384,7 +392,7 @@ def refreshMetadataLivePlot(self):
                     x = eval(formula_x, {"np": np}, mapped_variables)
                     y = eval(formula_y, {"np": np}, mapped_variables)
                 except Exception as e:
-                    logger.exception(e)
+                    logger.debug(e)
                     continue
                 # convert to array
                 x = np.asarray(x)
@@ -447,6 +455,57 @@ def refreshMetadataLivePlot(self):
             subplot.setLabel(loc, name, units=unit)
 
 
+# %% DISPLAY STATISTICS
+
+
+def displayStats(self):
+    """display statistics for the currently defined variables"""
+    global TITLE_STR, VAR_STR, PREFIX_CORE, PREFIX_LAST
+
+    # -- get metadata list
+    metadata = dataexplorer.getSelectionMetaDataFromCache(self)
+
+    # -- loop on all sets
+    # init out string
+    disp = ""
+    for setname, metadata_dic in metadata.items():
+        disp += TITLE_STR % setname
+        mapped_variables = mapVariables(self, metadata_dic)
+        for name, values in mapped_variables.items():
+            # skip info
+            if name.startswith("_"):
+                continue
+            # filter
+            values = values[np.isfinite(values)]
+            if len(values) == 0:
+                continue
+            # get info dic
+            info_key = "_%s_info" % name
+            info = mapped_variables.get(info_key, {})
+            # prepare unit and name
+            unit = info.get("unit", "")
+            real_name = info.get("name", "")
+            if real_name:
+                name += " (%s)" % real_name
+            disp += VAR_STR % name
+            # number of elements
+            new_line = " # %i" % len(values)
+            disp += PREFIX_CORE + new_line + "\n"
+            # mean / min / max
+            for meas in ["mean", "min", "max"]:
+                x = eval("np.%s(v)" % meas, {"np": np, "v": values})
+                new_line = " %s : %.3g %s" % (meas, x, unit)
+                disp += PREFIX_CORE + new_line + "\n"
+            # std
+            std = np.std(values)
+            percent = 100 * np.std(values) / np.mean(values)
+            new_line = " std : %.3g %s (%.2g %%)" % (std, unit, percent)
+            disp += PREFIX_LAST + new_line + "\n"
+
+    # -- set string
+    self.metaDataText.setPlainText(disp)
+
+
 # %% CALLBACKS
 
 
@@ -468,7 +527,7 @@ def exportDataButtonClicked(self):
 
 def advancedStatButtonClicked(self):
     """ Placeholder. TODO : implement"""
-    logger.debug("compute advanced stats")
+    displayStats(self)
 
 
 def updateSubplotLayout(self):
@@ -732,3 +791,24 @@ def advancedPlotSelectionBoxSelectionChanged(self):
     table.blockSignals(False)
 
     refreshMetadataLivePlot(self)
+
+
+def advancedPlotResetButtonClicked(self):
+    """resets the advanced plot panel"""
+    # - clear variable declaration
+    table = self.variableDeclarationTable
+    table.blockSignals(True)
+    # clear
+    for row in range(table.rowCount()):
+        table.item(row, 0).setText("")
+        table.item(row, 1).setText("")
+    table.blockSignals(False)
+    # - select first config
+    self.advancedPlotSelectionBox.setCurrentIndex(0)
+    # - clear the plot content table
+    table = self.subplotContentTable
+    table.clearContents()
+    table.setRowCount(1)
+    table.setItem(0, 0, QTableWidgetItem("(x, y); "))
+    # - clear the subplot layout table
+    resetSubplotLayout(self)
