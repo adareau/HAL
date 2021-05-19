@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 15:09:28
+Modified : 2021-05-17 12:52:24
 
 Comments : Abstract classes for data display
 """
@@ -37,46 +37,50 @@ class AbstractDisplay(object):
         """sets up display"""
         pass
 
-    def clearPlot(self):
+    def clearPlot(self, *args, **kwargs):
         """clear all the data plot"""
         pass
 
-    def updatePlot(self):
+    def updatePlot(self, *args, **kwargs):
         """to update the current plot with image, 3D atoms position...
            depending on the display type"""
         pass
 
-    def updateColormap(self):
+    def updateColormap(self, *args, **kwargs):
         """update colormap"""
         pass
 
-    def clearFit(self):
+    def clearFit(self, *args, **kwargs):
         """resets fit display"""
         pass
 
-    def updateFit(self):
+    def updateFit(self, *args, **kwargs):
         """updates the fit display"""
         pass
 
     # -- ROI MANAGEMENT
 
-    def addROI(self):
+    def addROI(self, *args, **kwargs):
         """adds an roi"""
         pass
 
-    def getROINames(self):
+    def updateROI(self, *args, **kwargs):
+        """adds an roi"""
+        pass
+
+    def getROINames(self, *args, **kwargs):
         """returns list of current roi"""
         return []
 
-    def getROIPos(self):
+    def getROIPos(self, *args, **kwargs):
         """returns a given roi position"""
         pass
 
-    def getROISize(self):
+    def getROISize(self, *args, **kwargs):
         """returns a given roi position"""
         pass
 
-    def removeROI(self):
+    def removeROI(self, *args, **kwargs):
         """remove given roi"""
         pass
 
@@ -87,17 +91,17 @@ class AbstractDisplay(object):
 
     # -- BACKGROUND MANAGEMENT
 
-    def addBackground(self):
+    def addBackground(self, *args, **kwargs):
         """add a background"""
         pass
 
-    def removeBackground(self):
+    def removeBackground(self, *args, **kwargs):
         """remove background"""
         pass
 
     # -- DATA MANAGEMENT
 
-    def getROIData(self):
+    def getROIData(self, *args, **kwargs):
         """returns data contained in a given ROI"""
         pass
 
@@ -107,6 +111,6 @@ class AbstractDisplay(object):
 
     # -- MISC
 
-    def getColormaps(self):
+    def getColormaps(self, *args, **kwargs):
         """returns the list of available colormaps"""
         return IMPLEMENTED_COLORMAPS

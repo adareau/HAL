@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-12 15:37:44
+Modified : 2021-05-18 16:13:19
 
 Comments :
 """
@@ -29,6 +29,7 @@ import HAL.gui.fitting as fitting
 import HAL.gui.testing as testing
 import HAL.gui.misc as misc
 import HAL.gui.menubar as menubar
+import HAL.gui.advancedplot as advancedplot
 
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
@@ -101,6 +102,17 @@ CALLBACK_LIST = [
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
 
+    # -- ADVANCED DATA ANALYSIS / PLOT
+    ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
+    ("exportToMatplotlibButton", "clicked", "_exportToMatplotlibButtonClicked"),
+    ("updateSubplotLayoutButton", "clicked", "_updateSubplotLayoutButtonClicked"),
+    ("resetSubplotLayoutButton", "clicked", "_resetSubplotLayoutButtonClicked"),
+    ("subplotContentTable", "itemChanged", "_subplotContentTableChanged"),
+    ("advancedPlotSaveButton", "clicked", "_advancedPlotSaveButtonClicked"),
+    ("advancedPlotSaveAsButton", "clicked", "_advancedPlotSaveAsButtonClicked"),
+    ("advancedPlotDeleteButton", "clicked", "_advancedPlotDeleteButtonClicked"),
+    ("advancedPlotSelectionBox", "currentIndexChanged", "_advancedPlotSelectionBoxSelectionChanged"),
+
     # -- FITTING --
     # ROI
     ("addRoiButton", "clicked", "_addRoiButtonClicked"),
@@ -147,6 +159,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # print first log
         self.logger.debug("HAL started")
 
+        # -- Hidden
+        self._version = "0.0"
+        self._name = "HAL"
+        self._url = "https://github.com/adareau/HAL"
+        self._settings_folder = Path().home() / ".HAL"
+        self._kl = []
+        self._t0 = 0
+
         # -- FIRST
         # load settings
         self.settings = Settings()
@@ -177,19 +197,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         ordered_dic_init = [(m, set()) for m in meta_names]
         self.available_metadata = OrderedDict(ordered_dic_init)
         self.available_numeric_metadata = OrderedDict(ordered_dic_init)
+        # live display subplots
+        self.live_display_subplots = []
 
         # -- Other initializations
         self.dummy = Dummy()
         self.current_folder = None
         self.current_fig = None
-
-        # -- Hidden
-        self._version = "0.0"
-        self._name = "HAL"
-        self._url = "https://github.com/adareau/HAL"
-        self._settings_folder = Path().home() / ".HAL"
-        self._kl = []
-        self._t0 = 0
 
         # -- Keyboard shortcuts
         self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
@@ -206,6 +220,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.setupDataExplorer(self)
         # -- Quick Plot
         quickplot.setupQuickPlot(self)
+        # -- Advanced Plot
+        advancedplot.setupAdvancedPlot(self)
         # -- Fitting
         fitting.setupFitting(self)
         # -- Menu Bar
@@ -319,6 +335,35 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _quickPlotSelectionChanged(self):
         quickplot.quickPlotSelectionChanged(self)
 
+    # -- ADVANCED DATA ANALYSIS / PLOT
+
+    def _variableDeclarationChanged(self, item):
+        advancedplot.variableDeclarationChanged(self, item)
+
+    def _exportToMatplotlibButtonClicked(self):
+        advancedplot.exportToMatplotlib(self)
+
+    def _updateSubplotLayoutButtonClicked(self):
+        advancedplot.updateSubplotLayout(self)
+
+    def _resetSubplotLayoutButtonClicked(self):
+        advancedplot.resetSubplotLayout(self)
+
+    def _subplotContentTableChanged(self, item):
+        advancedplot.subplotContentChanged(self, item)
+
+    def _advancedPlotSaveButtonClicked(self):
+        advancedplot.advancedPlotSaveButtonClicked(self)
+
+    def _advancedPlotSaveAsButtonClicked(self):
+        advancedplot.advancedPlotSaveAsButtonClicked(self)
+
+    def _advancedPlotDeleteButtonClicked(self):
+        advancedplot.advancedPlotDeleteButtonClicked(self)
+
+    def _advancedPlotSelectionBoxSelectionChanged(self):
+        advancedplot.advancedPlotSelectionBoxSelectionChanged(self)
+
     # -- FITTING
 
     def _addRoiButtonClicked(self):
@@ -352,6 +397,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
         testing.open_image(self)
+        testing.declare_variables(self)
+        testing.select_livemetadata_display(self)
 
     def _tic(self, msg=None, name=""):
         if msg is not None:

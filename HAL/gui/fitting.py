@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 16:21:46
+Modified : 2021-05-17 13:00:30
 
 Comments : Functions related to data fitting
 """
@@ -314,6 +314,8 @@ def load_saved_fit(self, data_path=None):
     # if no path provided: use current data
     if data_path is None:
         data_object = self.display.getCurrentDataObject()
+        if data_object is None:
+            return None, None
         data_path = Path(data_object.path)
 
     # generate saved fit path

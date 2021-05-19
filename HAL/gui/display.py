@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-07 16:30:21
+Modified : 2021-05-18 16:13:05
 
 Comments : Functions related to data visualization
 """
@@ -15,18 +15,27 @@ import numpy as np
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QActionGroup
+from PyQt5.QtGui import QKeySequence
 
 # -- local
 import HAL.gui.fitting as fitting
+import HAL.gui.advancedplot as advancedplot
+from HAL.classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
+
+
+# %% GLOBAL
+SWITCH_DISPLAY_SHORTCUT = "ALT+SHIFT"
 
 
 # %% SETUP FUNCTIONS
 
 
 def setupDisplay(self):
+    global SWITCH_DISPLAY_SHORTCUT
+
     # -- setup data classes list selector
     for name in self.data_classes.keys():
         self.dataTypeComboBox.addItem(name)
@@ -56,6 +65,7 @@ def setupDisplay(self):
     # we make it such that only one action can be selected
     # cf. https://stackoverflow.com/a/48447711
     displaySelectionGroup = QActionGroup(menu)  # group for display selection
+    n_shortcut = 1
     for display_name, display in self.display_classes.items():
         display_type = display().type
         displaySubmenu = self.menu_data_display_cat_list[display_type]
@@ -65,10 +75,32 @@ def setupDisplay(self):
             checkable=True,
             checked=(display_name == default_display),
         )
+        # set shortcut
+        seq = "%s+%i"% (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
+        action.setShortcut(QKeySequence(seq))
+        n_shortcut += 1
         # the display class is stored in the action data for later access
         action.setData(display)
         displaySubmenu.addAction(action)
         displaySelectionGroup.addAction(action)
+
+    # special case : the "live meta data" class
+    # this is a basically empty class, used when we
+    # switch to the "live metadata" display
+    action = QAction(
+        "Live metadata plot",
+        menu,
+        checkable=True,
+        checked=(display_name == default_display),
+    )
+    action.setData(LiveMetaData)
+    # keyboard shortcut
+    seq = "%s+0" % SWITCH_DISPLAY_SHORTCUT
+    action.setShortcut(QKeySequence(seq))
+    action.setShortcut(QKeySequence(seq))
+    # add
+    menu.addAction(action)
+    displaySelectionGroup.addAction(action)
 
     # set the group to be exclusive, and store it in self
     displaySelectionGroup.setExclusive(True)
@@ -107,6 +139,8 @@ def displaySelectionChanged(self, action):
 
     # refresh display
     plotSelectedData(self)
+    advancedplot.updateSubplotLayout(self)
+    advancedplot.refreshMetadataLivePlot(self)
 
 
 def updateColormap(self):
