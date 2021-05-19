@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-17 13:04:34
+Modified : 2021-05-19 11:02:34
 
 Comments : Functions related to (meta)data exploration
 """
@@ -13,6 +13,7 @@ Comments : Functions related to (meta)data exploration
 import json
 import logging
 import time
+from numpy import NaN
 from collections import OrderedDict
 from pathlib import Path
 from datetime import datetime
@@ -177,12 +178,12 @@ def _generateMetadaListFromCache(self, path_list):
     """
     Subfunction, generates a list of metadata from cache
     """
-    # -- initialize output dictionnary, populated with 'None'
+    # -- initialize output dictionnary, populated with 'NaNs'
     meta_dic = {}
     for meta_name, meta_param_list in self.available_metadata.items():
         meta_dic[meta_name] = {}
         for param_name in meta_param_list:
-            meta_dic[meta_name][param_name] = [None for p in path_list]
+            meta_dic[meta_name][param_name] = [NaN for p in path_list]
 
     # -- populate from cache
     for i_file, file_path in enumerate(path_list):

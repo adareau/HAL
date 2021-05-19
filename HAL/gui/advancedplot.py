@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-18 15:56:33
+Modified : 2021-05-19 11:24:05
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 # %% GLOBAL VARIABLES
 NAME_SEPARATION_CHARACTER = "."
 NAME_REGEXP_FORMAT = "\w*"
+PLOT_FORMULA_REGEXP_FORMAT = "[\w\+\-.\*/\(\)]*"  # to allow math formulaes
 VARIABLE_REGEXP_FORMAT = "[\w_\-:.\s]*"
 VARIABLE_SPLIT_FORMAT = "^([\w_\-:\s]*)\.([\w_\-:\s]*)$"
 CONF_SAVE_SUFOLDER = "advanced_plot_saved_configurations"
@@ -290,7 +291,8 @@ def mapVariables(self, metadata_dic):
             logger.debug(msg % (meta_parname, meta_name))
             continue
         # store
-        mapped_variables[name] = metadata_dic[meta_name][meta_parname]
+        var = np.asarray(metadata_dic[meta_name][meta_parname])
+        mapped_variables[name] = var
         # store info
         info_key = "_" + meta_parname + "_info"
         if info_key in metadata_dic[meta_name]:
@@ -305,12 +307,13 @@ def parseSubplotContent(self):
     Parses the content of the subplotContentTable. The content to plot
     has to be given in the following form :
 
-    '(var_1, var_2); (var_3, var_4)'
+    '(formula_1, formula_2); (formula_3, formula_4)'
 
-    where the variable names match the format defined in the global variable
-    'NAME_REGEXP_FORMAT'. White spaces are ignored.
+    where the formulaes contain variables with names matching the regexp format
+    'NAME_REGEXP_FORMAT', plus math symbols (*+/-) and numpy formulaes such as
+    'np.cos()'. White spaces are ignored.
     """
-    global NAME_REGEXP_FORMAT
+    global PLOT_FORMULA_REGEXP_FORMAT
 
     # -- get table
     table = self.subplotContentTable
@@ -318,7 +321,7 @@ def parseSubplotContent(self):
 
     # -- get content
     requested_content = {}
-    var_fmt = NAME_REGEXP_FORMAT
+    var_fmt = PLOT_FORMULA_REGEXP_FORMAT
     regexp_format = "^\((%s)\,(%s)\)$" % (var_fmt, var_fmt)
     for row in range(n_row):
         requested_content[row] = []
@@ -370,38 +373,39 @@ def refreshMetadataLivePlot(self):
             mapped_variables = mapVariables(self, metadata_dic)
             n_content = len(content)
             for i_content, c in enumerate(content):
-                # get keys
-                kx, ky = c
+                # get formulaes
+                formula_x, formula_y = c
                 # update name, just in case
-                for ax, k in zip(["x", "y"], [kx, ky]):
+                for ax, formula in zip(["x", "y"], [formula_x, formula_y]):
                     if info[ax]["name"] == ax:
-                        info[ax]["name"] = k
-                if kx not in mapped_variables or ky not in mapped_variables:
-                    continue
+                        info[ax]["name"] = formula
                 # get values
-                x_raw = np.array(mapped_variables[kx])
-                y_raw = np.array(mapped_variables[ky])
-                # remove None
-                x = []
-                y = []
-                for (xx, yy) in zip(x_raw, y_raw):
-                    if None in [xx, yy]:
-                        continue
-                    x.append(xx)
-                    y.append(yy)
-                # if empty: continue
-                if not x:
+                try:
+                    x = eval(formula_x, {"np": np}, mapped_variables)
+                    y = eval(formula_y, {"np": np}, mapped_variables)
+                except Exception as e:
+                    logger.exception(e)
                     continue
-                # get info
-                for ax, k in zip(["x", "y"], [kx, ky]):
-                    info_key = "_%s_info" % k
+                # convert to array
+                x = np.asarray(x)
+                y = np.asarray(y)
+                # remove NaNs
+                i_good = np.isfinite(x) * np.isfinite(y)
+                x = x[i_good]
+                y = y[i_good]
+                # if empty: continue
+                if len(x)==0:
+                    continue
+
+                # if a bare variable is resquested, we get the corresponding
+                # information (unit / name), if present
+                for ax, form in zip(["x", "y"], [formula_x, formula_y]):
+                    info_key = "_%s_info" % form
                     if info_key in mapped_variables:
                         info[ax]["name"] = mapped_variables[info_key]["name"]
                         info[ax]["unit"] = mapped_variables[info_key]["unit"]
 
                 # sort
-                x = np.array(x)
-                y = np.array(y)
                 isort = np.argsort(x)
                 x = x[isort]
                 y = y[isort]
@@ -554,6 +558,7 @@ def _refreshAvailableConfigs(self):
     # -- retrieve saved selection (if still exists)
     self.advancedPlotSelectionBox.blockSignals(False)
     self.advancedPlotSelectionBox.setCurrentText(current_selection)
+
 
 def _saveCurrentConfig(self, out_name="config.json"):
     global CONF_SAVE_SUFOLDER
