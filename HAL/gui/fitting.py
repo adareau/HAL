@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-17 13:00:30
+Modified : 2021-05-19 15:59:44
 
 Comments : Functions related to data fitting
 """
@@ -15,6 +15,8 @@ import json
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import Qt
 
 # -- local
 from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
@@ -425,3 +427,49 @@ def fit_data(self):
 
     # - save as json
     _save_fit_result_as_json(self, fit_dic, data_object)
+
+
+# == saved fit management
+
+
+def deleteSavedFits(self):
+    """deletes the saved fits for the current file selection"""
+
+    # -- ask for confirmation
+    msg = "delete saved fits for current run selection ?"
+    title = "This mission is too important..."
+    answer = QMessageBox.question(
+        self, title, msg, QMessageBox.Yes | QMessageBox.No
+    )
+    if answer == QMessageBox.No:
+        return
+
+    # -- search and destroy saved fits
+    logger.debug("deleting fits")
+    # get runs
+    selected_runs = self.runList.selectedItems()
+    if not selected_runs:
+        # if empty >> do nothing
+        return
+    # get paths
+    selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
+    # loop
+    n_paths = len(selected_paths)
+    self.progressBar.setRange(1, n_paths + 1)
+    self.progressBar.setFormat("processing file %v / %m")
+    self.progressBar.setTextVisible(True)
+    for i_path, path in enumerate(selected_paths):
+        self.progressBar.setValue(i_path + 1)
+        # skip "folders"
+        if path is None:
+            continue
+        # generate saved fit path
+        fit_file = _gen_saved_fit_path(self, path)
+        # if file exist : DELETE !!!!!
+        if fit_file.is_file():
+            fit_file.unlink()
+
+    # done
+    self.progressBar.setFormat("DONE")
+    self.progressBar.setRange(0, 100)
+    self.progressBar.setValue(100)

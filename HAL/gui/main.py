@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-19 15:31:54
+Modified : 2021-05-19 15:43:03
 
 Comments :
 """
@@ -125,6 +125,7 @@ CALLBACK_LIST = [
     # fit buttons
     ("fitButton", "clicked", "_fitButtonClicked"),
     ("fitBrowserButton", "clicked", "_fitButtonClicked"),
+    ("deleteFitButton", "clicked", "_deleteFitButtonClicked"),
 
     # -- MENU BAR --
     ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
@@ -388,6 +389,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
+    def _deleteFitButtonClicked(self):
+        # fit
+        fitting.deleteSavedFits(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
+
     def _backgroundCheckBoxChanged(self):
         if self.backgroundCheckBox.isChecked():
             fitting.addBackground(self)
@@ -409,8 +417,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
         testing.open_image(self)
-        testing.declare_variables(self)
-        testing.select_livemetadata_display(self)
+        #testing.declare_variables(self)
+        #testing.select_livemetadata_display(self)
 
     def _tic(self, msg=None, name=""):
         if msg is not None:
