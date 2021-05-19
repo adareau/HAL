@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-19 11:24:05
+Modified : 2021-05-19 12:11:59
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -629,6 +629,7 @@ def advancedPlotSaveButtonClicked(self):
     # if data is None : ask for a name
     if data is None or not data.is_file():
         advancedPlotSaveAsButtonClicked(self)
+        return
     # otherwise, overwrite current selection
     out_name = data.name
     msg = "overwrite existing config '%s' ?" % data.stem
