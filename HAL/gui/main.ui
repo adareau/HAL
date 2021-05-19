@@ -442,6 +442,13 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QPushButton" name="deleteFitButton">
+               <property name="text">
+                <string>Del. Fit</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>
