@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-05 10:24:37
-Modified : 2021-05-12 10:01:44
+Modified : 2021-05-19 16:44:37
 
 Comments : miscellaneous functions, that would not fit anywhere else
 """
@@ -13,6 +13,22 @@ import time
 import webbrowser
 import pyautogui
 from PyQt5.QtCore import Qt
+
+
+# %% TEXT WRAPPING
+
+
+def wrap_text(text_in, max=50):
+    words_in = text_in.split(" ")
+    text_out = ""
+    current_line = ""
+    for w in words_in:
+        if len(current_line) + len(w) + 1 > max:
+            text_out += current_line + "\n"
+            current_line = ""
+        current_line += w + " "
+    text_out += current_line
+    return text_out
 
 
 # %% KEY MANAGEMENT

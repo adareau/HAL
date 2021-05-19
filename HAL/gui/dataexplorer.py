@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-19 11:02:34
+Modified : 2021-05-19 16:44:58
 
 Comments : Functions related to (meta)data exploration
 """
@@ -14,6 +14,7 @@ import json
 import logging
 import time
 from numpy import NaN
+from random import choice
 from collections import OrderedDict
 from pathlib import Path
 from datetime import datetime
@@ -34,6 +35,8 @@ from PyQt5.QtWidgets import (
 # -- local
 import HAL.gui.quickplot as quickplot
 import HAL.gui.advancedplot as advancedplot
+from HAL.gui import quotes
+from HAL.gui.misc import wrap_text
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -71,6 +74,11 @@ def setupDataExplorer(self):
     self.setList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     self.setList.setSelectionMode(QAbstractItemView.ExtendedSelection)
     self.setList.setIconSize(QSize(15, 15))
+
+    # -- setup display text
+    selected_quote = choice(quotes)
+    selected_quote = wrap_text(selected_quote, 38)
+    self.metaDataText.setPlainText(selected_quote)
 
 
 # %% META DATA MANAGEMENT
