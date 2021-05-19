@@ -670,19 +670,6 @@
            </rect>
           </property>
          </widget>
-         <widget class="QPushButton" name="exportToMatplotlibButton">
-          <property name="geometry">
-           <rect>
-            <x>667</x>
-            <y>4</y>
-            <width>91</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>to matplotlib</string>
-          </property>
-         </widget>
          <widget class="QTableWidget" name="subplotContentTable">
           <property name="geometry">
            <rect>
@@ -778,6 +765,39 @@
              </property>
              <property name="text">
               <string>delete</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="horizontalLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>500</x>
+            <y>0</y>
+            <width>259</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QPushButton" name="advancedStatButton">
+             <property name="text">
+              <string>STATS</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="exportDataButton">
+             <property name="text">
+              <string>export</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="exportToMatplotlibButton">
+             <property name="text">
+              <string>to matplotlib</string>
              </property>
             </widget>
            </item>

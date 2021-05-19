@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-19 12:11:59
+Modified : 2021-05-19 12:19:11
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -394,7 +394,7 @@ def refreshMetadataLivePlot(self):
                 x = x[i_good]
                 y = y[i_good]
                 # if empty: continue
-                if len(x)==0:
+                if len(x) == 0:
                     continue
 
                 # if a bare variable is resquested, we get the corresponding
@@ -459,6 +459,16 @@ def variableDeclarationChanged(self, item):
 def exportToMatplotlib(self):
     """ Placeholder. TODO : implement"""
     logger.debug("export to MPL !")
+
+
+def exportDataButtonClicked(self):
+    """ Placeholder. TODO : implement"""
+    logger.debug("export data)")
+
+
+def advancedStatButtonClicked(self):
+    """ Placeholder. TODO : implement"""
+    logger.debug("compute advanced stats")
 
 
 def updateSubplotLayout(self):
