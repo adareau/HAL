@@ -2,13 +2,14 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-04-22 13:53:45
+Modified : 2021-05-19 12:12:03
 
 Comments : Abstract classes for data handling
 """
 # %% IMPORTS
 
 # -- global
+import re
 import numpy as np
 from pathlib import Path
 from scipy.io import loadmat
@@ -49,6 +50,21 @@ class GusData(AbstractMetaData):
                         "name": "script",
                         "value": content.name,
                         "display": "%s",
+                        "unit": "",
+                        "comment": "",
+                    }
+                    data.append(param)
+
+        # - get sequence and cycle
+        name = self.path.stem
+        parts = name.split("_")
+        if len(parts) == 2:
+            for p, name in zip(parts, ["seq", "cycle"]):
+                if re.match("^\d*$", p):
+                    param = {
+                        "name": name,
+                        "value": int(p),
+                        "display": "%03d",
                         "unit": "",
                         "comment": "",
                     }
