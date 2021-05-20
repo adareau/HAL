@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-20 14:47:13
+Modified : 2021-05-20 15:01:07
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -50,12 +50,12 @@ class Settings(object):
 
         # initialize config parser
         self.config = configparser.RawConfigParser()
-        self.init_default()
+        self.initDefaults()
 
         # load
         self.load()
 
-    def init_default(self):
+    def initDefaults(self):
         self.config["data"] = DATA_DEFAULTS
         self.config["fit"] = FIT_DEFAULTS
 
@@ -76,6 +76,10 @@ class Settings(object):
             out_file = self.conf_file_path
         with open(out_file, "w") as fout:
             self.config.write(fout)
+
+    def openGuiEditor(self):
+        logger.debug("edit settings in gui")
+        pass
 
 
 # %% TEST
