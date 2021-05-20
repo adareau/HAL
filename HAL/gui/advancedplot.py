@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-19 15:30:58
+Modified : 2021-05-20 16:03:53
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -221,13 +221,14 @@ def setupAdvancedPlot(self):
     # -- init saved configs
     saved_config_folder = self._settings_folder / CONF_SAVE_SUFOLDER
     self.advancedPlotSelectionBox.addItem("----", userData=None)
-    for content in saved_config_folder.iterdir():
-        if not content.is_file():
-            continue
-        if content.suffix == ".json":
-            self.advancedPlotSelectionBox.addItem(
-                content.stem, userData=content
-            )
+    if saved_config_folder.is_dir():
+        for content in saved_config_folder.iterdir():
+            if not content.is_file():
+                continue
+            if content.suffix == ".json":
+                self.advancedPlotSelectionBox.addItem(
+                    content.stem, userData=content
+                )
 
 
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
@@ -617,13 +618,14 @@ def _refreshAvailableConfigs(self):
     # -- get list of saved configs
     saved_config_folder = self._settings_folder / CONF_SAVE_SUFOLDER
     self.advancedPlotSelectionBox.addItem("----", userData=None)
-    for content in saved_config_folder.iterdir():
-        if not content.is_file():
-            continue
-        if content.suffix == ".json":
-            self.advancedPlotSelectionBox.addItem(
-                content.stem, userData=content
-            )
+    if saved_config_folder.is_dir():
+        for content in saved_config_folder.iterdir():
+            if not content.is_file():
+                continue
+            if content.suffix == ".json":
+                self.advancedPlotSelectionBox.addItem(
+                    content.stem, userData=content
+                )
     # -- retrieve saved selection (if still exists)
     self.advancedPlotSelectionBox.blockSignals(False)
     self.advancedPlotSelectionBox.setCurrentText(current_selection)
