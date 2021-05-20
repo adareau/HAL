@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-20 14:43:34
+Modified : 2021-05-20 16:05:03
 
 Comments :
 """
@@ -172,6 +172,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._t0 = 0
 
         # -- FIRST
+        # create HAL settings folder
+        self._settings_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
