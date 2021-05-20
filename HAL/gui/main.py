@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-20 15:00:09
+Modified : 2021-05-20 15:15:39
 
 Comments :
 """
@@ -414,17 +414,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         menubar.getOnlineHelp(self)
 
     def _editSettings(self):
-        self.settings.openGuiEditor()
+        self.settings.openGuiEditor(parent=self)
         #TODO : reset gui ???
 
     # -- DEBUG
 
     def _DEBUG(self):
-        self.autoScaleCheckBox.setChecked(True)
+        # self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
-        testing.open_image(self)
+        # testing.open_image(self)
         #testing.declare_variables(self)
         #testing.select_livemetadata_display(self)
+        self.settings.openGuiEditor(parent=self)
 
     def _tic(self, msg=None, name=""):
         if msg is not None:

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-20 15:01:07
+Modified : 2021-05-20 15:24:54
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -13,6 +13,7 @@ Comments : implements the Settings class, that manages user settings
 import os
 import configparser
 import logging
+from PyQt5.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QDialog
 
 # -- local
 import HAL
@@ -31,6 +32,28 @@ DATA_DEFAULTS = {
 FIT_DEFAULTS = {
     "fit folder name": ".HAL_fits",
 }
+
+
+# %% SETTINGS EDITOR DIALG CLASS
+# inspired by https://www.mfitzp.com/tutorials/dialogs/
+
+class SettingsEditor(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("HELLO!")
+
+        QBtn = QDialogButtonBox.Cancel | QDialogButtonBox.Save
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.layout = QVBoxLayout()
+        message = QLabel("Something happened, is that OK?")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
 
 
 # %% CLASS DEFINITION
@@ -77,9 +100,14 @@ class Settings(object):
         with open(out_file, "w") as fout:
             self.config.write(fout)
 
-    def openGuiEditor(self):
+    def openGuiEditor(self, parent=None):
         logger.debug("edit settings in gui")
-        pass
+        editor = SettingsEditor(parent=parent)
+        res = editor.exec()
+        if res:
+            logger.debug("Success!")
+        else:
+            logger.debug("cancel")
 
 
 # %% TEST
