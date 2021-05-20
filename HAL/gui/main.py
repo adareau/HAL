@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-19 15:43:03
+Modified : 2021-05-20 14:43:34
 
 Comments :
 """
@@ -173,7 +173,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- FIRST
         # load settings
-        self.settings = Settings()
+        global_config_path = self._settings_folder / "global.conf"
+        self.settings = Settings(path=global_config_path)
         # implemented data classes
         self.data_classes = implemented_data_dic
         # implemented metadata classes

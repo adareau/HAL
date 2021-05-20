@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-04 14:23:21
+Modified : 2021-05-20 14:47:13
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -12,10 +12,13 @@ Comments : implements the Settings class, that manages user settings
 # -- global
 import os
 import configparser
+import logging
 
 # -- local
 import HAL
 
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% GLOBAL VARIABLES
 DATA_DEFAULTS = {
@@ -41,7 +44,7 @@ class Settings(object):
         if path is None:
             HAL_path = HAL.__file__
             HAL_root, _ = os.path.split(HAL_path)
-            path = os.path.join(HAL_root, "config")
+            path = os.path.join(HAL_root, "global.conf")
 
         self.conf_file_path = path
 
@@ -58,10 +61,12 @@ class Settings(object):
 
     def load(self):
         """load the configuration file and parse it"""
+        logger.debug("loading settings from %s" % self.conf_file_path)
         # check that the file exists
         if not os.path.isfile(self.conf_file_path):
-            print("ERROR IN SETTINGS LOADER")
-            print(">> '%s' do not exist" % self.conf_file_path)
+            logger.warning("ERROR IN SETTINGS LOADER")
+            logger.warning(">> '%s' do not exist" % self.conf_file_path)
+            return
 
         # load
         self.config.read(self.conf_file_path)
@@ -75,7 +80,11 @@ class Settings(object):
 
 # %% TEST
 if __name__ == "__main__":
-    set = Settings()
+    from pathlib import Path
+
+    settings_folder = Path().home() / ".HAL"
+    global_config_path = settings_folder / "global.conf"
+    set = Settings(path=global_config_path)
     set.load()
     """
     print(set.config.sections())
