@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 14:27:28
+Modified : 2021-05-21 14:49:10
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -212,9 +212,24 @@ class Settings(object):
         res = editor.exec()
         # take results
         if res:
-            logger.debug("Success!")
+            logger.debug("settings changed, reload !")
+            self.config = configparser.RawConfigParser()
+            self.initDefaults()
+            self.load()
+            return True
         else:
-            logger.debug("cancel")
+            return False
+
+    def toString(self):
+        """export current settings as a string"""
+        out_str = ""
+        for section in self.config.sections():
+            out_str += "[%s]\n" % section
+            for k in self.config[section]:
+                out_str += "%s=%s \n" % (k, self.config[section][k])
+            out_str += "\n"
+        return out_str
+
 
 
 # %% TEST
@@ -231,4 +246,4 @@ if __name__ == "__main__":
         print("%s : %s" % (k, set.config["data"][k]))
 
     """
-    set.save()
+    print(set.toString())

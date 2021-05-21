@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-20 16:05:03
+Modified : 2021-05-21 14:53:49
 
 
 Comments :
@@ -17,7 +17,7 @@ import time
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QShortcut
+from PyQt5.QtWidgets import QShortcut, QMessageBox
 from pathlib import Path
 from collections import OrderedDict
 
@@ -417,8 +417,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         menubar.getOnlineHelp(self)
 
     def _editSettings(self):
-        self.settings.openGuiEditor(parent=self)
-        #TODO : reset gui ???
+        if self.settings.openGuiEditor(parent=self):
+            msg = "New user settings loaded. You might have to restart HAL now."
+            QMessageBox.warning(self, "I am afraid Dave", msg)
+
 
     # -- DEBUG
 
@@ -428,7 +430,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # testing.open_image(self)
         #testing.declare_variables(self)
         #testing.select_livemetadata_display(self)
-        self.settings.openGuiEditor(parent=self)
+        self._editSettings()
 
     def _tic(self, msg=None, name=""):
         if msg is not None:
