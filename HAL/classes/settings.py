@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 14:21:08
+Modified : 2021-05-21 14:27:28
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -15,6 +15,7 @@ import configparser
 import logging
 from pathlib import Path
 from io import StringIO
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import (
     QDialogButtonBox,
     QVBoxLayout,
@@ -27,6 +28,7 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QMessageBox,
+    QShortcut,
 )
 
 # -- local
@@ -99,6 +101,10 @@ class SettingsEditor(QDialog):
         self.layout.addWidget(message)
         self.layout.addLayout(self.buttonLayout)
         self.setLayout(self.layout)
+
+        # -- keyboard shortcut
+        self.ctrlS = QShortcut(QKeySequence("Ctrl+S"), self)
+        self.ctrlS.activated.connect(self.checkBeforeAccept)
 
         # -- load user config
         self.config_path = Path(user_config_path)
