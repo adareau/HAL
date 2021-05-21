@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-12 09:26:01
-Modified : 2021-05-12 11:15:52
+Modified : 2021-05-20 15:01:24
 
 Comments : Functions related to the window menubar
 """
@@ -27,6 +27,16 @@ logger = logging.getLogger(__name__)
 def setupMenubar(self):
     # -- Get menubar
     menuBar = self.menubar
+    # -- Preferences
+    # add section
+    menuPreferences = QMenu("Preferences", menuBar)
+    menuBar.addMenu(menuPreferences)
+    self.menuPreferences = menuPreferences
+    # add "settings"
+    editSettingsAction = QAction("Settings", menuPreferences)
+    editSettingsAction.setToolTip("Edit user settings")
+    menuPreferences.addAction(editSettingsAction)
+    self.menuPreferencesEditSettingsAction = editSettingsAction
     # -- About section
     # add section
     menuAbout = QMenu("About", menuBar)
