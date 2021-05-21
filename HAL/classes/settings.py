@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-20 15:24:54
+Modified : 2021-05-21 11:57:33
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -13,7 +13,21 @@ Comments : implements the Settings class, that manages user settings
 import os
 import configparser
 import logging
-from PyQt5.QtWidgets import QDialogButtonBox, QVBoxLayout, QLabel, QDialog
+from pathlib import Path
+from io import StringIO
+from PyQt5.QtWidgets import (
+    QDialogButtonBox,
+    QVBoxLayout,
+    QHBoxLayout,
+    QSpacerItem,
+    QGridLayout,
+    QLabel,
+    QDialog,
+    QPlainTextEdit,
+    QPushButton,
+    QSizePolicy,
+    QMessageBox,
+)
 
 # -- local
 import HAL
@@ -37,23 +51,85 @@ FIT_DEFAULTS = {
 # %% SETTINGS EDITOR DIALG CLASS
 # inspired by https://www.mfitzp.com/tutorials/dialogs/
 
+
 class SettingsEditor(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, user_config_path, default_config="", parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("HELLO!")
+        self.setWindowTitle("Config editor")
+        self.resize(800, 600)
+        # -- Config editors
+        # create
+        self.defaultConfigDisplay = QPlainTextEdit()
+        self.defaultConfigDisplay.setPlainText(default_config)
+        self.defaultConfigDisplay.setReadOnly(True)
+        self.userConfigEdit = QPlainTextEdit()
+        # titles
+        default_title = QLabel("Default config")
+        user_title = QLabel("User config (overrides default)")
+        # join in layout
+        self.configLayout = QGridLayout()
+        self.configLayout.addWidget(default_title, 0, 0)
+        self.configLayout.addWidget(self.defaultConfigDisplay, 1, 0)
+        self.configLayout.addWidget(user_title, 0, 1)
+        self.configLayout.addWidget(self.userConfigEdit, 1, 1)
 
+        # -- Buttons
+        # check button
+        self.checkButton = QPushButton("Check config")
+        self.checkButton.clicked.connect(self.checkConfig)
+        # cancel / save
         QBtn = QDialogButtonBox.Cancel | QDialogButtonBox.Save
-
+        # create dialog button box & connect callbacks
         self.buttonBox = QDialogButtonBox(QBtn)
-        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.accepted.connect(self.checkBeforeAccept)
         self.buttonBox.rejected.connect(self.reject)
+        # button layout
+        self.buttonLayout = QHBoxLayout()
+        self.buttonLayout.addWidget(self.checkButton)
+        spacer = QSpacerItem(
+            40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum
+        )
+        self.buttonLayout.addItem(spacer)
+        self.buttonLayout.addWidget(self.buttonBox)
 
+        # -- Setting up main layout
         self.layout = QVBoxLayout()
-        message = QLabel("Something happened, is that OK?")
+        self.layout.addLayout(self.configLayout)
+        message = QLabel("user config path: %s" % user_config_path)
         self.layout.addWidget(message)
-        self.layout.addWidget(self.buttonBox)
+        self.layout.addLayout(self.buttonLayout)
         self.setLayout(self.layout)
+
+        # -- load user config
+        self.config_path = Path(user_config_path)
+        if self.config_path.is_file() and False:
+            current_config_text = self.config_path.read_text()
+            self.userConfigEdit.setPlainText(current_config_text)
+        else:
+            placeholder = "edit here to create a custom settings file"
+            self.userConfigEdit.setPlaceholderText(placeholder)
+
+    def checkConfig(self):
+        """checks that the config will be parsed by configparser"""
+        # create parser
+        parser = configparser.RawConfigParser()
+        # get user config
+        user_config = self.userConfigEdit.toPlainText()
+        # try / catch
+        try:
+            parser.read_string(user_config)
+        except Exception as e:
+            msg = "Parsing the current config as raised the following exception :"
+            msg += "\n\n"
+            msg += repr(e)
+            QMessageBox.warning(self, "Exception caught while parsing", msg)
+            return
+        QMessageBox.information(self, "Good boi", "Config parsed sucessfully !")
+
+    def checkBeforeAccept(self):
+        """checks the config before accepting"""
+        self.accept()
 
 
 # %% CLASS DEFINITION
@@ -74,6 +150,12 @@ class Settings(object):
         # initialize config parser
         self.config = configparser.RawConfigParser()
         self.initDefaults()
+
+        # store default as a string
+        # the configparser class does not have
+        output = StringIO()
+        self.config.write(output)
+        self._default_settings_as_string = output.getvalue()
 
         # load
         self.load()
@@ -101,9 +183,15 @@ class Settings(object):
             self.config.write(fout)
 
     def openGuiEditor(self, parent=None):
+        """opens a gui settings editor"""
         logger.debug("edit settings in gui")
-        editor = SettingsEditor(parent=parent)
+        # execute gui
+        default_config = self._default_settings_as_string
+        editor = SettingsEditor(
+            self.conf_file_path, parent=parent, default_config=default_config,
+        )
         res = editor.exec()
+        # take results
         if res:
             logger.debug("Success!")
         else:
