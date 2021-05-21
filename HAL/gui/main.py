@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-21 14:53:49
+Modified : 2021-05-21 15:29:26
 
 
 Comments :
@@ -16,7 +16,7 @@ import logging
 import time
 
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QFont
 from PyQt5.QtWidgets import QShortcut, QMessageBox
 from pathlib import Path
 from collections import OrderedDict
@@ -187,6 +187,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.fit_classes = implemented_fit_dic
         # implemented display classes
         self.display_classes = implemented_display_dic
+
+        # -- Set font size and Family
+        font_family = self.settings.config["gui"]["font family"]
+        font_size = self.settings.config["gui"]["font size"]
+        font = QFont("Sans Serif", int(font_size))
+        self.setFont(font)
+        if parent is not None:
+            parent.setFont(font)
 
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)

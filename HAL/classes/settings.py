@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 14:49:10
+Modified : 2021-05-21 15:23:49
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -47,6 +47,11 @@ DATA_DEFAULTS = {
 
 FIT_DEFAULTS = {
     "fit folder name": ".HAL_fits",
+}
+
+GUI_DEFAULT = {
+    "font family": "Sans Serif",
+    "font size": 9,
 }
 
 
@@ -182,6 +187,7 @@ class Settings(object):
     def initDefaults(self):
         self.config["data"] = DATA_DEFAULTS
         self.config["fit"] = FIT_DEFAULTS
+        self.config["gui"] = GUI_DEFAULT
 
     def load(self):
         """load the configuration file and parse it"""

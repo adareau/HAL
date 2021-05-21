@@ -63,7 +63,7 @@ $> source halenv/bin/activate
 Now that we work in halenv (as indicated in the terminal) install all packages from requirements.txt
 
 ```bash
-(halenv) $> pip3 install numpy matplotlib scipy pyqtgraph PyQt5 datetime pathlib configparser pysnooper  
+(halenv) $> pip3 install PyQt5 pysnooper jsbeautifier numpy scipy matplotlib opencv-python pyqtgraph pyautogui opencv-python-headless
 ```
 
 Now you can copy the start file in the folder where HAL is and go in it. It means that asking ls should returns some files an HAL and start : 
