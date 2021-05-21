@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 11:57:33
+Modified : 2021-05-21 14:21:08
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -49,7 +49,6 @@ FIT_DEFAULTS = {
 
 
 # %% SETTINGS EDITOR DIALG CLASS
-# inspired by https://www.mfitzp.com/tutorials/dialogs/
 
 
 class SettingsEditor(QDialog):
@@ -103,14 +102,14 @@ class SettingsEditor(QDialog):
 
         # -- load user config
         self.config_path = Path(user_config_path)
-        if self.config_path.is_file() and False:
+        if self.config_path.is_file():
             current_config_text = self.config_path.read_text()
             self.userConfigEdit.setPlainText(current_config_text)
         else:
             placeholder = "edit here to create a custom settings file"
             self.userConfigEdit.setPlaceholderText(placeholder)
 
-    def checkConfig(self):
+    def checkConfig(self, show_sucess=True):
         """checks that the config will be parsed by configparser"""
         # create parser
         parser = configparser.RawConfigParser()
@@ -124,15 +123,29 @@ class SettingsEditor(QDialog):
             msg += "\n\n"
             msg += repr(e)
             QMessageBox.warning(self, "Exception caught while parsing", msg)
-            return
-        QMessageBox.information(self, "Good boi", "Config parsed sucessfully !")
+            return False
+
+        if show_sucess:
+            QMessageBox.information(
+                self, "Good boi", "Config parsed sucessfully !"
+            )
+
+        return True
 
     def checkBeforeAccept(self):
         """checks the config before accepting"""
+        #  check
+        if not self.checkConfig(show_sucess=False):
+            return
+        #  write
+        self.config_path.write_text(self.userConfigEdit.toPlainText())
+        # close window with "accept()"
         self.accept()
 
 
-# %% CLASS DEFINITION
+# %% MAIN CLASS DEFINITION
+
+
 class Settings(object):
     """docstring for Settings"""
 
