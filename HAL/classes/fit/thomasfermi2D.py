@@ -2,7 +2,7 @@
 """
 Author   : Victor
 Created  : 2021-05-25T14:18:21+02:00
-Modified : 2021-05-25T14:18:21+02:00
+Modified : 2021-05-25 16:51:24
 
 Comments : implements a 2D Thomas Fermi fit
 """
@@ -16,14 +16,21 @@ from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 
 # %% FUNCTIONS
-def TFParab(x,y, size_x, size_y, center_x, center_y):
-    return 1-(x-center_x)**2/size_x**2  -  (y-center_y)**2/size_y**2
+def TFParab(x, y, size_x, size_y, center_x, center_y):
+    return (
+        1
+        - (x - center_x) ** 2 / size_x ** 2
+        - (y - center_y) ** 2 / size_y ** 2
+    )
+
 
 def ThomasFermi2D(xy, *p):
-        """ p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
-        (x, y) = xy
-        return np.choose(TFParab(x, y, p[2], p[3], p[4], p[5])>0,[0, p[0] + p[1]*TFParab(x, y, p[2], p[3], p[4], p[5])] )
-#        return p[0] + p[1]*np.heaviside(TFParab(x, y, p[2], p[3], p[4], p[5]), 0)*TFParab(x, y, p[2], p[3], p[4], p[5])**(3/2)
+    """ p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
+    (x, y) = xy
+    TF_profile = TFParab(x, y, p[2], p[3], p[4], p[5])
+    return np.choose(
+        TF_profile > 0, [p[0], p[0] + p[1] * TF_profile ** (3 / 2)]
+    )
 
 
 # %% CLASS DEFINITION
@@ -36,8 +43,8 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
 
         # -- attributes specific to 2D Gauss fit
         self.name = "ThomasFermi2D"
-        self.formula_help = "f(x) = p[0] "
-        self.formula_help += "+ p[1] *(1  - (x-p[4])**2/p[2]**2 - (x-p[5])**2/p[3]**2 )**(3/2)"
+        self.formula_help = "f(x) = p[0] + p[1] * (1 - (x - p[4])**2 / p[2]**2"
+        self.formula_help += " - (x - p[5])**2 / p[3]**2)**(3/2)"
         self.parameters_help = (
             "p = [offset, amplitude, size_x, size_y, center_x, center_y]"
         )
@@ -112,7 +119,7 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
         values.append(param)
 
         # Ncalc
-        Ncal = 2*np.pi/5*amplitude*sx*sy/dx/dy* conv_factor
+        Ncal = 2 * np.pi / 5 * amplitude * sx * sy / dx / dy * conv_factor
         param = {
             "name": "Ncal",
             "value": Ncal,
@@ -198,6 +205,7 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
 
         # -- store
         self.values = values
+
 
 # %% TESTS
 if __name__ == "__main__":
