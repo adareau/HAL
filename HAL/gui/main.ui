@@ -316,7 +316,7 @@
              <string>background</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="addRoiButton_2">
+           <widget class="QPushButton" name="deleteRoiButton">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -329,7 +329,7 @@
              <string>Delete ROI</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="addRoiButton_3">
+           <widget class="QPushButton" name="resetRoiButton">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -342,7 +342,7 @@
              <string>Reset ROIs</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="addRoiButton_4">
+           <widget class="QPushButton" name="renameRoiButton">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -355,7 +355,7 @@
              <string>Rename ROI</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="addRoiButton_5">
+           <widget class="QPushButton" name="addBackgroundButton">
             <property name="geometry">
              <rect>
               <x>10</x>

@@ -400,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         fitting.addROI(self)
 
     def _renameRoiButtonClicked(self):
-        fitting.updateROI(self)
+        fitting.renameROI(self)
 
     def _deleteRoiButtonClicked(self):
         fitting.removeROI(self)

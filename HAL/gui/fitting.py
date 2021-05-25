@@ -15,7 +15,7 @@ import json
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox,QInputDialog
 from PyQt5.QtCore import Qt
 
 # -- local
@@ -73,7 +73,28 @@ def addROI(self, roi_name=None):
         handle_hover_style=handle_hover_style,
         label_color=label_color,
     )
+    # add the ROI to the RoiComboBox
+    self.selectRoiComboBox.addItem(roi_name)
 
+def removeROI(self):
+    """ removes the currently selected ROI"""
+    selected_ROI = self.selectRoiComboBox.currentText()
+    self.display.removeROI(selected_ROI)
+    # removes ROI from ComboBox
+    selected_idx = self.selectRoiComboBox.currentIndex()
+    self.selectRoiComboBox.removeItem(selected_idx)
+
+def renameROI(self):
+    """ renames the currently selected ROI"""
+    selected_ROI_name = self.selectRoiComboBox.currentText()
+    name, ok = QInputDialog.getText(
+        self, "Rename ROI", "Choose a new ROI name:", text=""
+    )
+    self.display.updateROI(roi_name=selected_ROI_name,name=name)
+
+def clearROIs(self):
+    """ removes all the ROIs"""
+    self.display.clearROIs()
 
 # %% BACKGROUND MANAGEMENT
 

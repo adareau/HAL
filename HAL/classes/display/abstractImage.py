@@ -97,6 +97,7 @@ class AbstractImageDisplay(AbstractDisplay):
             new_roi.addScaleHandle(pos=pos, center=center)
 
         # add a label
+        new_roi.label_color = label_color
         roi_label = pg.TextItem(roi_name, color=label_color)
         roi_label.setPos(0, 0)
         new_roi.label = roi_label  # link to roi !!
@@ -143,7 +144,7 @@ class AbstractImageDisplay(AbstractDisplay):
         self.image_plot.removeItem(roi)
         self.roi_list.pop(roi_name)
 
-    def updateROI(self, roi_name="ROI", pos=None, size=None):
+    def updateROI(self, roi_name="ROI", pos=None, size=None, name=None):
         """updates a given ROI"""
         roi = self.getROI(roi_name)
         if roi is None:
@@ -152,6 +153,21 @@ class AbstractImageDisplay(AbstractDisplay):
             roi.setPos(pos, finish=True, update=True)
         if size is not None:
             roi.setSize(size, finish=True, update=True)
+        if name is not None:
+            roi.name = name
+            # add a label
+            roi_label = pg.TextItem(roi_name, color=roi.label_color)
+            roi_label.setPos(0, 0)
+            roi.label = roi_label
+
+            # make it such that the label follows the ROI !
+            # using sigRegionChanged
+            roi.sigRegionChanged.connect(_roi_changed)
+            #
+            # add to current plot
+            self.image_plot.addItem(new_roi)
+            self.image_plot.addItem(roi_label)
+            self.roi_list[roi_name] = new_roi
 
     # -- DATA MANAGEMENT
 
