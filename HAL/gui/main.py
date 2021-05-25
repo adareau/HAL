@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-21 15:29:26
+Modified : 2021-05-25 14:30:55
 
 
 Comments :
@@ -435,10 +435,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _DEBUG(self):
         # self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
-        # testing.open_image(self)
-        #testing.declare_variables(self)
-        #testing.select_livemetadata_display(self)
-        self._editSettings()
+        testing.open_image(self)
+        # testing.declare_variables(self)
+        # testing.select_livemetadata_display(self)
+        # self._editSettings()
 
     def _tic(self, msg=None, name=""):
         if msg is not None:

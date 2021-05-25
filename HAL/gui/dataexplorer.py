@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-19 16:44:58
+Modified : 2021-05-25 14:54:31
 
 Comments : Functions related to (meta)data exploration
 """
@@ -13,6 +13,7 @@ Comments : Functions related to (meta)data exploration
 import json
 import logging
 import time
+import re
 from numpy import NaN
 from random import choice
 from collections import OrderedDict
@@ -139,8 +140,20 @@ def updateMetadataCache(self, reset_cache=False):
         if dataset is None:
             continue
         if dataset.is_file():
+            # load json
             set_json = json.loads(dataset.read_text())
-            for path in set_json.get("paths", []):
+            # get list of paths
+            json_paths = set_json.get("paths", [])
+            # get "data root" tag, and replace it by the local data root
+            if "root tag" in set_json:
+                conf = self.settings.config
+                root = Path(conf["data"]["root"])
+                root = str(root.expanduser())
+                tag = set_json["root tag"]
+                pattern = "^%s" % tag
+                json_paths = [re.sub(pattern, root, p) for p in json_paths]
+            # convert to path objects
+            for path in json_paths:
                 all_selected_files.add(Path(path))
 
     # -- remove from cache
@@ -153,6 +166,9 @@ def updateMetadataCache(self, reset_cache=False):
     for i_file, file_to_cache in enumerate(all_selected_files):
         if file_to_cache in self.metadata_cache:
             # ignore
+            continue
+        if not file_to_cache.is_file():
+            logger.debug("'%s' does not exist." % file_to_cache)
             continue
         file_metadata = _loadFileMetaData(self, file_to_cache)
         self.metadata_cache[file_to_cache] = file_metadata
@@ -233,8 +249,21 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
         if dataset is None:
             continue
         if dataset.is_file():
+            # load json
             set_json = json.loads(dataset.read_text())
-            json_paths = [Path(p) for p in set_json.get("paths", [])]
+            # get list of paths
+            json_paths = set_json.get("paths", [])
+            # get "data root" tag, and replace it by the local data root
+            if "root tag" in set_json:
+                conf = self.settings.config
+                root = Path(conf["data"]["root"])
+                root = str(root.expanduser())
+                tag = set_json["root tag"]
+                pattern = "^%s" % tag
+                json_paths = [re.sub(pattern, root, p) for p in json_paths]
+            # convert to path objects
+            json_paths = [Path(p) for p in json_paths]
+            # store
             dataset_list[dataset.stem] = json_paths
 
     # add the current selection
@@ -317,6 +346,14 @@ def addNewSet(self):
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
+    # replace the data root by '{data_root}'
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = root.expanduser()
+    pattern = "^%s" % root  # only replace at the beginning of the path
+    tag = "{data_root}"
+    selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
+
     # -- save set
     # prepare json file
     date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -324,6 +361,8 @@ def addNewSet(self):
         "created": date_str,
         "program": self._name,
         "version": self._version,
+        "root tag": tag,
+        "local root": str(root),
         "paths": selected_paths,
     }
 
