@@ -240,6 +240,73 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="settingsROITab">
+           <attribute name="title">
+            <string>ROI</string>
+           </attribute>
+           <widget class="QComboBox" name="comboBox">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>20</y>
+              <width>141</width>
+              <height>23</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton">
+            <property name="geometry">
+             <rect>
+              <x>170</x>
+              <y>20</y>
+              <width>80</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Delete</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="geometry">
+             <rect>
+              <x>170</x>
+              <y>50</y>
+              <width>80</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Rename</string>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="geometry">
+             <rect>
+              <x>170</x>
+              <y>210</y>
+              <width>80</width>
+              <height>23</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>RESET ALL</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="label_9">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>0</y>
+              <width>121</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Select ROI:</string>
+            </property>
+           </widget>
+          </widget>
           <widget class="QWidget" name="settingsFitTab">
            <attribute name="title">
             <string>FIT</string>
@@ -873,7 +940,7 @@
       <item>
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Metadata sources :</string>
+         <string>Metadata sources:</string>
         </property>
        </widget>
       </item>
