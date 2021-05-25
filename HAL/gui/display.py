@@ -178,8 +178,7 @@ def plotSelectedData(self, update_fit=True):
     data.load()
 
     # -- get the selected roi
-    # FIXME : let the user choose the selected roi !!!
-    selected_roi = "ROI 0"
+    selected_roi = self.selectRoiComboBox.currentText()
     current_rois = self.display.getROINames()
     if current_rois and selected_roi not in current_rois:
         selected_roi = current_rois[0]
