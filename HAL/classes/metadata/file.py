@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-12 16:56:04
+Modified : 2021-05-25 14:35:32
 
 Comments : Abstract classes for data handling
 """
@@ -28,7 +28,11 @@ class FileData(AbstractMetaData):
         self.path = path
 
     def analyze(self):
+        # check that file exists !
+        if not self.path.is_file():
+            return
         data = []
+
         #  name
         param = {
             "name": "file name",
