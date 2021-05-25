@@ -155,19 +155,15 @@ class AbstractImageDisplay(AbstractDisplay):
             roi.setSize(size, finish=True, update=True)
         if name is not None:
             roi.name = name
-            # add a label
-            roi_label = pg.TextItem(roi_name, color=roi.label_color)
-            roi_label.setPos(0, 0)
-            roi.label = roi_label
+            roi.label.setText(roi.name)
 
-            # make it such that the label follows the ROI !
-            # using sigRegionChanged
-            roi.sigRegionChanged.connect(_roi_changed)
-            #
-            # add to current plot
-            self.image_plot.addItem(new_roi)
-            self.image_plot.addItem(roi_label)
-            self.roi_list[roi_name] = new_roi
+    def clearROIs(self):
+        """ clears the whole set of existing ROIs"""
+        for roi in self.roi_list.values():
+            self.image_plot.removeItem(roi.label)
+            self.image_plot.removeItem(roi)
+        self.roi_list = {}
+        
 
     # -- DATA MANAGEMENT
 

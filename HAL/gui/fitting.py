@@ -86,15 +86,18 @@ def removeROI(self):
 
 def renameROI(self):
     """ renames the currently selected ROI"""
+    selected_idx = self.selectRoiComboBox.currentIndex()
     selected_ROI_name = self.selectRoiComboBox.currentText()
     name, ok = QInputDialog.getText(
         self, "Rename ROI", "Choose a new ROI name:", text=""
     )
     self.display.updateROI(roi_name=selected_ROI_name,name=name)
+    self.selectRoiComboBox.setItemText(selected_idx, name)
 
 def clearROIs(self):
     """ removes all the ROIs"""
     self.display.clearROIs()
+    self.selectRoiComboBox.clear()
 
 # %% BACKGROUND MANAGEMENT
 
