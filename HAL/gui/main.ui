@@ -248,7 +248,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>20</y>
+              <y>50</y>
               <width>141</width>
               <height>23</height>
              </rect>
@@ -296,14 +296,14 @@
            <widget class="QLabel" name="label_9">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>0</y>
-              <width>121</width>
+              <x>0</x>
+              <y>30</y>
+              <width>151</width>
               <height>16</height>
              </rect>
             </property>
             <property name="text">
-             <string>Select ROI:</string>
+             <string>Select ROI/background:</string>
             </property>
            </widget>
           </widget>

@@ -72,6 +72,10 @@ class AbstractDisplay(object):
         """returns list of current roi"""
         return []
 
+    def getBCGNames(self, *args, **kwargs):
+        """returns list of current backgrounds"""
+        return []
+
     def getROIPos(self, *args, **kwargs):
         """returns a given roi position"""
         pass
