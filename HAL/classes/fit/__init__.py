@@ -9,9 +9,10 @@ Comments :
 
 from HAL.classes.fit.gauss2D import Gauss2DFit
 from HAL.classes.fit.statsOnly2D import StatsOnly2D
+from HAL.classes.fit.thomasfermi2D import ThomasFermi2DFit
 
 implemented_fit = [
-    Gauss2DFit, StatsOnly2D
+    Gauss2DFit, StatsOnly2D, ThomasFermi2DFit
 ]
 
 implemented_fit_dic = {}
