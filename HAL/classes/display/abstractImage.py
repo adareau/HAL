@@ -156,6 +156,7 @@ class AbstractImageDisplay(AbstractDisplay):
         if name is not None:
             roi.name = name
             roi.label.setText(roi.name)
+            self.roi_list[roi.name] = self.roi_list.pop(roi_name)
 
     def clearROIs(self):
         """ clears the whole set of existing ROIs"""
@@ -163,7 +164,7 @@ class AbstractImageDisplay(AbstractDisplay):
             self.image_plot.removeItem(roi.label)
             self.image_plot.removeItem(roi)
         self.roi_list = {}
-        
+
 
     # -- DATA MANAGEMENT
 
