@@ -37,6 +37,10 @@ def _isnumber(x):
         return False
 
 
+def updatePlot(self, *args, **kwargs):
+    self.display.updatePlot(*args, **kwargs)
+
+
 # %% SETUP FUNCTIONS
 
 
@@ -75,6 +79,7 @@ def addROI(self, roi_name=None):
     )
     # add the ROI to the RoiComboBox
     self.selectRoiComboBox.addItem(roi_name)
+
 
 def removeROI(self):
     """ removes the currently selected ROI"""

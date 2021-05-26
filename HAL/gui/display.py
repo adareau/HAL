@@ -122,7 +122,7 @@ def setupDisplay(self):
 
 def displaySelectionChanged(self, action):
     """
-    triggered when the display type selection was changed
+    triggered when the display type selection is changed
     """
     # get the new requested display class
     display_class = action.data()
@@ -130,6 +130,10 @@ def displaySelectionChanged(self, action):
     # setup display
     self.display = display_class(screen=self.mainScreen)
     self.display.setup()
+
+    # setup ROIs
+    # ROI_list = self.display.roi_list
+    self.selectRoiComboBox.clear()
 
     # setup colormaps
     colormap_list = self.display.getColormaps()
@@ -156,7 +160,7 @@ def updateColormap(self):
 
 def plotSelectedData(self, update_fit=True):
     """
-    loads the selected data, and plot it
+    loads the selected data, and plots it
     """
     # -- get selected data
     selection = self.runList.selectedItems()

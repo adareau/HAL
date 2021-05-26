@@ -123,6 +123,7 @@ CALLBACK_LIST = [
     ("renameRoiButton", "clicked", "_renameRoiButtonClicked"),
     ("deleteRoiButton", "clicked", "_deleteRoiButtonClicked"),
     ("resetRoiButton", "clicked", "_resetRoiButtonClicked"),
+    ("selectRoiComboBox", "currentIndexChanged", "_selectRoiComboBoxSelectionChanged"),
     # background
     ("backgroundCheckBox", "stateChanged", "_backgroundCheckBoxChanged"),
 
@@ -406,6 +407,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _resetRoiButtonClicked(self):
         fitting.clearROIs(self)
+
+    def _selectRoiComboBoxSelectionChanged(self):
+        fitting.updatePlot(self, selected_ROI=self.selectRoiComboBox.currentText())
 
     def _fitButtonClicked(self):
         # fit

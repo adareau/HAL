@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(1239, 926)
+        mainWindow.resize(1335, 823)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -452,7 +452,7 @@ class Ui_mainWindow(object):
         self.horizontalLayout.addLayout(self.metaColumn)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1239, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1335, 20))
         self.menubar.setObjectName("menubar")
         self.menuDataDisplay = QtWidgets.QMenu(self.menubar)
         self.menuDataDisplay.setObjectName("menuDataDisplay")
@@ -469,7 +469,7 @@ class Ui_mainWindow(object):
         self.menubar.addAction(self.menuDataDisplay.menuAction())
 
         self.retranslateUi(mainWindow)
-        self.settingsTabWidget.setCurrentIndex(1)
+        self.settingsTabWidget.setCurrentIndex(0)
         self.dataAnalysisTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 

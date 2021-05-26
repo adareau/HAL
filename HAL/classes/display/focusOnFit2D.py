@@ -147,6 +147,7 @@ class FocusOnFit2D(AbstractImageDisplay):
 
         # update roi (so that the roi is refreshed even if no fit is loaded)
         if selected_ROI is not None:
+            print(selected_ROI)
             Z, _ = self.getROIData(selected_ROI)
             if Z is not None:
                 # roi
