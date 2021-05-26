@@ -29,7 +29,7 @@ def ThomasFermi2D(xy, *p):
     (x, y) = xy
     TF_profile = TFParab(x, y, p[2], p[3], p[4], p[5])
     return np.choose(
-        TF_profile > 0, [p[0], p[0] + p[1] * TF_profile ** (3 / 2)]
+        TF_profile > 0, [p[0], p[0] + p[1] * np.abs(TF_profile) ** (3/2)]
     )
 
 
