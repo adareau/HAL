@@ -10,27 +10,30 @@ Comments : implements a 2D Thomas Fermi fit
 
 # -- global
 import numpy as np
+from collections import namedtuple
 
 # -- local
 from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 
 # %% FUNCTIONS
-def TFParab(x, y, size_x, size_y, center_x, center_y):
-    return (
-        1
-        - (x - center_x) ** 2 / size_x ** 2
-        - (y - center_y) ** 2 / size_y ** 2
+def ThomasFermi2D(parameters):
+    """
+    Returns the Thomas-Fermi distributrion in 2D.
+    The argument is a tuple such that:
+    (x, y, sizeX, sizeY, centerX, centerY, offset, amplitude)
+    """
+    Parameters = namedtuple(
+        "Parameters", "x y sizeX sizeY centerX centerY offset amplitude"
     )
+    p = Parameters(*parameters)
 
+    shiftX = (p.x - p.centerX)/p.sizeX
+    shiftY = (p.y - p.centerY)/p.sizeY
+    parabValue = 1 - np.square(shiftX) - np.square(shiftY)
 
-def ThomasFermi2D(xy, *p):
-    """ p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
-    (x, y) = xy
-    TF_profile = TFParab(x, y, p[2], p[3], p[4], p[5])
-    return np.choose(
-        TF_profile > 0, [p[0], p[0] + p[1] * np.abs(TF_profile) ** (3/2)]
-    )
+    s = np.maximum(p.offset + p.amplitude * parabValue, p.offset)
+    return s
 
 
 # %% CLASS DEFINITION
