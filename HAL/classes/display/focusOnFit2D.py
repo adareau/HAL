@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 16:47:41
+Modified : 2021-05-26 10:13:39
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -176,8 +176,8 @@ class FocusOnFit2D(AbstractImageDisplay):
 
     def clearFit(self):
         image = np.zeros((10, 10))
-        self.current_fit_image.updateImage(image=image)
-        self.current_err_image.updateImage(image=image)
+        self.current_fit_image.updateImage(image=image, levels=(0, 1))
+        self.current_err_image.updateImage(image=image, levels=(0, 1))
         self.err_plot.setTitle('Error')
 
     def updateFit(
