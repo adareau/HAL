@@ -123,7 +123,6 @@ CALLBACK_LIST = [
     ("renameRoiButton", "clicked", "_renameRoiButtonClicked"),
     ("deleteRoiButton", "clicked", "_deleteRoiButtonClicked"),
     ("resetRoiButton", "clicked", "_resetRoiButtonClicked"),
-    ("addBackgroundButton", "clicked", "_addBackgroundButtonClicked"),
     # background
     ("backgroundCheckBox", "stateChanged", "_backgroundCheckBoxChanged"),
 
@@ -407,9 +406,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _resetRoiButtonClicked(self):
         fitting.clearROIs(self)
-
-    def _addBackgroundButtonClicked(self):
-        fitting.addBackground(self)
 
     def _fitButtonClicked(self):
         # fit

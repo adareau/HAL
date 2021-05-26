@@ -76,7 +76,7 @@ def setupDisplay(self):
             checked=(display_name == default_display),
         )
         # set shortcut
-        seq = "%s+%i"% (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
+        seq = "%s+%i" % (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
         action.setShortcut(QKeySequence(seq))
         n_shortcut += 1
         # the display class is stored in the action data for later access
@@ -250,8 +250,7 @@ def updateFitForSelectedData(self):
         fitting.removeBackground(self)
 
     # -- update the fit
-    # FIXME : let the user choose the selected roi !!!
-    selected_roi = ""
+    selected_roi = self.selectRoiComboBox.currentText()
     # we take the first roi, if selected roi does not exist
     if selected_roi not in fit_collection:
         selected_roi = list(fit_collection.keys())[0]
