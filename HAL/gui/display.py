@@ -13,7 +13,6 @@ Comments : Functions related to data visualization
 import logging
 import numpy as np
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QActionGroup
 from PyQt5.QtGui import QKeySequence
 
@@ -76,7 +75,7 @@ def setupDisplay(self):
             checked=(display_name == default_display),
         )
         # set shortcut
-        seq = "%s+%i"% (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
+        seq = "%s+%i" % (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
         action.setShortcut(QKeySequence(seq))
         n_shortcut += 1
         # the display class is stored in the action data for later access

@@ -165,7 +165,6 @@ class AbstractImageDisplay(AbstractDisplay):
             self.image_plot.removeItem(roi)
         self.roi_list = {}
 
-
     # -- DATA MANAGEMENT
 
     def getROIData(self, roi_name="ROI"):

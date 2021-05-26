@@ -15,7 +15,7 @@ import json
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtWidgets import QMessageBox,QInputDialog
+from PyQt5.QtWidgets import QMessageBox, QInputDialog
 from PyQt5.QtCore import Qt
 
 # -- local
@@ -76,6 +76,7 @@ def addROI(self, roi_name=None):
     # add the ROI to the RoiComboBox
     self.selectRoiComboBox.addItem(roi_name)
 
+
 def removeROI(self):
     """ removes the currently selected ROI"""
     selected_ROI = self.selectRoiComboBox.currentText()
@@ -84,14 +85,17 @@ def removeROI(self):
     selected_idx = self.selectRoiComboBox.currentIndex()
     self.selectRoiComboBox.removeItem(selected_idx)
 
+
 def renameROI(self):
     """ renames the currently selected ROI"""
     selected_idx = self.selectRoiComboBox.currentIndex()
     selected_ROI_name = self.selectRoiComboBox.currentText()
     new_name, ok = QInputDialog.getText(
-        self, "Rename ROI", "Choose a new name for " + selected_ROI_name + " :")
-    self.display.updateROI(roi_name=selected_ROI_name,name=new_name)
+        self, "Rename ROI", "Choose a new name for " + selected_ROI_name + " :"
+        )
+    self.display.updateROI(roi_name=selected_ROI_name, name=new_name)
     self.selectRoiComboBox.setItemText(selected_idx, new_name)
+
 
 def clearROIs(self):
     """ removes all the ROIs"""
@@ -229,7 +233,8 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
         fit_info["count_conversion_factor"] = {
             "value": fit.count_conversion_factor,
             "unit": fit.converted_count_unit,
-            "comment": "converts image counts into physically meaning quantity (e.g. atom number)",
+            "comment": "converts image counts into physically meaning \
+            quantity (e.g. atom number)",
         }
 
     # get background

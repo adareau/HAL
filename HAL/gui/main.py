@@ -193,7 +193,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.display_classes = implemented_display_dic
 
         # -- Set font size and Family
-        font_family = self.settings.config["gui"]["font family"]
         font_size = self.settings.config["gui"]["font size"]
         font = QFont("Sans Serif", int(font_size))
         self.setFont(font)
@@ -442,9 +441,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _editSettings(self):
         if self.settings.openGuiEditor(parent=self):
-            msg = "New user settings loaded. You might have to restart HAL now."
+            msg = "New user settings loaded. \
+            You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
-
 
     # -- DEBUG
 

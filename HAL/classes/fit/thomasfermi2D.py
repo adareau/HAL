@@ -125,7 +125,8 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
             "value": Ncal,
             "display": "%.3g",
             "unit": self.converted_count_unit,
-            "comment": "counts, calculated from fit results, not restricted to ROI",
+            "comment": "counts, calculated from fit results, \
+            not restricted to ROI",
         }
         values.append(param)
 

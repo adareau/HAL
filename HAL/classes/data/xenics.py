@@ -57,7 +57,6 @@ class XenicsData(AbstractCameraPictureData):
 
 # %% TEST
 if __name__ == "__main__":
-    import numpy as np
 
     root = Path().home()
     path = root / "gus_data_dummy" / "cam_example" / "001" / "001_001.png"
