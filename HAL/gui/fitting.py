@@ -91,8 +91,8 @@ def renameROI(self):
     selected_ROI_name = self.selectRoiComboBox.currentText()
     msg = f"Choose a new name for {selected_ROI_name} :"
     new_name, ok = QInputDialog.getText(self, "Rename ROI", msg)
-    self.display.updateROI(roi_name=selected_ROI_name, name=new_name)
-    self.selectRoiComboBox.setItemText(selected_idx, new_name)
+    if self.display.updateROI(roi_name=selected_ROI_name, name=new_name) == 0:
+        self.selectRoiComboBox.setItemText(selected_idx, new_name)
 
 
 def clearROIs(self):

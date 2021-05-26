@@ -154,9 +154,14 @@ class AbstractImageDisplay(AbstractDisplay):
         if size is not None:
             roi.setSize(size, finish=True, update=True)
         if name is not None:
+            if name in self.roi_list:
+                msg = f"{name} roi name is already used."
+                logger.warning(msg)
+                return
             roi.name = name
             roi.label.setText(roi.name)
             self.roi_list[roi.name] = self.roi_list.pop(roi_name)
+            return 0
 
     def clearROIs(self):
         """ clears the whole set of existing ROIs"""
