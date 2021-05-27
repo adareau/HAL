@@ -405,6 +405,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _renameRoiButtonClicked(self):
         fitting.renameROI(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _deleteRoiButtonClicked(self):
         fitting.removeROI(self)

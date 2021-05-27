@@ -83,22 +83,21 @@ def addROI(self, roi_name=None):
 
 def removeROI(self):
     """removes the currently selected ROI"""
-    # get run
+    # get run & ROI
     selected_run = self.runList.currentItem()
     selected_ROI = self.selectRoiComboBox.currentText()
-
     if not selected_run:
         # if empty >> do nothing
         return 1
-    # get paths
+    # get path to datafile
     path = str(selected_run.data(Qt.UserRole))
     # generate saved fit path
     fit_file = _gen_saved_fit_path(self, path)
-    # if file exist : delete the associated fit
     if fit_file.is_file():
         # load
         fit_json = json.loads(fit_file.read_text())
         fit_collection = fit_json["collection"]
+        # if fit exists for the ROI: ask confirmation -> deletion
         if selected_ROI in fit_collection:
             # -- ask for confirmation
             msg = "This will also delete the associated fit. Do you confirm ?"
@@ -108,13 +107,13 @@ def removeROI(self):
             )
             if answer == QMessageBox.No:
                 return
-            if len(fit_collection) == 1:
+            elif len(fit_collection) == 1:
                 fit_file.unlink()
             else:
                 fit_collection.pop(selected_ROI)
                 fit_json["collection"] = fit_collection
                 data_object = self.display.getCurrentDataObject()
-                _save_fit_result_as_json(fit_json, data_object)
+                _save_fit_result_as_json(self, fit_json, data_object)
         else:
             pass
 
@@ -126,13 +125,29 @@ def removeROI(self):
 
 def renameROI(self):
     """renames the currently selected ROI"""
-    selected_idx = self.selectRoiComboBox.currentIndex()
+    selected_run = self.runList.currentItem()
+    selected_ROI_idx = self.selectRoiComboBox.currentIndex()
     selected_ROI_name = self.selectRoiComboBox.currentText()
     msg = f"Choose a new name for {selected_ROI_name} :"
     new_name, ok = QInputDialog.getText(self, "Rename ROI", msg)
     if self.display.updateROI(roi_name=selected_ROI_name, name=new_name) is None:
         # if diplay.updateROI() worked fine, it returned the default None value
-        self.selectRoiComboBox.setItemText(selected_idx, new_name)
+        self.selectRoiComboBox.setItemText(selected_ROI_idx, new_name)
+
+        # get path to datafile
+        path = str(selected_run.data(Qt.UserRole))
+        # generate saved fit path
+        fit_file = _gen_saved_fit_path(self, path)
+        if fit_file.is_file():
+            # load
+            fit_json = json.loads(fit_file.read_text())
+            fit_collection = fit_json["collection"]
+            # if fit exists for the ROI: ask confirmation -> deletion
+            if selected_ROI_name in fit_collection:
+                fit_collection[new_name] = fit_collection.pop(selected_ROI_name)
+                fit_json["collection"] = fit_collection
+                data_object = self.display.getCurrentDataObject()
+                _save_fit_result_as_json(self, fit_json, data_object)
 
 
 def clearROIs(self):
