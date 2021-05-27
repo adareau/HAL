@@ -139,7 +139,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """remove given roi"""
         roi = self.getROI(roi_name)
         if roi is None:
-            return
+            return 1
         self.image_plot.removeItem(roi.label)
         self.image_plot.removeItem(roi)
         self.roi_list.pop(roi_name)
@@ -148,28 +148,31 @@ class AbstractImageDisplay(AbstractDisplay):
         """updates a given ROI"""
         roi = self.getROI(roi_name)
         if roi is None:
-            return
+            return 1
         if pos is not None:
             roi.setPos(pos, finish=True, update=True)
         if size is not None:
             roi.setSize(size, finish=True, update=True)
         if name is not None:
-            if name in self.roi_list:
+            if not name or name.isspace():
+                msg = "Chosen roi name is empty."
+                logger.warning(msg)
+                return 1
+            elif name in self.roi_list:
                 msg = f"{name} roi name is already used."
                 logger.warning(msg)
-                return
-            roi.name = name
-            roi.label.setText(roi.name)
-            self.roi_list[roi.name] = self.roi_list.pop(roi_name)
-            return 0
+                return 1
+            else:
+                roi.name = name
+                roi.label.setText(roi.name)
+                self.roi_list[roi.name] = self.roi_list.pop(roi_name)
 
     def clearROIs(self):
-        """ clears the whole set of existing ROIs"""
+        """clears the whole set of existing ROIs"""
         for roi in self.roi_list.values():
             self.image_plot.removeItem(roi.label)
             self.image_plot.removeItem(roi)
         self.roi_list = {}
-
 
     # -- DATA MANAGEMENT
 
@@ -245,9 +248,7 @@ class AbstractImageDisplay(AbstractDisplay):
         # using sigRegionChanged
         background.sigRegionChanged.connect(_roi_changed)
         # when finished, call self.BackgroundChangedFinished
-        background.sigRegionChangeFinished.connect(
-            self.BackgroundChangedFinished
-        )
+        background.sigRegionChangeFinished.connect(self.BackgroundChangedFinished)
 
         # add to current plot
         self.image_plot.addItem(background)
@@ -289,9 +290,7 @@ class AbstractImageDisplay(AbstractDisplay):
 
     # -- COLORMAP
 
-    def updateColormap(
-        self, colormap="Greiner", image=None, update_current=True
-    ):
+    def updateColormap(self, colormap="Greiner", image=None, update_current=True):
         # set colormap
         lut = get_pyqtgraph_lookuptable(colormap)
         if image is None:

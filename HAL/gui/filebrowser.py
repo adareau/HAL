@@ -368,9 +368,7 @@ def refreshCurrentFolder(self, new_folder=None):
 
     # -- get selected sequences and runs
     selected_sequences = [item.text() for item in self.seqList.selectedItems()]
-    selected_runs = [
-        item.data(Qt.UserRole) for item in self.runList.selectedItems()
-    ]
+    selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
     # handle case where "all" is selected
     if "[all]" in selected_sequences:
         selected_sequences = []

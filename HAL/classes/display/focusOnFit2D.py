@@ -23,8 +23,8 @@ from HAL.classes.display.abstractImage import AbstractImageDisplay
 
 class FocusOnFit2D(AbstractImageDisplay):
     """a basic (2D) image display
-       NB : inherits a LOT of methods from AbstractImageDisplay().
-            Have a look at this class if you do not find a method here !
+    NB : inherits a LOT of methods from AbstractImageDisplay().
+         Have a look at this class if you do not find a method here !
     """
 
     def __init__(self, **kwargs):
@@ -121,11 +121,11 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.current_data_object = dataobject
 
         # redefine limits
-        '''
+        """
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
-        '''
+        """
         # get background
         if self.background is not None:
             background, _ = self.background.getArrayRegion(
@@ -136,9 +136,7 @@ class FocusOnFit2D(AbstractImageDisplay):
             background_value = 0
 
         # update image
-        self.current_image.updateImage(
-            image=image - background_value, levels=levels
-        )
+        self.current_image.updateImage(image=image - background_value, levels=levels)
         self.current_data = image - background_value
         self._data_in = image
         self._current_levels = levels
@@ -147,13 +145,13 @@ class FocusOnFit2D(AbstractImageDisplay):
 
         # update roi (so that the roi is refreshed even if no fit is loaded)
         if selected_ROI is not None:
-            print(selected_ROI)
             Z, _ = self.getROIData(selected_ROI)
             if Z is not None:
                 # roi
                 self.current_roi_image.updateImage(image=Z, levels=levels)
                 self.updateColormap(
-                    colormap=colormap, image=self.current_roi_image,
+                    colormap=colormap,
+                    image=self.current_roi_image,
                 )
 
     def BackgroundChangedFinished(self):
@@ -179,10 +177,12 @@ class FocusOnFit2D(AbstractImageDisplay):
         image = np.zeros((10, 10))
         self.current_fit_image.updateImage(image=image)
         self.current_err_image.updateImage(image=image)
-        self.err_plot.setTitle('Error')
+        self.err_plot.setTitle("Error")
 
     def updateFit(
-        self, fit_dic, selected_ROI,
+        self,
+        fit_dic,
+        selected_ROI,
     ):
         """updates the fit display"""
 
@@ -201,27 +201,21 @@ class FocusOnFit2D(AbstractImageDisplay):
 
         # -- display
         # roi
-        self.current_roi_image.updateImage(
-            image=Z, levels=self._current_levels
-        )
+        self.current_roi_image.updateImage(image=Z, levels=self._current_levels)
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_roi_image
         )
 
         # fit
-        self.current_fit_image.updateImage(
-            image=Zfit, levels=self._current_levels
-        )
+        self.current_fit_image.updateImage(image=Zfit, levels=self._current_levels)
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_fit_image
         )
 
         # err
         err_ampl = np.max(np.abs(Zerr))
-        self.current_err_image.updateImage(
-            image=Zerr, levels=(-err_ampl, err_ampl)
-        )
-        new_title = 'Error : range = ± %.2g' % err_ampl
+        self.current_err_image.updateImage(image=Zerr, levels=(-err_ampl, err_ampl))
+        new_title = "Error : range = ± %.2g" % err_ampl
         self.err_plot.setTitle(new_title)
         self.updateColormap(
             colormap="RdBu", image=self.current_err_image, update_current=False

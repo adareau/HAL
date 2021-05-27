@@ -91,9 +91,7 @@ def _loadFileMetaData(self, path):
     """
     # -- get metadata
     # get selected metadata sources
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
+    selected_metadata = [item.text() for item in self.metaDataList.selectedItems()]
 
     # values are then sorted in an ordered dict
     metadata_dic = OrderedDict()
@@ -267,9 +265,7 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
             dataset_list[dataset.stem] = json_paths
 
     # add the current selection
-    selected_runs = [
-        item.data(Qt.UserRole) for item in self.runList.selectedItems()
-    ]
+    selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
     if len(selected_runs) > 1:
         dataset_list["current selection"] = selected_runs
 
@@ -508,9 +504,7 @@ def refreshDataSetList(self):
                     prefix = "├─ "
                 # add item
                 item = QListWidgetItem()
-                item.setText(
-                    prefix + file.stem
-                )  # NB: use file.stem to remove ext
+                item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
 
@@ -520,9 +514,7 @@ if __name__ == "__main__":
     from HAL.classes.metadata import implemented_metadata
 
     root = Path().home()
-    path = (
-        root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
-    )
+    path = root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
 
     print(path.is_file())
     path_list = [
