@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-05 17:12:56
+Modified : 2021-05-28 15:38:35
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -11,7 +11,7 @@ Comments : Functions related to file browsing, i.e. select the right year,
 # %% IMPORTS
 
 # -- global
-import pysnooper
+import logging
 import locale
 from datetime import datetime, date
 from pathlib import Path
@@ -23,6 +23,8 @@ from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
 # -- local
 import HAL.gui.fitting as fitting
 
+# -- logger
+logger = logging.getLogger(__name__)
 
 # %% GLOBAL VARIABLES
 
@@ -368,12 +370,29 @@ def refreshCurrentFolder(self, new_folder=None):
 
     # -- get selected sequences and runs
     selected_sequences = [item.text() for item in self.seqList.selectedItems()]
-    selected_runs = [
-        item.data(Qt.UserRole) for item in self.runList.selectedItems()
-    ]
+    selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
     # handle case where "all" is selected
     if "[all]" in selected_sequences:
         selected_sequences = []
+
+    # -- get current index
+    # run list
+    item = self.runList.currentItem()
+    current_run = item.data(Qt.UserRole) if item is not None else None
+    # seq list
+    item = self.seqList.currentItem()
+    current_seq = item.data(Qt.UserRole) if item is not None else None
+
+    # -- get current focus, to restore it after refresh
+    if self.runList.hasFocus():
+        focus_widget = self.runList
+    elif self.seqList.hasFocus():
+        focus_widget = self.seqList
+    elif self.refreshRunListButton.hasFocus():
+        # by default, set focus to runList when the refresh button is clicked !
+        focus_widget = self.runList
+    else:
+        focus_widget = None
 
     # -- reset lists
     # block callbacks
@@ -447,13 +466,25 @@ def refreshCurrentFolder(self, new_folder=None):
             self.runList.addItem(item)
 
     # -- restore selections
+    # run list
     for i in range(self.runList.count()):
-        data = self.runList.item(i).data(Qt.UserRole)
+        item = self.runList.item(i)
+        data = item.data(Qt.UserRole)
         if data in selected_runs:
-            self.runList.item(i).setSelected(True)
+            item.setSelected(True)
+        if data == current_run:
+            self.runList.setCurrentItem(item)
+    # seq list
     self.seqList.blockSignals(True)
     for i in range(self.seqList.count()):
-        name = self.seqList.item(i).text()
+        item = self.seqList.item(i)
+        name = item.text()
         if name in selected_sequences:
-            self.seqList.item(i).setSelected(True)
+            item.setSelected(True)
+        if name == current_seq:
+            self.seqList.setCurrentItem(item)
     self.seqList.blockSignals(False)
+
+    # -- restore focus
+    if focus_widget is not None:
+        focus_widget.setFocus()
