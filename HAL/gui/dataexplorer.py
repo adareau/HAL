@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 16:00:41
+Modified : 2021-05-28 17:08:25
 
 Comments : Functions related to (meta)data exploration
 """
@@ -109,7 +109,7 @@ def updateMetadataCache(self, reset_cache=False):
     """
     Updates the metadata cache
     """
-    logger.debug("update metadata cache")
+    # logger.debug("update metadata cache")
 
     # -- reset ?
     if reset_cache:

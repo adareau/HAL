@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-28 15:38:35
+Modified : 2021-05-28 17:06:13
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -394,9 +394,11 @@ def refreshCurrentFolder(self, new_folder=None):
     else:
         focus_widget = None
 
-    # -- reset lists
-    # block callbacks
+    # -- BLOCK SIGNALS
     self.seqList.blockSignals(True)
+    self.runList.blockSignals(True)
+
+    # -- reset lists
     # clear
     self.runList.clear()
     self.seqList.clear()
@@ -405,12 +407,12 @@ def refreshCurrentFolder(self, new_folder=None):
     item.setText("[all]")
     item.setData(Qt.UserRole, None)
     self.seqList.addItem(item)
-    # unblock
-    self.seqList.blockSignals(False)
 
     # -- check that the folder exists
     if not self.current_folder.is_dir():
         self.runList.addItems(["Folder does not exists"])
+        self.seqList.blockSignals(False)
+        self.runList.blockSignals(False)
         return
 
     # -- get content and update list
@@ -475,7 +477,6 @@ def refreshCurrentFolder(self, new_folder=None):
         if data == current_run:
             self.runList.setCurrentItem(item)
     # seq list
-    self.seqList.blockSignals(True)
     for i in range(self.seqList.count()):
         item = self.seqList.item(i)
         name = item.text()
@@ -483,7 +484,10 @@ def refreshCurrentFolder(self, new_folder=None):
             item.setSelected(True)
         if name == current_seq:
             self.seqList.setCurrentItem(item)
+
+    # -- UNBLOCK SIGNALS
     self.seqList.blockSignals(False)
+    self.runList.blockSignals(False)
 
     # -- restore focus
     if focus_widget is not None:
