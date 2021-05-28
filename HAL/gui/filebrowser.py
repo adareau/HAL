@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-28 15:24:56
+Modified : 2021-05-28 15:38:35
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -377,17 +377,11 @@ def refreshCurrentFolder(self, new_folder=None):
 
     # -- get current index
     # run list
-    current_run_item = self.runList.currentItem()
-    if current_run_item is not None:
-        current_run = current_run_item.data(Qt.UserRole)
-    else:
-        current_run = None
+    item = self.runList.currentItem()
+    current_run = item.data(Qt.UserRole) if item is not None else None
     # seq list
-    current_seq_item = self.seqList.currentItem()
-    if current_seq_item is not None:
-        current_seq = current_seq_item.text()
-    else:
-        current_seq = None
+    item = self.seqList.currentItem()
+    current_seq = item.data(Qt.UserRole) if item is not None else None
 
     # -- get current focus, to restore it after refresh
     if self.runList.hasFocus():

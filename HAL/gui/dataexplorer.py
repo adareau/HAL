@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 13:58:00
+Modified : 2021-05-28 15:41:39
 
 Comments : Functions related to (meta)data exploration
 """
@@ -91,9 +91,7 @@ def _loadFileMetaData(self, path):
     """
     # -- get metadata
     # get selected metadata sources
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
+    selected_metadata = [item.text() for item in self.metaDataList.selectedItems()]
 
     # values are then sorted in an ordered dict
     metadata_dic = OrderedDict()
@@ -267,9 +265,7 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
             dataset_list[dataset.stem] = json_paths
 
     # add the current selection
-    selected_runs = [
-        item.data(Qt.UserRole) for item in self.runList.selectedItems()
-    ]
+    selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
     if len(selected_runs) > 1:
         dataset_list["current selection"] = selected_runs
 
@@ -486,6 +482,12 @@ def refreshDataSetList(self):
                 fav_datasets.append(content)
 
     # -- show in setList
+    # save dataset selection
+    selection = [item.data(Qt.UserRole) for item in self.setList.selectedItems()]
+    item = self.setList.currentItem()
+    current_set = item.data(Qt.UserRole) if item is not None else None
+
+    # refresh set list
     self.setList.clear()
     for name, datasets in zip(
         ["current folder", "favorite"], [current_datasets, fav_datasets]
@@ -508,11 +510,14 @@ def refreshDataSetList(self):
                     prefix = "├─ "
                 # add item
                 item = QListWidgetItem()
-                item.setText(
-                    prefix + file.stem
-                )  # NB: use file.stem to remove ext
+                item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
+                # restore selection ?
+                if file in selection:
+                    item.setSelected(True)
+                if file == current_set:
+                    self.setList.setCurrentItem(item)
 
 
 # %% TEST
@@ -520,9 +525,7 @@ if __name__ == "__main__":
     from HAL.classes.metadata import implemented_metadata
 
     root = Path().home()
-    path = (
-        root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
-    )
+    path = root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
 
     print(path.is_file())
     path_list = [
