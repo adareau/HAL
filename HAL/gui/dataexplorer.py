@@ -386,6 +386,11 @@ def addNewSet(self):
     refreshDataSetList(self)
 
 
+def addtoDataSet(self):
+    return
+
+
+
 def renameDataSet(self):
     """
     Rename the currently selected dataset
