@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-25 14:54:31
+Modified : 2021-05-28 13:58:00
 
 Comments : Functions related to (meta)data exploration
 """
@@ -404,7 +404,7 @@ def renameDataSet(self):
     )
     # OK, let's do it
     if ok:
-        path.rename(path.with_stem(new_name))
+        path.rename(path.with_name(f"{new_name}.json"))
 
     # -- refresh
     refreshDataSetList(self)
