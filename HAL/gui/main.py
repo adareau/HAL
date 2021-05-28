@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 16:58:48
+Modified : 2021-05-28 17:01:37
 
 
 Comments :
@@ -67,7 +67,6 @@ def forAllCallbacks(decorator):
             if attr == "__init__":
                 continue
             if attr.startswith("_") and callable(getattr(cls, attr)):
-                print(attr)
                 setattr(cls, attr, decorator(getattr(cls, attr)))
         return cls
 
