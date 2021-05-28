@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 17:22:24
+Modified : 2021-05-28 17:27:54
 
 
 Comments :
@@ -124,7 +124,7 @@ CALLBACK_LIST = [
     # -- DATA EXPLORER --
     # meta data management
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
-    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
+    ("refreshMetadataCachebutton", "clicked", "_refreshMetadataCachebuttonClicked"),
     # sets management
     ("newSetButton", "clicked", "_newSetButtonClicked"),
     ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
@@ -266,6 +266,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlD.activated.connect(self._ctrlD)
         self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
         self.ctrlR.activated.connect(self._ctrlR)
+        self.ctrlShiftR = QShortcut(QKeySequence("Ctrl+shift+R"), self)
+        self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
         self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
         self.ctrlMinus.activated.connect(self._ctrlMinus)
 
@@ -376,6 +378,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.displayMetaData(self)
         dataexplorer.updateMetadataCache(self, reset_cache=True)
         quickplot.refreshMetaDataList(self)
+
+    def _refreshMetadataCachebuttonClicked(self, *args, **kwargs):
+        dataexplorer.updateMetadataCache(self, reset_cache=True)
 
     def _newSetButtonClicked(self, *args, **kwargs):
         dataexplorer.addNewSet(self)

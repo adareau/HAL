@@ -951,6 +951,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="refreshMetadataCachebutton">
+        <property name="text">
+         <string>refresh metadata cache</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
