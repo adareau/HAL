@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 17:01:37
+Modified : 2021-05-28 17:22:24
 
 
 Comments :
@@ -50,7 +50,7 @@ def logCallback(f):
     def wrapper(*args, **kwds):
         # get log callback setting
         log_callbacks = args[0].settings.config["dev"]["log callbacks"]
-        if log_callbacks:
+        if eval(log_callbacks):
             name = f.__name__
             args[0].logger.debug(f"called {name}")
         return f(*args, **kwds)
@@ -319,15 +319,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         display.plotSelectedData(self)
         # metadata
         dataexplorer.displayMetaData(self)
-        dataexplorer.updateMetadataCache(self)
+        if eval(self.settings.config["metadata"]["autorefresh cache"]):
+            dataexplorer.updateMetadataCache(self)
 
     def _seqListSelectionChanged(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
-        dataexplorer.updateMetadataCache(self)
+        if eval(self.settings.config["metadata"]["autorefresh cache"]):
+            dataexplorer.updateMetadataCache(self)
 
     def _setListSelectionChanged(self, *args, **kwargs):
-        dataexplorer.updateMetadataCache(self)
+        if eval(self.settings.config["metadata"]["autorefresh cache"]):
+            dataexplorer.updateMetadataCache(self)
 
     def _dateEditClicked(self, date):
         filebrowser.dateEditClicked(self)
