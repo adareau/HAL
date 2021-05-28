@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 15:23:49
+Modified : 2021-05-28 16:12:50
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -54,6 +54,10 @@ GUI_DEFAULT = {
     "font size": 9,
 }
 
+DEV_DEFAULT = {
+    "log callbacks": False,
+}
+
 
 # %% SETTINGS EDITOR DIALG CLASS
 
@@ -93,9 +97,7 @@ class SettingsEditor(QDialog):
         # button layout
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.addWidget(self.checkButton)
-        spacer = QSpacerItem(
-            40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum
-        )
+        spacer = QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.buttonLayout.addItem(spacer)
         self.buttonLayout.addWidget(self.buttonBox)
 
@@ -137,9 +139,7 @@ class SettingsEditor(QDialog):
             return False
 
         if show_sucess:
-            QMessageBox.information(
-                self, "Good boi", "Config parsed sucessfully !"
-            )
+            QMessageBox.information(self, "Good boi", "Config parsed sucessfully !")
 
         return True
 
@@ -188,6 +188,7 @@ class Settings(object):
         self.config["data"] = DATA_DEFAULTS
         self.config["fit"] = FIT_DEFAULTS
         self.config["gui"] = GUI_DEFAULT
+        self.config["dev"] = DEV_DEFAULT
 
     def load(self):
         """load the configuration file and parse it"""
@@ -235,7 +236,6 @@ class Settings(object):
                 out_str += "%s=%s \n" % (k, self.config[section][k])
             out_str += "\n"
         return out_str
-
 
 
 # %% TEST

@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 15:07:49
+Modified : 2021-05-28 16:58:48
 
 
 Comments :
@@ -20,6 +20,7 @@ from PyQt5.QtGui import QKeySequence, QFont
 from PyQt5.QtWidgets import QShortcut, QMessageBox
 from pathlib import Path
 from collections import OrderedDict
+from functools import wraps
 
 # -- local
 import HAL.gui.filebrowser as filebrowser
@@ -39,6 +40,38 @@ from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
 from HAL.classes.fit import implemented_fit_dic
 from HAL.classes.display import implemented_display_dic
+
+
+# %% DECORATOR FOR DEBUGGING
+def logCallback(f):
+    """a wrapper for callback, for debug purposes """
+
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        # get log callback setting
+        log_callbacks = args[0].settings.config["dev"]["log callbacks"]
+        if log_callbacks:
+            name = f.__name__
+            args[0].logger.debug(f"called {name}")
+        return f(*args, **kwds)
+
+    return wrapper
+
+
+# cf. https://stackoverflow.com/a/6307868
+def forAllCallbacks(decorator):
+    """should decorate all methods with names starting with '_'"""
+
+    def decorate(cls):
+        for attr in cls.__dict__:
+            if attr == "__init__":
+                continue
+            if attr.startswith("_") and callable(getattr(cls, attr)):
+                print(attr)
+                setattr(cls, attr, decorator(getattr(cls, attr)))
+        return cls
+
+    return decorate
 
 
 # %% CALLBACK DEFINITIONS
@@ -146,6 +179,7 @@ CALLBACK_LIST = [
 # %% DEFINE GUI CLASS
 
 
+@forAllCallbacks(logCallback)
 class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # == INITIALIZATIONS
@@ -233,6 +267,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlD.activated.connect(self._ctrlD)
         self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
         self.ctrlR.activated.connect(self._ctrlR)
+        self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
+        self.ctrlMinus.activated.connect(self._ctrlMinus)
 
     def setupElements(self):
         # -- File Browser
@@ -266,18 +302,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # == CALLBACKS
 
     # -- FILE BROWSER (defined in gui.filebrowser)
-
-    def _yearListSelectionChanged(self):
+    def _yearListSelectionChanged(self, *args, **kwargs):
         filebrowser.yearListSelectionChanged(self)
 
-    def _monthListSelectionChanged(self):
+    def _monthListSelectionChanged(self, *args, **kwargs):
         filebrowser.monthListSelectionChanged(self)
 
-    def _dayListSelectionChanged(self):
+    def _dayListSelectionChanged(self, *args, **kwargs):
         filebrowser.dayListSelectionChanged(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _runListSelectionChanged(self):
+    def _runListSelectionChanged(self, *args, **kwargs):
         # handle special selection rules
         # (for instance, if a sequence is selected)
         filebrowser.runListSelectionChanged(self)
@@ -287,41 +322,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.displayMetaData(self)
         dataexplorer.updateMetadataCache(self)
 
-    def _seqListSelectionChanged(self):
+    def _seqListSelectionChanged(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
         dataexplorer.updateMetadataCache(self)
 
-    def _setListSelectionChanged(self):
+    def _setListSelectionChanged(self, *args, **kwargs):
         dataexplorer.updateMetadataCache(self)
 
-    def _dateEditClicked(self):
+    def _dateEditClicked(self, date):
         filebrowser.dateEditClicked(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _refreshRunListButtonClicked(self):
+    def _refreshRunListButtonClicked(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _todayButtonClicked(self):
+    def _todayButtonClicked(self, checked):
         filebrowser.todayButtonClicked(self)
         dataexplorer.refreshDataSetList(self)
 
     # -- DATA VISUALIZATION
 
-    def _dataTypeComboBoxSelectionChanged(self):
+    def _dataTypeComboBoxSelectionChanged(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
 
-    def _colorMapComboBoxSelectionChanged(self):
+    def _colorMapComboBoxSelectionChanged(self, *args, **kwargs):
         display.updateColormap(self)
 
-    def _scaleMaxEditChanged(self):
+    def _scaleMaxEditChanged(self, *args, **kwargs):
         new_max = self.scaleMaxEdit.text()
         if not new_max.isnumeric():
             self.scaleMaxEdit.setText("65535")
         display.plotSelectedData(self, update_fit=False)
 
-    def _scaleMinEditChanged(self):
+    def _scaleMinEditChanged(self, *args, **kwargs):
         new_min = self.scaleMinEdit.text()
         if not new_min.isnumeric():
             self.scaleMinEdit.setText("0")
@@ -330,32 +365,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _displaySelectionChanged(self, action):
         display.displaySelectionChanged(self, action)
 
-    def _autoScaleCheckBoxChanged(self):
+    def _autoScaleCheckBoxChanged(self, *args, **kwargs):
         display.plotSelectedData(self, update_fit=False)
 
     # -- DATA EXPLORER
 
-    def _metaDataListSelectionChanged(self):
+    def _metaDataListSelectionChanged(self, *args, **kwargs):
         dataexplorer.displayMetaData(self)
         dataexplorer.updateMetadataCache(self, reset_cache=True)
         quickplot.refreshMetaDataList(self)
 
-    def _newSetButtonClicked(self):
+    def _newSetButtonClicked(self, *args, **kwargs):
         dataexplorer.addNewSet(self)
 
-    def _deleteSetButtonClicked(self):
+    def _deleteSetButtonClicked(self, *args, **kwargs):
         dataexplorer.deleteDataSet(self)
 
-    def _favSetButtonClicked(self):
+    def _favSetButtonClicked(self, *args, **kwargs):
         dataexplorer.favDataSet(self)
 
-    def _setListDoubleClicked(self):
+    def _setListDoubleClicked(self, *args, **kwargs):
         dataexplorer.renameDataSet(self)
 
-    def _quickPlotButtonClicked(self):
+    def _quickPlotButtonClicked(self, *args, **kwargs):
         quickplot.plotData(self)
 
-    def _quickPlotSelectionChanged(self):
+    def _quickPlotSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotSelectionChanged(self)
 
     # -- ADVANCED DATA ANALYSIS / PLOT
@@ -363,71 +398,71 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _variableDeclarationChanged(self, item):
         advancedplot.variableDeclarationChanged(self, item)
 
-    def _exportToMatplotlibButtonClicked(self):
+    def _exportToMatplotlibButtonClicked(self, *args, **kwargs):
         advancedplot.exportToMatplotlib(self)
 
-    def _updateSubplotLayoutButtonClicked(self):
+    def _updateSubplotLayoutButtonClicked(self, *args, **kwargs):
         advancedplot.updateSubplotLayout(self)
 
-    def _resetSubplotLayoutButtonClicked(self):
+    def _resetSubplotLayoutButtonClicked(self, *args, **kwargs):
         advancedplot.resetSubplotLayout(self)
 
     def _subplotContentTableChanged(self, item):
         advancedplot.subplotContentChanged(self, item)
 
-    def _advancedPlotSaveButtonClicked(self):
+    def _advancedPlotSaveButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotSaveButtonClicked(self)
 
-    def _advancedPlotSaveAsButtonClicked(self):
+    def _advancedPlotSaveAsButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotSaveAsButtonClicked(self)
 
-    def _advancedPlotDeleteButtonClicked(self):
+    def _advancedPlotDeleteButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotDeleteButtonClicked(self)
 
-    def _advancedPlotSelectionBoxSelectionChanged(self):
+    def _advancedPlotSelectionBoxSelectionChanged(self, *args, **kwargs):
         advancedplot.advancedPlotSelectionBoxSelectionChanged(self)
 
-    def _exportDataButtonClicked(self):
+    def _exportDataButtonClicked(self, *args, **kwargs):
         advancedplot.exportDataButtonClicked(self)
 
-    def _advancedStatButtonClicked(self):
+    def _advancedStatButtonClicked(self, *args, **kwargs):
         advancedplot.advancedStatButtonClicked(self)
 
-    def _advancedPlotResetButtonClicked(self):
+    def _advancedPlotResetButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotResetButtonClicked(self)
 
     # -- FITTING
 
-    def _addRoiButtonClicked(self):
+    def _addRoiButtonClicked(self, *args, **kwargs):
         fitting.addROI(self)
 
-    def _renameRoiButtonClicked(self):
+    def _renameRoiButtonClicked(self, *args, **kwargs):
         fitting.renameROI(self)
 
-    def _deleteRoiButtonClicked(self):
+    def _deleteRoiButtonClicked(self, *args, **kwargs):
         fitting.removeROI(self)
 
-    def _resetRoiButtonClicked(self):
+    def _resetRoiButtonClicked(self, *args, **kwargs):
         fitting.clearROIs(self)
 
-    def _addBackgroundButtonClicked(self):
+    def _addBackgroundButtonClicked(self, *args, **kwargs):
         fitting.addBackground(self)
 
-    def _fitButtonClicked(self):
+    def _fitButtonClicked(self, *args, **kwargs):
         # fit
         fitting.fit_data(self)
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _deleteFitButtonClicked(self):
+    def _deleteFitButtonClicked(self, *args, **kwargs):
         # fit
         fitting.deleteSavedFits(self)
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _backgroundCheckBoxChanged(self):
+    def _backgroundCheckBoxChanged(self, *args, **kwargs):
         if self.backgroundCheckBox.isChecked():
             fitting.addBackground(self)
         else:
@@ -436,20 +471,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # -- MENUBAR
 
-    def _gotoGithub(self):
+    def _gotoGithub(self, *args, **kwargs):
         menubar.gotoGithub(self)
 
-    def _getOnlineHelp(self):
+    def _getOnlineHelp(self, *args, **kwargs):
         menubar.getOnlineHelp(self)
 
-    def _editSettings(self):
+    def _editSettings(self, *args, **kwargs):
         if self.settings.openGuiEditor(parent=self):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
 
     # -- DEBUG
 
-    def _DEBUG(self):
+    def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
         testing.open_image(self)
@@ -470,17 +505,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # == KEYBOARD SHORTCUTS
 
-    def _ctrlF(self):
+    def _ctrlF(self, *args, **kwargs):
         """called when 'Ctrl+F' is pressed"""
         self._fitButtonClicked()
 
-    def _ctrlD(self):
+    def _ctrlD(self, *args, **kwargs):
         """called when 'Ctrl+D' is pressed"""
         self._DEBUG()
 
-    def _ctrlR(self):
+    def _ctrlR(self, *args, **kwargs):
         """called when 'Ctrl+R' is pressed"""
         self._refreshRunListButtonClicked()
+
+    def _ctrlMinus(self, *args, **kwargs):
+        """called when 'Ctrl+-' is pressed"""
+        self.logger.debug("-" * 50)
 
     def keyPressEvent(self, event):
         """key pressed"""

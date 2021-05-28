@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 15:44:21
+Modified : 2021-05-28 16:00:41
 
 Comments : Functions related to (meta)data exploration
 """
@@ -12,7 +12,6 @@ Comments : Functions related to (meta)data exploration
 # -- global
 import json
 import logging
-import time
 import re
 from numpy import NaN
 from random import choice
@@ -27,10 +26,6 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
-    QAction,
-    QActionGroup,
-    QMenu,
-    QToolButton,
 )
 
 # -- local
@@ -114,7 +109,7 @@ def updateMetadataCache(self, reset_cache=False):
     """
     Updates the metadata cache
     """
-    # logger.debug("update metadata cache")
+    logger.debug("update metadata cache")
 
     # -- reset ?
     if reset_cache:
@@ -133,7 +128,6 @@ def updateMetadataCache(self, reset_cache=False):
         item.data(Qt.UserRole) for item in self.setList.selectedItems()
     ]
     # get corresponding paths
-    dataset_list = {}
     for dataset in selected_datasets:
         if dataset is None:
             continue
@@ -160,7 +154,6 @@ def updateMetadataCache(self, reset_cache=False):
             self.metadata_cache.pop(cached_file)
 
     # -- update cache
-    n_files = len(all_selected_files)
     for i_file, file_to_cache in enumerate(all_selected_files):
         if file_to_cache in self.metadata_cache:
             # ignore
