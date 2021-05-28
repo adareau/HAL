@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-25 14:30:55
+Modified : 2021-05-28 15:07:49
 
 
 Comments :
@@ -195,7 +195,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
         font_size = self.settings.config["gui"]["font size"]
-        font = QFont("Sans Serif", int(font_size))
+        font = QFont(font_family, int(font_size))
         self.setFont(font)
         if parent is not None:
             parent.setFont(font)
@@ -231,6 +231,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlF.activated.connect(self._ctrlF)
         self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
         self.ctrlD.activated.connect(self._ctrlD)
+        self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
+        self.ctrlR.activated.connect(self._ctrlR)
 
     def setupElements(self):
         # -- File Browser
@@ -445,7 +447,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
 
-
     # -- DEBUG
 
     def _DEBUG(self):
@@ -476,6 +477,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _ctrlD(self):
         """called when 'Ctrl+D' is pressed"""
         self._DEBUG()
+
+    def _ctrlR(self):
+        """called when 'Ctrl+R' is pressed"""
+        self._refreshRunListButtonClicked()
 
     def keyPressEvent(self, event):
         """key pressed"""
