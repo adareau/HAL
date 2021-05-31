@@ -154,6 +154,7 @@ def clearROIs(self):
     """removes all the ROIs"""
     self.display.clearROIs()
     self.selectRoiComboBox.clear()
+    deleteSavedFits(self)
 
 
 # %% BACKGROUND MANAGEMENT

@@ -419,6 +419,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _resetRoiButtonClicked(self):
         fitting.clearROIs(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _selectRoiComboBoxSelectionChanged(self):
         fitting.updatePlot(self, selected_ROI=self.selectRoiComboBox.currentText())
