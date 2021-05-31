@@ -13,6 +13,7 @@ Comments : implements the Settings class, that manages user settings
 import os
 import configparser
 import logging
+import json
 from pathlib import Path
 from io import StringIO
 from PyQt5.QtGui import QKeySequence
@@ -93,9 +94,7 @@ class SettingsEditor(QDialog):
         # button layout
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.addWidget(self.checkButton)
-        spacer = QSpacerItem(
-            40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum
-        )
+        spacer = QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.buttonLayout.addItem(spacer)
         self.buttonLayout.addWidget(self.buttonBox)
 
@@ -137,9 +136,7 @@ class SettingsEditor(QDialog):
             return False
 
         if show_sucess:
-            QMessageBox.information(
-                self, "Good boi", "Config parsed sucessfully !"
-            )
+            QMessageBox.information(self, "Good boi", "Config parsed sucessfully !")
 
         return True
 
@@ -213,7 +210,9 @@ class Settings(object):
         # execute gui
         default_config = self._default_settings_as_string
         editor = SettingsEditor(
-            self.conf_file_path, parent=parent, default_config=default_config,
+            self.conf_file_path,
+            parent=parent,
+            default_config=default_config,
         )
         res = editor.exec()
         # take results
@@ -236,6 +235,29 @@ class Settings(object):
             out_str += "\n"
         return out_str
 
+
+class Callbacks(object):
+    def __init__(self, path=None):
+        if path is None:
+            self.path = Path("callbacks.json")
+        if self.path.is_file():
+            with open(self.path, "r") as fp:
+                self.CALLBACKS_DIC = json.load(fp)
+            self.CALLBACKS_LIST = self.flatten(self.CALLBACKS_DIC)
+
+    def flatten(self, dic):
+        def rec(lt, dic, widget=None):
+            widget = widget
+            callback = dic
+            if isinstance(callback, list):
+                lt.append((widget, *callback))
+            else:
+                for key, value in callback.items():
+                    rec(lt, value, widget=key)
+
+        lt = []
+        rec(lt, dic)
+        return lt
 
 
 # %% TEST

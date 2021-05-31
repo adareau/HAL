@@ -35,6 +35,7 @@ import HAL.gui.advancedplot as advancedplot
 from HAL.gui.MainUI import Ui_mainWindow
 from HAL.classes.dummy import Dummy
 from HAL.classes.settings import Settings
+from HAL.classes.settings import Callbacks
 from HAL.classes.data import implemented_data_dic
 from HAL.classes.metadata import implemented_metadata
 from HAL.classes.fit import implemented_fit_dic
@@ -58,93 +59,8 @@ from HAL.classes.display import implemented_display_dic
 #
 # self.todayButton.clicked.connect(self._todayButtonClicked)
 
-# We disable black formatting : some lines will to too long, but
-# this is better for readability IMHO
-# fmt: off
-CALLBACK_LIST = [
-
-    # -- FILE BROWSER --
-    # year / month / day lists
-    ("yearList", "itemSelectionChanged", "_yearListSelectionChanged"),
-    ("monthList", "itemSelectionChanged", "_monthListSelectionChanged"),
-    ("dayList", "itemSelectionChanged", "_dayListSelectionChanged"),
-    # seq / run / sets lists
-    ("seqList", "itemSelectionChanged", "_seqListSelectionChanged"),
-    ("runList", "itemSelectionChanged", "_runListSelectionChanged"),
-    ("setList", "itemSelectionChanged", "_setListSelectionChanged"),
-    # buttons
-    ("refreshRunListButton", "clicked", "_refreshRunListButtonClicked"),
-    ("todayButton", "clicked", "_todayButtonClicked"),
-    ("dateEdit", "dateChanged", "_dateEditClicked"),
-
-    # -- DATA DISPLAY --
-    # select data type
-    ("dataTypeComboBox", "currentIndexChanged", "_dataTypeComboBoxSelectionChanged"),
-    # select colormap
-    ("colorMapComboBox", "currentIndexChanged", "_colorMapComboBoxSelectionChanged"),
-    # colormap scale
-    ("scaleMinEdit", "editingFinished", "_scaleMinEditChanged"),
-    ("scaleMaxEdit", "editingFinished", "_scaleMaxEditChanged"),
-    ("autoScaleCheckBox", "stateChanged", "_autoScaleCheckBoxChanged"),
-    # display type selector
-    ("displaySelectionGroup", "triggered", "_displaySelectionChanged"),
-
-    # -- DATA EXPLORER --
-    # meta data management
-    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
-    ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
-    # sets management
-    ("newSetButton", "clicked", "_newSetButtonClicked"),
-    ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
-    ("favSetButton", "clicked", "_favSetButtonClicked"),
-    ("setList", "doubleClicked", "_setListDoubleClicked"),
-    # quickplot
-    ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
-    ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
-    ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
-
-    # -- ADVANCED DATA ANALYSIS / PLOT
-    ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
-    ("exportToMatplotlibButton", "clicked", "_exportToMatplotlibButtonClicked"),
-    ("updateSubplotLayoutButton", "clicked", "_updateSubplotLayoutButtonClicked"),
-    ("resetSubplotLayoutButton", "clicked", "_resetSubplotLayoutButtonClicked"),
-    ("subplotContentTable", "itemChanged", "_subplotContentTableChanged"),
-    ("advancedPlotSaveButton", "clicked", "_advancedPlotSaveButtonClicked"),
-    ("advancedPlotSaveAsButton", "clicked", "_advancedPlotSaveAsButtonClicked"),
-    ("advancedPlotDeleteButton", "clicked", "_advancedPlotDeleteButtonClicked"),
-    (
-        "advancedPlotSelectionBox",
-        "currentIndexChanged",
-        "_advancedPlotSelectionBoxSelectionChanged"
-    ),
-    ("exportDataButton", "clicked", "_exportDataButtonClicked"),
-    ("advancedStatButton", "clicked", "_advancedStatButtonClicked"),
-    ("advancedPlotResetButton", "clicked", "_advancedPlotResetButtonClicked"),
-
-    # -- FITTING --
-    # ROI
-    ("addRoiButton", "clicked", "_addRoiButtonClicked"),
-    ("renameRoiButton", "clicked", "_renameRoiButtonClicked"),
-    ("deleteRoiButton", "clicked", "_deleteRoiButtonClicked"),
-    ("resetRoiButton", "clicked", "_resetRoiButtonClicked"),
-    ("selectRoiComboBox", "currentIndexChanged", "_selectRoiComboBoxSelectionChanged"),
-    # background
-    ("backgroundCheckBox", "stateChanged", "_backgroundCheckBoxChanged"),
-
-    # fit buttons
-    ("fitButton", "clicked", "_fitButtonClicked"),
-    ("fitBrowserButton", "clicked", "_fitButtonClicked"),
-    ("deleteFitButton", "clicked", "_deleteFitButtonClicked"),
-
-    # -- MENU BAR --
-    ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
-    ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
-    ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
-
-    # -- DEBUG --
-    ("debugButton", "clicked", "_DEBUG"),
-]
-# fmt: on
+CALLBACK = Callbacks()
+CALLBACK_LIST = CALLBACK.CALLBACKS_LIST
 
 
 # %% DEFINE GUI CLASS
