@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 16:46:51
+Modified : 2021-05-26 10:12:49
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -108,11 +108,11 @@ class BasicImageDisplay(AbstractImageDisplay):
         self.current_data_object = dataobject
 
         # redefine limits
-        '''
+        """
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
-        '''
+        """
         # get background
         if self.background is not None:
             background, _ = self.background.getArrayRegion(
@@ -156,7 +156,7 @@ class BasicImageDisplay(AbstractImageDisplay):
         self.cx_plot.clear()
         self.cy_plot.clear()
         image = np.zeros((10, 10))
-        self.current_fit_image.updateImage(image=image)
+        self.current_fit_image.updateImage(image=image, levels=(0, 1))
 
     def updateFit(
         self, fit_dic, selected_ROI,

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-25 14:54:31
+Modified : 2021-05-28 15:44:21
 
 Comments : Functions related to (meta)data exploration
 """
@@ -400,7 +400,7 @@ def renameDataSet(self):
     )
     # OK, let's do it
     if ok:
-        path.rename(path.with_stem(new_name))
+        path.rename(path.with_name(f"{new_name}.json"))
 
     # -- refresh
     refreshDataSetList(self)
@@ -482,6 +482,13 @@ def refreshDataSetList(self):
                 fav_datasets.append(content)
 
     # -- show in setList
+    # save dataset selection
+    selection = [item.data(Qt.UserRole) for item in self.setList.selectedItems()]
+    item = self.setList.currentItem()
+    current_set = item.data(Qt.UserRole) if item is not None else None
+
+    # refresh set list
+    self.setList.blockSignals(True)
     self.setList.clear()
     for name, datasets in zip(
         ["current folder", "favorite"], [current_datasets, fav_datasets]
@@ -507,6 +514,13 @@ def refreshDataSetList(self):
                 item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
+                # restore selection ?
+                if file in selection:
+                    item.setSelected(True)
+                if file == current_set:
+                    self.setList.setCurrentItem(item)
+
+    self.setList.blockSignals(False)
 
 
 # %% TEST
