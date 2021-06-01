@@ -96,6 +96,7 @@ CALLBACK_LIST = [
     # sets management
     ("newSetButton", "clicked", "_newSetButtonClicked"),
     ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
+    ("addtoSetButton", "clicked", "_addtoSetButtonClicked"),
     ("favSetButton", "clicked", "_favSetButtonClicked"),
     ("setList", "doubleClicked", "_setListDoubleClicked"),
     # quickplot
@@ -340,6 +341,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _newSetButtonClicked(self):
         dataexplorer.addNewSet(self)
+
+    def _addtoSetButtonClicked(self):
+        dataexplorer.addtoDataSet(self)
 
     def _deleteSetButtonClicked(self):
         dataexplorer.deleteDataSet(self)

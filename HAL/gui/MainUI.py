@@ -502,6 +502,7 @@ class Ui_mainWindow(object):
         self.newSetButton.setText(_translate("mainWindow", "new"))
         self.deleteSetButton.setText(_translate("mainWindow", "del"))
         self.favSetButton.setText(_translate("mainWindow", "⭐"))
+        self.addtoSetButton.setText(_translate("mainWindow", "add to"))
         self.debugButton.setText(_translate("mainWindow", "DEBUG"))
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))
         self.quickStatsButton.setText(_translate("mainWindow", "STATS"))

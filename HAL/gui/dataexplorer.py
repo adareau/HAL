@@ -387,7 +387,63 @@ def addNewSet(self):
 
 
 def addtoDataSet(self):
-    return
+    """
+    Add the currently selected runs to the selected DataSet.
+    """
+    print('Hello')
+    # -- get selected data
+    # get runs
+    selected_runs = self.runList.selectedItems()
+    if not selected_runs:
+        # if empty >> do nothing
+        return
+
+    current_dataset = self.setList.currentItem()
+    path = current_dataset.data(Qt.UserRole)
+    if path is None or not path.is_file():
+        return #say the user that no dataset is selected
+
+    # get paths
+    selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
+
+    # replace the data root by '{data_root}'
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = root.expanduser()
+    pattern = "^%s" % root  # only replace at the beginning of the path
+    tag = "{data_root}"
+    selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
+
+    # -- save set
+    # prepare json file
+    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    json_content = {
+        "created": date_str,
+        "program": self._name,
+        "version": self._version,
+        "root tag": tag,
+        "local root": str(root),
+        "paths": selected_paths,
+    }
+
+    # prepare .dataset dir (create if does not exist)
+    root = self.current_folder
+    dataset_dir = root / ".datasets"
+    dataset_dir.mkdir(exist_ok=True)
+
+    # ask name
+    #default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
+    #name, ok = QInputDialog.getText(
+    #    self, "create new data set", "Enter dataset name:", text=default_name
+    #)
+    # write json file
+    if ok:
+        json_file = root / ".datasets" / ("%s.json" % name)
+        json_txt = json.dumps(json_content)
+        json_file.write_text(json_txt)
+
+    # refresh
+    refreshDataSetList(self)
 
 
 
