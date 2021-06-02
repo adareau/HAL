@@ -395,17 +395,16 @@ def addtoDataSet(self):
     selected_runs = self.runList.selectedItems()
     if not selected_runs:
         # if empty >> do nothing
-        print('pas de dataset sélectionné')
-        warning, ok = QInputDialog.getText(
-            self, "Warning", "No dataset selected", text=current_name
-        )
+        QMessageBox.warning(self, "No run selected", "Please select runs to add to the dataset.")
         return
 
     current_dataset = self.setList.currentItem()
-    path = current_dataset.data(Qt.UserRole)
-    if path is None or not path.is_file():
+    #if path is None or not path.is_file():
+    if not current_dataset:
+        QMessageBox.warning(self, "No dataset selected", "Please select a dataset to add runs to.")
         return #say the user that no dataset is selected
 
+    path = current_dataset.data(Qt.UserRole)
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
@@ -443,7 +442,7 @@ def addtoDataSet(self):
     name = str(path.stem)
 
     # write json file
-    json_file = path#root / ".datasets" / ("%s.json" % name)
+    json_file = path
     json_txt = json.dumps(json_content)
     json_file.write_text(json_txt)
 
