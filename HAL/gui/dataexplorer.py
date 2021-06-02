@@ -396,13 +396,18 @@ def addtoDataSet(self):
     selected_runs = self.runList.selectedItems()
     if not selected_runs:
         # if empty >> do nothing
+        print('pas de dataset sélectionné')
+        warning, ok = QInputDialog.getText(
+            self, "Warning", "No dataset selected", text=current_name
+        )
         return
 
     current_dataset = self.setList.currentItem()
     path = current_dataset.data(Qt.UserRole)
     if path is None or not path.is_file():
         return #say the user that no dataset is selected
-
+    print(path.stem)
+    
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
@@ -414,6 +419,10 @@ def addtoDataSet(self):
     tag = "{data_root}"
     selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
 
+    with open(str(path)) as json_file:
+        data = json.load(json_file)
+        total_paths = data['paths']+selected_paths
+
     # -- save set
     # prepare json file
     date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -423,7 +432,7 @@ def addtoDataSet(self):
         "version": self._version,
         "root tag": tag,
         "local root": str(root),
-        "paths": selected_paths,
+        "paths": total_paths,
     }
 
     # prepare .dataset dir (create if does not exist)
@@ -431,16 +440,13 @@ def addtoDataSet(self):
     dataset_dir = root / ".datasets"
     dataset_dir.mkdir(exist_ok=True)
 
-    # ask name
-    #default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
-    #name, ok = QInputDialog.getText(
-    #    self, "create new data set", "Enter dataset name:", text=default_name
-    #)
+    # get name
+    name = str(path.stem)
+
     # write json file
-    if ok:
-        json_file = root / ".datasets" / ("%s.json" % name)
-        json_txt = json.dumps(json_content)
-        json_file.write_text(json_txt)
+    json_file = root / ".datasets" / ("%s.json" % name)
+    json_txt = json.dumps(json_content)
+    json_file.write_text(json_txt)
 
     # refresh
     refreshDataSetList(self)
