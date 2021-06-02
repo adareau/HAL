@@ -132,7 +132,6 @@ def displaySelectionChanged(self, action):
     self.display.setup()
 
     # setup ROIs
-    # ROI_list = self.display.roi_list
     self.selectRoiComboBox.clear()
 
     # setup colormaps
@@ -223,6 +222,7 @@ def updateFitForSelectedData(self):
     Load a saved fit for the selected data (if exist), and update
     the display accordingly
     """
+    self.selectRoiComboBox.blockSignals(True)
     # -- clear current fit
     self.display.clearFit()
     # -- load saved fit
@@ -259,7 +259,6 @@ def updateFitForSelectedData(self):
     if selected_roi not in fit_collection:
         selected_roi = list(fit_collection.keys())[0]
     # get selected fit
-    fit_dic = {
-        roi_name: res["fit"] for roi_name, res in fit_collection.items()
-    }
+    fit_dic = {roi_name: res["fit"] for roi_name, res in fit_collection.items()}
     self.display.updateFit(fit_dic, selected_roi)
+    self.selectRoiComboBox.blockSignals(False)

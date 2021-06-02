@@ -54,18 +54,10 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.screen.clear()
 
         # -- create plot layout
-        if False:  # old version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(3, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
-        else:  # new version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(2, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 2, title="Data (all)")
+        roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
+        fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
+        err_plot = self.screen.addPlot(2, 2, title="Error")
+        im_plot = self.screen.addPlot(1, 2, title="Data (all)")
 
         # stretch
         layout = self.screen.ci.layout

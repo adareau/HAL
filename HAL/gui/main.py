@@ -424,7 +424,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.refreshDataSetList(self)
 
     def _selectRoiComboBoxSelectionChanged(self):
-        fitting.updatePlot(self, selected_ROI=self.selectRoiComboBox.currentText())
+        display.updateFitForSelectedData(self)
 
     def _fitButtonClicked(self):
         # fit

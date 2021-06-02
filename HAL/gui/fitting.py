@@ -37,8 +37,8 @@ def _isnumber(x):
         return False
 
 
-def updatePlot(self, *args, **kwargs):
-    self.display.updatePlot(*args, **kwargs)
+def updateFit(self, *args, **kwargs):
+    self.display.updateFit(*args, **kwargs)
 
 
 # %% SETUP FUNCTIONS
@@ -152,8 +152,8 @@ def renameROI(self):
 
 def clearROIs(self):
     """removes all the ROIs"""
-    self.display.clearROIs()
     self.selectRoiComboBox.clear()
+    self.display.clearROIs()
     deleteSavedFits(self)
 
 
