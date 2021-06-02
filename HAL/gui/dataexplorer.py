@@ -390,7 +390,6 @@ def addtoDataSet(self):
     """
     Add the currently selected runs to the selected DataSet.
     """
-    print('Hello')
     # -- get selected data
     # get runs
     selected_runs = self.runList.selectedItems()
@@ -406,8 +405,7 @@ def addtoDataSet(self):
     path = current_dataset.data(Qt.UserRole)
     if path is None or not path.is_file():
         return #say the user that no dataset is selected
-    print(path.stem)
-    
+
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
@@ -435,6 +433,7 @@ def addtoDataSet(self):
         "paths": total_paths,
     }
 
+
     # prepare .dataset dir (create if does not exist)
     root = self.current_folder
     dataset_dir = root / ".datasets"
@@ -444,7 +443,7 @@ def addtoDataSet(self):
     name = str(path.stem)
 
     # write json file
-    json_file = root / ".datasets" / ("%s.json" % name)
+    json_file = path#root / ".datasets" / ("%s.json" % name)
     json_txt = json.dumps(json_content)
     json_file.write_text(json_txt)
 
