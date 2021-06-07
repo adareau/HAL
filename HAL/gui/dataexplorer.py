@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 15:44:21
+Modified : 2021-06-07 21:20:35
 
 Comments : Functions related to (meta)data exploration
 """
@@ -34,10 +34,8 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
-import HAL.gui.quickplot as quickplot
-import HAL.gui.advancedplot as advancedplot
-from HAL.gui import quotes
-from HAL.gui.misc import wrap_text
+from . import quickplot, advancedplot, quotes
+from .misc import wrap_text
 
 # -- logger
 logger = logging.getLogger(__name__)

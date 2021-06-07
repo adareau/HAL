@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 12:52:39
-Modified : 2021-05-17 13:01:36
+Modified : 2021-06-07 21:28:25
 
 Comments : implement the liveMetaData display, basically an empty class
            that replaces the "normal" display classes when switching to
@@ -12,7 +12,7 @@ Comments : implement the liveMetaData display, basically an empty class
 # %% IMPORTS
 
 # -- local
-from HAL.classes.display.abstract import AbstractDisplay
+from .abstract import AbstractDisplay
 
 
 # %% CLASS DEFINITION

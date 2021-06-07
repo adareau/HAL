@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-05-28 15:38:35
+Modified : 2021-06-07 21:21:28
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -21,7 +21,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
 
 # -- local
-import HAL.gui.fitting as fitting
+from . import fitting
 
 # -- logger
 logger = logging.getLogger(__name__)

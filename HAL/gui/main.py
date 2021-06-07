@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 15:07:49
+Modified : 2021-06-07 21:17:05
 
 
 Comments :
@@ -22,23 +22,25 @@ from pathlib import Path
 from collections import OrderedDict
 
 # -- local
-import HAL.gui.filebrowser as filebrowser
-import HAL.gui.display as display
-import HAL.gui.dataexplorer as dataexplorer
-import HAL.gui.quickplot as quickplot
-import HAL.gui.fitting as fitting
-import HAL.gui.testing as testing
-import HAL.gui.misc as misc
-import HAL.gui.menubar as menubar
-import HAL.gui.advancedplot as advancedplot
+from . import (
+    filebrowser,
+    display,
+    dataexplorer,
+    quickplot,
+    fitting,
+    testing,
+    misc,
+    menubar,
+    advancedplot,
+)
 
-from HAL.gui.MainUI import Ui_mainWindow
-from HAL.classes.dummy import Dummy
-from HAL.classes.settings import Settings
-from HAL.classes.data import implemented_data_dic
-from HAL.classes.metadata import implemented_metadata
-from HAL.classes.fit import implemented_fit_dic
-from HAL.classes.display import implemented_display_dic
+from .MainUI import Ui_mainWindow
+from ..classes.dummy import Dummy
+from ..classes.settings import Settings
+from ..classes.data import implemented_data_dic
+from ..classes.metadata import implemented_metadata
+from ..classes.fit import implemented_fit_dic
+from ..classes.display import implemented_display_dic
 
 
 # %% CALLBACK DEFINITIONS

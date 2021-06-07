@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-07 14:11:49
+Modified : 2021-06-07 21:26:34
 
 Comments : implements a 2D Gauss fit
 """
@@ -12,7 +12,7 @@ Comments : implements a 2D Gauss fit
 import numpy as np
 
 # -- local
-from HAL.classes.fit.abstract import Abstract2DBellShaped
+from .abstract import Abstract2DBellShaped
 
 
 # %% FUNCTIONS
@@ -182,8 +182,7 @@ class Gauss2DFit(Abstract2DBellShaped):
                     "value": v_err,
                     "display": "%.3g",
                     "unit": unit,
-                    "comment": "%s fit error along %s, in %s"
-                    % (name, ax, unit),
+                    "comment": "%s fit error along %s, in %s" % (name, ax, unit),
                 }
                 values.append(param)
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:10:40
-Modified : 2021-05-07 14:59:58
+Modified : 2021-06-07 21:27:05
 
 Comments : Variables and functions related to colormaps, used by the display
            classes
@@ -17,7 +17,7 @@ import numpy as np
 from matplotlib import cm
 
 # -- local
-from HAL.classes.display.colormaps.custom import colormap_dic
+from .custom import colormap_dic
 
 # -- logger
 logger = logging.getLogger(__name__)

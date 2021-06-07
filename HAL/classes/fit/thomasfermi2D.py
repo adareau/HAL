@@ -2,7 +2,7 @@
 """
 Author   : Victor
 Created  : 2021-05-25T14:18:21+02:00
-Modified : 2021-05-25 16:51:24
+Modified : 2021-06-07 21:26:31
 
 Comments : implements a 2D Thomas Fermi fit
 """
@@ -12,16 +12,12 @@ Comments : implements a 2D Thomas Fermi fit
 import numpy as np
 
 # -- local
-from HAL.classes.fit.abstract import Abstract2DBellShaped
+from .abstract import Abstract2DBellShaped
 
 
 # %% FUNCTIONS
 def TFParab(x, y, size_x, size_y, center_x, center_y):
-    return (
-        1
-        - (x - center_x) ** 2 / size_x ** 2
-        - (y - center_y) ** 2 / size_y ** 2
-    )
+    return 1 - (x - center_x) ** 2 / size_x ** 2 - (y - center_y) ** 2 / size_y ** 2
 
 
 def ThomasFermi2D(xy, *p):
@@ -29,7 +25,7 @@ def ThomasFermi2D(xy, *p):
     (x, y) = xy
     TF_profile = TFParab(x, y, p[2], p[3], p[4], p[5])
     return np.choose(
-        TF_profile > 0, [p[0], p[0] + p[1] * np.abs(TF_profile) ** (3/2)]
+        TF_profile > 0, [p[0], p[0] + p[1] * np.abs(TF_profile) ** (3 / 2)]
     )
 
 
@@ -182,8 +178,7 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
                     "value": v_err,
                     "display": "%.3g",
                     "unit": unit,
-                    "comment": "%s fit error along %s, in %s"
-                    % (name, ax, unit),
+                    "comment": "%s fit error along %s, in %s" % (name, ax, unit),
                 }
                 values.append(param)
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-18 16:13:05
+Modified : 2021-06-07 21:21:07
 
 Comments : Functions related to data visualization
 """
@@ -18,9 +18,8 @@ from PyQt5.QtWidgets import QAction, QActionGroup
 from PyQt5.QtGui import QKeySequence
 
 # -- local
-import HAL.gui.fitting as fitting
-import HAL.gui.advancedplot as advancedplot
-from HAL.classes.display import LiveMetaData
+from . import fitting, advancedplot
+from ..classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -76,7 +75,7 @@ def setupDisplay(self):
             checked=(display_name == default_display),
         )
         # set shortcut
-        seq = "%s+%i"% (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
+        seq = "%s+%i" % (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
         action.setShortcut(QKeySequence(seq))
         n_shortcut += 1
         # the display class is stored in the action data for later access
@@ -257,7 +256,5 @@ def updateFitForSelectedData(self):
     if selected_roi not in fit_collection:
         selected_roi = list(fit_collection.keys())[0]
     # get selected fit
-    fit_dic = {
-        roi_name: res["fit"] for roi_name, res in fit_collection.items()
-    }
+    fit_dic = {roi_name: res["fit"] for roi_name, res in fit_collection.items()}
     self.display.updateFit(fit_dic, selected_roi)

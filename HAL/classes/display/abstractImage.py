@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 16:05:54
+Modified : 2021-06-07 21:28:01
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -14,8 +14,8 @@ import logging
 import pyqtgraph as pg
 
 # -- local
-from HAL.classes.display.abstract import AbstractDisplay
-from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
+from .abstract import AbstractDisplay
+from .colormaps import get_pyqtgraph_lookuptable
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -165,7 +165,6 @@ class AbstractImageDisplay(AbstractDisplay):
             self.image_plot.removeItem(roi)
         self.roi_list = {}
 
-
     # -- DATA MANAGEMENT
 
     def getROIData(self, roi_name="ROI"):
@@ -240,9 +239,7 @@ class AbstractImageDisplay(AbstractDisplay):
         # using sigRegionChanged
         background.sigRegionChanged.connect(_roi_changed)
         # when finished, call self.BackgroundChangedFinished
-        background.sigRegionChangeFinished.connect(
-            self.BackgroundChangedFinished
-        )
+        background.sigRegionChangeFinished.connect(self.BackgroundChangedFinished)
 
         # add to current plot
         self.image_plot.addItem(background)
@@ -284,9 +281,7 @@ class AbstractImageDisplay(AbstractDisplay):
 
     # -- COLORMAP
 
-    def updateColormap(
-        self, colormap="Greiner", image=None, update_current=True
-    ):
+    def updateColormap(self, colormap="Greiner", image=None, update_current=True):
         # set colormap
         lut = get_pyqtgraph_lookuptable(colormap)
         if image is None:

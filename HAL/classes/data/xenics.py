@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 16:07:30
+Modified : 2021-06-07 21:28:37
 
 Comments : Abstract classes for data handling
 """
@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 # -- local
-from HAL.classes.data.abstract import AbstractCameraPictureData
+from .abstract import AbstractCameraPictureData
 
 
 # %% CLASS DEFINITION

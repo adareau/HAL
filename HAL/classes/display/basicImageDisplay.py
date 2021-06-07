@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-26 10:12:49
+Modified : 2021-06-07 21:28:08
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -16,7 +16,7 @@ import pyqtgraph as pg
 import numpy as np
 
 # -- local
-from HAL.classes.display.abstractImage import AbstractImageDisplay
+from .abstractImage import AbstractImageDisplay
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -123,9 +123,7 @@ class BasicImageDisplay(AbstractImageDisplay):
             background_value = 0
 
         # update image
-        self.current_image.updateImage(
-            image=image - background_value, levels=levels
-        )
+        self.current_image.updateImage(image=image - background_value, levels=levels)
         self.current_data = image - background_value
         self._data_in = image
         self._current_levels = levels
@@ -184,22 +182,16 @@ class BasicImageDisplay(AbstractImageDisplay):
         # plot x cut
         self.cx_plot.clear()
         self.cx_plot.plot(x, Z[:, j], symbol="+", size=1, symbolSize=5)
-        self.cx_plot.plot(
-            x, Zfit[:, j], pen=pg.mkPen(color=(255, 0, 0), width=2)
-        )
+        self.cx_plot.plot(x, Zfit[:, j], pen=pg.mkPen(color=(255, 0, 0), width=2))
 
         # plot y cut
         self.cy_plot.clear()
         self.cy_plot.plot(Z[i, :], y, symbol="+", size=1, symbolSize=5)
-        self.cy_plot.plot(
-            Zfit[i, :], y, pen=pg.mkPen(color=(255, 0, 0), width=2)
-        )
+        self.cy_plot.plot(Zfit[i, :], y, pen=pg.mkPen(color=(255, 0, 0), width=2))
 
         # -- display
         # fit
-        self.current_fit_image.updateImage(
-            image=Zfit, levels=self._current_levels
-        )
+        self.current_fit_image.updateImage(image=Zfit, levels=self._current_levels)
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_fit_image
         )

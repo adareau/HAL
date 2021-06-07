@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-05-05 15:23:23
+Modified : 2021-06-07 21:26:34
 
 Comments : implements a "null" fit, that only returns spatial stats
 """
@@ -12,7 +12,7 @@ Comments : implements a "null" fit, that only returns spatial stats
 import numpy as np
 
 # -- local
-from HAL.classes.fit.abstract import Abstract2DBellShaped
+from .abstract import Abstract2DBellShaped
 
 
 # %% CLASS DEFINITION

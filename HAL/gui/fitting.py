@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-19 15:59:44
+Modified : 2021-06-07 21:21:45
 
 Comments : Functions related to data fitting
 """
@@ -15,13 +15,13 @@ import json
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtWidgets import QMessageBox,QInputDialog
+from PyQt5.QtWidgets import QMessageBox, QInputDialog
 from PyQt5.QtCore import Qt
 
 # -- local
-from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
-from HAL.classes.fit import implemented_fit_dic
-from HAL.classes.data.abstract import AbstractCameraPictureData
+from ..classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
+from ..classes.fit import implemented_fit_dic
+from ..classes.data.abstract import AbstractCameraPictureData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -76,6 +76,7 @@ def addROI(self, roi_name=None):
     # add the ROI to the RoiComboBox
     self.selectRoiComboBox.addItem(roi_name)
 
+
 def removeROI(self):
     """ removes the currently selected ROI"""
     selected_ROI = self.selectRoiComboBox.currentText()
@@ -84,19 +85,23 @@ def removeROI(self):
     selected_idx = self.selectRoiComboBox.currentIndex()
     self.selectRoiComboBox.removeItem(selected_idx)
 
+
 def renameROI(self):
     """ renames the currently selected ROI"""
     selected_idx = self.selectRoiComboBox.currentIndex()
     selected_ROI_name = self.selectRoiComboBox.currentText()
     new_name, ok = QInputDialog.getText(
-        self, "Rename ROI", "Choose a new name for " + selected_ROI_name + " :")
-    self.display.updateROI(roi_name=selected_ROI_name,name=new_name)
+        self, "Rename ROI", "Choose a new name for " + selected_ROI_name + " :"
+    )
+    self.display.updateROI(roi_name=selected_ROI_name, name=new_name)
     self.selectRoiComboBox.setItemText(selected_idx, new_name)
+
 
 def clearROIs(self):
     """ removes all the ROIs"""
     self.display.clearROIs()
     self.selectRoiComboBox.clear()
+
 
 # %% BACKGROUND MANAGEMENT
 
@@ -461,9 +466,7 @@ def deleteSavedFits(self):
     # -- ask for confirmation
     msg = "delete saved fits for current run selection ?"
     title = "This mission is too important..."
-    answer = QMessageBox.question(
-        self, title, msg, QMessageBox.Yes | QMessageBox.No
-    )
+    answer = QMessageBox.question(self, title, msg, QMessageBox.Yes | QMessageBox.No)
     if answer == QMessageBox.No:
         return
 

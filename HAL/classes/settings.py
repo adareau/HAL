@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-21 15:23:49
+Modified : 2021-06-07 21:25:18
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -30,9 +30,6 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QShortcut,
 )
-
-# -- local
-import HAL
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -93,9 +90,7 @@ class SettingsEditor(QDialog):
         # button layout
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.addWidget(self.checkButton)
-        spacer = QSpacerItem(
-            40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum
-        )
+        spacer = QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.buttonLayout.addItem(spacer)
         self.buttonLayout.addWidget(self.buttonBox)
 
@@ -137,9 +132,7 @@ class SettingsEditor(QDialog):
             return False
 
         if show_sucess:
-            QMessageBox.information(
-                self, "Good boi", "Config parsed sucessfully !"
-            )
+            QMessageBox.information(self, "Good boi", "Config parsed sucessfully !")
 
         return True
 
@@ -160,14 +153,8 @@ class SettingsEditor(QDialog):
 class Settings(object):
     """docstring for Settings"""
 
-    def __init__(self, path=None):
+    def __init__(self, path):
         super(Settings, self).__init__()
-
-        # if no path is given, use HAL root folder
-        if path is None:
-            HAL_path = HAL.__file__
-            HAL_root, _ = os.path.split(HAL_path)
-            path = os.path.join(HAL_root, "global.conf")
 
         self.conf_file_path = path
 
@@ -235,7 +222,6 @@ class Settings(object):
                 out_str += "%s=%s \n" % (k, self.config[section][k])
             out_str += "\n"
         return out_str
-
 
 
 # %% TEST
