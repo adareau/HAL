@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 
 # -- local
-from HAL.classes.metadata.abstract import AbstractMetaData
+from .abstract import AbstractMetaData
 
 # %% DECLARATIONS
 # FIXME : can we link this to the actual user settings ?

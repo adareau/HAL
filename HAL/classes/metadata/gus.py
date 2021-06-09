@@ -14,7 +14,7 @@ from pathlib import Path
 from scipy.io import loadmat
 
 # -- local
-from HAL.classes.metadata.abstract import AbstractMetaData
+from .abstract import AbstractMetaData
 
 
 # %% TOOL
