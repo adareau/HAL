@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 15:31:30
+Modified : 2021-06-09 15:56:32
 
 Comments : Functions related to (meta)data exploration
 """
@@ -343,6 +343,55 @@ def displayMetaData(self):
 # %% SET MANAGEMENT
 
 
+def _writeDataSet(self, setname, selected_paths, overwrite_ok=False, dataset_dir=None):
+    """
+    Low-level function to write data sets. Called by createNewDataSet()
+    or addToDataSet()
+    """
+    # -- process selected paths
+    # replace the data root by '{data_root}'
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = root.expanduser()
+    pattern = "^%s" % root  # only replace at the beginning of the path
+    tag = "{data_root}"
+    selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
+
+    # -- save dataset
+    # prepare json content
+    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    json_content = {
+        "created": date_str,
+        "program": self._name,
+        "version": self._version,
+        "root tag": tag,
+        "local root": str(root),
+        "paths": selected_paths,
+    }
+
+    # prepare .dataset dir (create if does not exist)
+    if dataset_dir is None:
+        root = self.current_folder
+        dataset_dir = root / ".datasets"
+        dataset_dir.mkdir(exist_ok=True)
+
+    json_file = dataset_dir / ("%s.json" % setname)
+    # check if file exists
+    if json_file.is_file() and not overwrite_ok:
+        # are you sure ?
+        answer = QMessageBox.question(
+            self,
+            "This mission is too important...",
+            f"Overwrite the existing dataset '{setname}' ?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if answer == QMessageBox.No:
+            return
+    # create dataset
+    json_txt = json.dumps(json_content)
+    json_file.write_text(json_txt)
+
+
 def createNewDataSet(self):
     """
     Add a new dataset, consisting of the currently selected runs.
@@ -358,53 +407,14 @@ def createNewDataSet(self):
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
-    # replace the data root by '{data_root}'
-    conf = self.settings.config
-    root = Path(conf["data"]["root"])
-    root = root.expanduser()
-    pattern = "^%s" % root  # only replace at the beginning of the path
-    tag = "{data_root}"
-    selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
-
-    # -- save set
-    # prepare json file
-    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    json_content = {
-        "created": date_str,
-        "program": self._name,
-        "version": self._version,
-        "root tag": tag,
-        "local root": str(root),
-        "paths": selected_paths,
-    }
-
-    # prepare .dataset dir (create if does not exist)
-    root = self.current_folder
-    dataset_dir = root / ".datasets"
-    dataset_dir.mkdir(exist_ok=True)
-
     # ask name
     default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
-    name, ok = QInputDialog.getText(
+    setname, ok = QInputDialog.getText(
         self, "create new data set", "Enter dataset name:", text=default_name
     )
     # write json file
     if ok:
-        json_file = root / ".datasets" / ("%s.json" % name)
-        # check if file exists
-        if json_file.is_file():
-            # are you sure ?
-            answer = QMessageBox.question(
-                self,
-                "This mission is too important...",
-                f"Overwrite the existing dataset '{name}' ?",
-                QMessageBox.Yes | QMessageBox.No,
-            )
-            if answer == QMessageBox.No:
-                return
-        # create dataset
-        json_txt = json.dumps(json_content)
-        json_file.write_text(json_txt)
+        _writeDataSet(self, setname, selected_paths, overwrite_ok=False)
 
     # refresh
     refreshDataSetList(self)
@@ -453,6 +463,31 @@ def addToDataSet(self):
     )
     if answer == QMessageBox.No:
         return
+
+    # -- add to dataset
+
+    # - paths to append
+    selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
+
+    # - current path list
+    # prepare "root" substitution
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = str(root.expanduser())
+    with open(str(path)) as json_file:
+        data = json.load(json_file)
+        tag = data["root tag"]
+        pattern = "^%s" % tag
+        json_paths = [re.sub(pattern, root, p) for p in data["paths"]]
+        total_paths = json_paths + selected_paths
+
+    # -- save set
+    _writeDataSet(
+        self, path.stem, total_paths, overwrite_ok=True, dataset_dir=path.parents[0]
+    )
+
+    # refresh
+    refreshDataSetList(self)
 
     # -- add to dataset
 
