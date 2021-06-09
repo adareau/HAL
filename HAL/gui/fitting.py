@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 09:48:28
+Modified : 2021-06-09 10:16:26
 
 Comments : Functions related to data fitting
 """
@@ -131,8 +131,8 @@ def renameROI(self):
     selected_ROI_name = self.selectRoiComboBox.currentText()
     msg = f"Choose a new name for {selected_ROI_name} :"
     new_name, ok = QInputDialog.getText(self, "Rename ROI", msg)
-    if self.display.updateROI(roi_name=selected_ROI_name, name=new_name) is None:
-        # if diplay.updateROI() worked fine, it returned the default None value
+    if self.display.updateROI(roi_name=selected_ROI_name, name=new_name):
+        # if diplay.updateROI() worked fine, it returned True
         self.selectRoiComboBox.setItemText(selected_ROI_idx, new_name)
 
         # get path to datafile

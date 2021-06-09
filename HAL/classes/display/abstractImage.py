@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-06-09 09:46:48
+Modified : 2021-06-09 10:14:41
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -166,6 +166,8 @@ class AbstractImageDisplay(AbstractDisplay):
                 roi.name = name
                 roi.label.setText(roi.name)
                 self.roi_list[roi.name] = self.roi_list.pop(roi_name)
+
+        return True
 
     def clearROIs(self):
         """clears the whole set of existing ROIs"""
