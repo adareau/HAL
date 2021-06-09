@@ -141,7 +141,8 @@ class FocusOnFit2D(AbstractImageDisplay):
                 # roi
                 self.current_roi_image.updateImage(image=Z, levels=levels)
                 self.updateColormap(
-                    colormap=colormap, image=self.current_roi_image,
+                    colormap=colormap,
+                    image=self.current_roi_image,
                 )
 
     def BackgroundChangedFinished(self):
@@ -170,7 +171,9 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.err_plot.setTitle("Error")
 
     def updateFit(
-        self, fit_dic, selected_ROI,
+        self,
+        fit_dic,
+        selected_ROI,
     ):
         """updates the fit display"""
 

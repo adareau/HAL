@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 class BasicImageDisplay(AbstractImageDisplay):
     """a basic (2D) image display
-       NB : inherits a LOT of methods from AbstractImageDisplay().
-            Have a look at this class if you do not find a method here !
+    NB : inherits a LOT of methods from AbstractImageDisplay().
+         Have a look at this class if you do not find a method here !
     """
 
     def __init__(self, **kwargs):
@@ -156,7 +156,9 @@ class BasicImageDisplay(AbstractImageDisplay):
         self.current_fit_image.updateImage(image=image, levels=(0, 1))
 
     def updateFit(
-        self, fit_dic, selected_ROI,
+        self,
+        fit_dic,
+        selected_ROI,
     ):
         """updates the fit display"""
 

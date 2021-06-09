@@ -77,7 +77,7 @@ KEY_SEQUENCES = {
 
 
 def analyse_keylog(self):
-    """ Analyse key log and trigger actions"""
+    """Analyse key log and trigger actions"""
     global KEY_SEQUENCES
 
     # -- get max length

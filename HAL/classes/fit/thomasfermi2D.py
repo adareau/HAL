@@ -20,7 +20,7 @@ def TFParab(x, y, size_x, size_y, center_x, center_y):
 
 
 def ThomasFermi2D(xy, *p):
-    """ p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
+    """p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
     (x, y) = xy
     TF_profile = TFParab(x, y, p[2], p[3], p[4], p[5])
     return np.choose(
@@ -31,7 +31,7 @@ def ThomasFermi2D(xy, *p):
 # %% CLASS DEFINITION
 class ThomasFermi2DFit(Abstract2DBellShaped):
     """a 2D Thomas Fermi fit. Inherits methods from the Abstract2DBellShaped
-       (for instance the do_guess() one)"""
+    (for instance the do_guess() one)"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -50,7 +50,7 @@ class ThomasFermi2DFit(Abstract2DBellShaped):
 
     def do_guess(self):
         """guess fit parameters. use the guess_center_size_ampl_offset()
-           method defined in the Abstract2DBellShaped class"""
+        method defined in the Abstract2DBellShaped class"""
 
         # guess amplitude / offset / center / size
         res = self.guess_center_size_ampl_offset()

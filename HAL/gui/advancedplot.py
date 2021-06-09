@@ -514,17 +514,17 @@ def variableDeclarationChanged(self, item):
 
 
 def exportToMatplotlib(self):
-    """ Placeholder. TODO : implement"""
+    """Placeholder. TODO : implement"""
     logger.debug("export to MPL !")
 
 
 def exportDataButtonClicked(self):
-    """ Placeholder. TODO : implement"""
+    """Placeholder. TODO : implement"""
     logger.debug("export data)")
 
 
 def advancedStatButtonClicked(self):
-    """ Placeholder. TODO : implement"""
+    """Placeholder. TODO : implement"""
     displayStats(self)
 
 

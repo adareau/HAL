@@ -35,8 +35,8 @@ class AbstractMetaData(object):
     @data.setter
     def data(self, dlist):
         """called when something is fed to self.data. We use this setter
-           to analyze the list of parameters stored in data, and ensure the
-           compatibility with the gui functions accessing self.data"""
+        to analyze the list of parameters stored in data, and ensure the
+        compatibility with the gui functions accessing self.data"""
 
         # check that the data provided is a list
         if not isinstance(dlist, list):

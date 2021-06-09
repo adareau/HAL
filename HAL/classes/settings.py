@@ -209,7 +209,9 @@ class Settings(object):
         # execute gui
         default_config = self._default_settings_as_string
         editor = SettingsEditor(
-            self.conf_file_path, parent=parent, default_config=default_config,
+            self.conf_file_path,
+            parent=parent,
+            default_config=default_config,
         )
         res = editor.exec()
         # take results
