@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-06-07 21:28:01
+Modified : 2021-06-09 10:14:41
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -154,12 +154,23 @@ class AbstractImageDisplay(AbstractDisplay):
         if size is not None:
             roi.setSize(size, finish=True, update=True)
         if name is not None:
-            roi.name = name
-            roi.label.setText(roi.name)
-            self.roi_list[roi.name] = self.roi_list.pop(roi_name)
+            if not name or name.isspace():
+                msg = "Chosen roi name is empty."
+                logger.warning(msg)
+                return
+            elif name in self.roi_list:
+                msg = f"{name} roi name is already used."
+                logger.warning(msg)
+                return
+            else:
+                roi.name = name
+                roi.label.setText(roi.name)
+                self.roi_list[roi.name] = self.roi_list.pop(roi_name)
+
+        return True
 
     def clearROIs(self):
-        """ clears the whole set of existing ROIs"""
+        """clears the whole set of existing ROIs"""
         for roi in self.roi_list.values():
             self.image_plot.removeItem(roi.label)
             self.image_plot.removeItem(roi)

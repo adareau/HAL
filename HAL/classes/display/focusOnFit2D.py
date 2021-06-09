@@ -23,8 +23,8 @@ from .abstractImage import AbstractImageDisplay
 
 class FocusOnFit2D(AbstractImageDisplay):
     """a basic (2D) image display
-       NB : inherits a LOT of methods from AbstractImageDisplay().
-            Have a look at this class if you do not find a method here !
+    NB : inherits a LOT of methods from AbstractImageDisplay().
+         Have a look at this class if you do not find a method here !
     """
 
     def __init__(self, **kwargs):
@@ -54,18 +54,10 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.screen.clear()
 
         # -- create plot layout
-        if False:  # old version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(3, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
-        else:  # new version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(2, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 2, title="Data (all)")
+        roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
+        fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
+        err_plot = self.screen.addPlot(2, 2, title="Error")
+        im_plot = self.screen.addPlot(1, 2, title="Data (all)")
 
         # stretch
         layout = self.screen.ci.layout
@@ -150,7 +142,8 @@ class FocusOnFit2D(AbstractImageDisplay):
                 # roi
                 self.current_roi_image.updateImage(image=Z, levels=levels)
                 self.updateColormap(
-                    colormap=colormap, image=self.current_roi_image,
+                    colormap=colormap,
+                    image=self.current_roi_image,
                 )
 
     def BackgroundChangedFinished(self):
@@ -179,7 +172,9 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.err_plot.setTitle("Error")
 
     def updateFit(
-        self, fit_dic, selected_ROI,
+        self,
+        fit_dic,
+        selected_ROI,
     ):
         """updates the fit display"""
 

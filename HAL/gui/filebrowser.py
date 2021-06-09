@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-08 09:51:10
-Modified : 2021-06-07 21:21:28
+Modified : 2021-05-28 17:06:13
 
 Comments : Functions related to file browsing, i.e. select the right year,
            month, day folders, and list the files inside.
@@ -18,7 +18,13 @@ from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
+from PyQt5.QtWidgets import (
+    QListWidgetItem,
+    QStyle,
+    QAbstractItemView,
+    QSpacerItem,
+    QSizePolicy,
+)
 
 # -- local
 from . import fitting
@@ -205,6 +211,14 @@ def setupFileListBrowser(self):
     self.dateEdit.setCalendarPopup(True)
     self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
     self.dateEdit.setDisplayFormat("yyyy/MM/dd")
+
+    # -- horizontal spacer in browser layout
+    layout = self.browserButtonsLayout
+    # find the spacer from the layout items
+    for i in range(layout.count()):
+        item = layout.itemAt(i)
+        if isinstance(item, QSpacerItem):
+            item.changeSize(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
 # %%  CALLBACKS
@@ -394,9 +408,11 @@ def refreshCurrentFolder(self, new_folder=None):
     else:
         focus_widget = None
 
-    # -- reset lists
-    # block callbacks
+    # -- BLOCK SIGNALS
     self.seqList.blockSignals(True)
+    self.runList.blockSignals(True)
+
+    # -- reset lists
     # clear
     self.runList.clear()
     self.seqList.clear()
@@ -405,12 +421,12 @@ def refreshCurrentFolder(self, new_folder=None):
     item.setText("[all]")
     item.setData(Qt.UserRole, None)
     self.seqList.addItem(item)
-    # unblock
-    self.seqList.blockSignals(False)
 
     # -- check that the folder exists
     if not self.current_folder.is_dir():
         self.runList.addItems(["Folder does not exists"])
+        self.seqList.blockSignals(False)
+        self.runList.blockSignals(False)
         return
 
     # -- get content and update list
@@ -475,7 +491,6 @@ def refreshCurrentFolder(self, new_folder=None):
         if data == current_run:
             self.runList.setCurrentItem(item)
     # seq list
-    self.seqList.blockSignals(True)
     for i in range(self.seqList.count()):
         item = self.seqList.item(i)
         name = item.text()
@@ -483,7 +498,10 @@ def refreshCurrentFolder(self, new_folder=None):
             item.setSelected(True)
         if name == current_seq:
             self.seqList.setCurrentItem(item)
+
+    # -- UNBLOCK SIGNALS
     self.seqList.blockSignals(False)
+    self.runList.blockSignals(False)
 
     # -- restore focus
     if focus_widget is not None:

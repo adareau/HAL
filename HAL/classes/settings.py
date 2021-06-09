@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-06-07 21:25:18
+Modified : 2021-05-28 17:16:27
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -42,6 +42,10 @@ DATA_DEFAULTS = {
     "year folder": "%Y",
 }
 
+METADATA_DEFAULTS = {
+    "autorefresh cache": True,
+}
+
 FIT_DEFAULTS = {
     "fit folder name": ".HAL_fits",
 }
@@ -49,6 +53,10 @@ FIT_DEFAULTS = {
 GUI_DEFAULT = {
     "font family": "Sans Serif",
     "font size": 9,
+}
+
+DEV_DEFAULT = {
+    "log callbacks": False,
 }
 
 
@@ -175,6 +183,8 @@ class Settings(object):
         self.config["data"] = DATA_DEFAULTS
         self.config["fit"] = FIT_DEFAULTS
         self.config["gui"] = GUI_DEFAULT
+        self.config["dev"] = DEV_DEFAULT
+        self.config["metadata"] = METADATA_DEFAULTS
 
     def load(self):
         """load the configuration file and parse it"""
