@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-06-09 15:13:52
+Modified : 2021-06-09 15:19:05
 
 
 Comments :
@@ -340,7 +340,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         quickplot.refreshMetaDataList(self)
 
     def _createNewDataSet(self):
-        dataexplorer.addNewSet(self)
+        dataexplorer.createNewDataSet(self)
 
     def _addToDataSet(self):
         dataexplorer.addtoDataSet(self)

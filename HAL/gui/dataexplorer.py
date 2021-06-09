@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 13:05:57
+Modified : 2021-06-09 15:19:42
 
 Comments : Functions related to (meta)data exploration
 """
@@ -343,7 +343,7 @@ def displayMetaData(self):
 # %% SET MANAGEMENT
 
 
-def addNewSet(self):
+def createNewDataSet(self):
     """
     Add a new dataset, consisting of the currently selected runs.
     The dataset is saved in the day folder, in a '.datasets' subfolder
@@ -391,6 +391,18 @@ def addNewSet(self):
     # write json file
     if ok:
         json_file = root / ".datasets" / ("%s.json" % name)
+        # check if file exists
+        if json_file.is_file():
+            # are you sure ?
+            answer = QMessageBox.question(
+                self,
+                "This mission is too important...",
+                f"Overwrite the existing dataset '{name}' ?",
+                QMessageBox.Yes | QMessageBox.No,
+            )
+            if answer == QMessageBox.No:
+                return
+        # create dataset
         json_txt = json.dumps(json_content)
         json_file.write_text(json_txt)
 
