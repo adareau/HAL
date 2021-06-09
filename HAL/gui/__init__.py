@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Author   : Alexandre
 Created  : 2021-04-07 14:33:19
-Modified : 2021-05-19 16:29:45
+Modified : 2021-06-09 17:11:06
 
 Comments :
-'''
+"""
 
 # %% IMPORTS
 
@@ -13,9 +13,18 @@ import json
 from pathlib import Path
 
 # %% LOAD OPENING LINES
-
-json_file = Path('quotes.json')
-if json_file.is_file():
-    quotes = json.loads(json_file.read_text())
-else:
-    quotes = ["Good morning, Dave."]
+try:
+    local_folder = __path__[0]
+    json_file = Path(local_folder) / "quotes.json"
+    if json_file.is_file():
+        quotes = json.loads(json_file.read_text())
+    else:
+        quotes = [
+            "Good morning, Dave.",
+        ]
+        print(f"Error loading quotes from {json_file}")
+except Exception as e:
+    quotes = [
+        "Good morning, Dave.",
+    ]
+    print(f"Error loading quotes : {e}")
