@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-06-09 15:19:05
+Modified : 2021-06-09 15:20:46
 
 
 Comments :
@@ -343,7 +343,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.createNewDataSet(self)
 
     def _addToDataSet(self):
-        dataexplorer.addtoDataSet(self)
+        dataexplorer.addToDataSet(self)
 
     def _deleteDataSet(self):
         dataexplorer.deleteDataSet(self)

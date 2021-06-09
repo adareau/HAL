@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 15:19:42
+Modified : 2021-06-09 15:20:52
 
 Comments : Functions related to (meta)data exploration
 """
@@ -410,7 +410,7 @@ def createNewDataSet(self):
     refreshDataSetList(self)
 
 
-def addtoDataSet(self):
+def addToDataSet(self):
     """
     Add the currently selected runs to the selected DataSet.
     """
