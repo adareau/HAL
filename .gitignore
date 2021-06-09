@@ -7,3 +7,10 @@ tests/
 # sublime tex files
 *.sublime-*
 
+# modules folder
+# ignore all by default
+#HAL/modules
+# include the __init__: important for module import
+!HAL/modules/__init__.py
+!HAL/modules/examples/*
+
