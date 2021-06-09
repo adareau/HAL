@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-06-09 13:04:28
+Modified : 2021-06-09 14:46:51
 
 
 Comments :
@@ -94,10 +94,6 @@ CALLBACK_LIST = [
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     # sets management
-    ("newSetButton", "clicked", "_newSetButtonClicked"),
-    ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
-    ("addtoSetButton", "clicked", "_addtoSetButtonClicked"),
-    ("favSetButton", "clicked", "_favSetButtonClicked"),
     ("setList", "doubleClicked", "_setListDoubleClicked"),
     ("dataSetCreateAction", "triggered", "_newSetButtonClicked"),
     ("dataSetDeleteAction", "triggered", "_deleteSetButtonClicked"),
