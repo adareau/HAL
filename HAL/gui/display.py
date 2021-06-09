@@ -76,7 +76,7 @@ def setupDisplay(self):
             checked=(display_name == default_display),
         )
         # set shortcut
-        seq = "%s+%i"% (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
+        seq = "%s+%i" % (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
         action.setShortcut(QKeySequence(seq))
         n_shortcut += 1
         # the display class is stored in the action data for later access
@@ -122,7 +122,7 @@ def setupDisplay(self):
 
 def displaySelectionChanged(self, action):
     """
-    triggered when the display type selection was changed
+    triggered when the display type selection is changed
     """
     # get the new requested display class
     display_class = action.data()
@@ -130,6 +130,9 @@ def displaySelectionChanged(self, action):
     # setup display
     self.display = display_class(screen=self.mainScreen)
     self.display.setup()
+
+    # setup ROIs
+    self.selectRoiComboBox.clear()
 
     # setup colormaps
     colormap_list = self.display.getColormaps()
@@ -156,7 +159,7 @@ def updateColormap(self):
 
 def plotSelectedData(self, update_fit=True):
     """
-    loads the selected data, and plot it
+    loads the selected data, and plots it
     """
     # -- get selected data
     selection = self.runList.selectedItems()
@@ -178,8 +181,7 @@ def plotSelectedData(self, update_fit=True):
     data.load()
 
     # -- get the selected roi
-    # FIXME : let the user choose the selected roi !!!
-    selected_roi = "ROI 0"
+    selected_roi = self.selectRoiComboBox.currentText()
     current_rois = self.display.getROINames()
     if current_rois and selected_roi not in current_rois:
         selected_roi = current_rois[0]
@@ -220,6 +222,7 @@ def updateFitForSelectedData(self):
     Load a saved fit for the selected data (if exist), and update
     the display accordingly
     """
+    self.selectRoiComboBox.blockSignals(True)
     # -- clear current fit
     self.display.clearFit()
     # -- load saved fit
@@ -251,13 +254,11 @@ def updateFitForSelectedData(self):
         fitting.removeBackground(self)
 
     # -- update the fit
-    # FIXME : let the user choose the selected roi !!!
-    selected_roi = ""
+    selected_roi = self.selectRoiComboBox.currentText()
     # we take the first roi, if selected roi does not exist
     if selected_roi not in fit_collection:
         selected_roi = list(fit_collection.keys())[0]
     # get selected fit
-    fit_dic = {
-        roi_name: res["fit"] for roi_name, res in fit_collection.items()
-    }
+    fit_dic = {roi_name: res["fit"] for roi_name, res in fit_collection.items()}
     self.display.updateFit(fit_dic, selected_roi)
+    self.selectRoiComboBox.blockSignals(False)
