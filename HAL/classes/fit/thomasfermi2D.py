@@ -2,7 +2,6 @@
 """
 Author   : Victor
 Created  : 2021-05-25T14:18:21+02:00
-Modified : 2021-06-07 21:26:31
 
 Comments : implements a 2D Thomas Fermi fit
 """

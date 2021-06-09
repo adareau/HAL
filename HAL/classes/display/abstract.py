@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-06-07 21:27:42
 
 Comments : Abstract classes for data display
 """

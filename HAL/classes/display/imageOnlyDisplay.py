@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-06-07 21:28:19
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects

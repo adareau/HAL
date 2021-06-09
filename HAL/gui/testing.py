@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-04 09:30:49
-Modified : 2021-06-07 21:22:47
 
 Comments : developer functions, meant to test / debug the gui
 """

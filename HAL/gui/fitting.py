@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 10:16:26
 
 Comments : Functions related to data fitting
 """
@@ -151,13 +150,11 @@ def renameROI(self):
                 _save_fit_result_as_json(self, fit_json, data_object)
 
 
-
 def clearROIs(self):
     """removes all the ROIs"""
     self.selectRoiComboBox.clear()
     self.display.clearROIs()
     deleteSavedFits(self)
-
 
 
 # %% BACKGROUND MANAGEMENT

@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-06-07 21:18:58
 
 Comments : Implement the "Advanced data analysis"
 """

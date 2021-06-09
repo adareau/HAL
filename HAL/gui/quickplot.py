@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-07 21:22:14
 
 Comments : Functions related to quick data analysis
 """

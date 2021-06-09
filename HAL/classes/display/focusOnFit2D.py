@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-06-07 21:28:14
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -142,8 +141,7 @@ class FocusOnFit2D(AbstractImageDisplay):
                 # roi
                 self.current_roi_image.updateImage(image=Z, levels=levels)
                 self.updateColormap(
-                    colormap=colormap,
-                    image=self.current_roi_image,
+                    colormap=colormap, image=self.current_roi_image,
                 )
 
     def BackgroundChangedFinished(self):
@@ -172,9 +170,7 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.err_plot.setTitle("Error")
 
     def updateFit(
-        self,
-        fit_dic,
-        selected_ROI,
+        self, fit_dic, selected_ROI,
     ):
         """updates the fit display"""
 

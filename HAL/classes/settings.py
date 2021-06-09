@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-28 17:16:27
 
 Comments : implements the Settings class, that manages user settings
 """

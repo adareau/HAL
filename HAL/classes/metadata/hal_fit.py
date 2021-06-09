@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-05 14:20:54
 
 Comments : Imports fit information, as saved by HAL
 """

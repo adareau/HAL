@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-06-07 21:28:37
 
 Comments : Abstract classes for data handling
 """

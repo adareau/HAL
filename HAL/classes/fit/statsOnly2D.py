@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:49:51
-Modified : 2021-06-07 21:26:34
 
 Comments : implements a "null" fit, that only returns spatial stats
 """

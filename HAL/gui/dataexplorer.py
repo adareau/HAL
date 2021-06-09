@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 16:36:29
 
 Comments : Functions related to (meta)data exploration
 """
