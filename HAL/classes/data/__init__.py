@@ -6,7 +6,7 @@ Created  : 2021-04-07 14:33:19
 Comments :
 """
 
-from HAL.classes.data.xenics import XenicsData
+from .xenics import XenicsData
 
 implemented_data = [
     XenicsData(),

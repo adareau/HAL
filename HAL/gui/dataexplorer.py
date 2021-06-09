@@ -696,24 +696,3 @@ def refreshDataSetList(self):
                     self.setList.setCurrentItem(item)
 
     self.setList.blockSignals(False)
-
-
-# %% TEST
-if __name__ == "__main__":
-    from HAL.classes.metadata import implemented_metadata
-
-    root = Path().home()
-    path = root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
-
-    print(path.is_file())
-    path_list = [
-        path,
-    ]
-    data_list = [("HeV-fit", "cx"), ("file", "size"), ("HeV-fit", "Nint")]
-
-    class Dummy(object):
-        def __init__(self):
-            self.metadata_classes = implemented_metadata
-
-    mdata = _loadSetMetaData(Dummy(), path_list, data_list)
-    print(mdata)

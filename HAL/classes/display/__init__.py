@@ -6,10 +6,10 @@ Created  : 2021-05-06 10:09:31
 Comments :
 """
 
-from HAL.classes.display.basicImageDisplay import BasicImageDisplay
-from HAL.classes.display.imageOnlyDisplay import ImageOnlyDisplay
-from HAL.classes.display.focusOnFit2D import FocusOnFit2D
-from HAL.classes.display.liveMetaData import LiveMetaData
+from .basicImageDisplay import BasicImageDisplay
+from .imageOnlyDisplay import ImageOnlyDisplay
+from .focusOnFit2D import FocusOnFit2D
+from .liveMetaData import LiveMetaData
 
 implemented_display = [
     BasicImageDisplay,
