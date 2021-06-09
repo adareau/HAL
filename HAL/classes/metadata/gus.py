@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-19 12:12:03
 
 Comments : Abstract classes for data handling
 """
@@ -15,7 +14,7 @@ from pathlib import Path
 from scipy.io import loadmat
 
 # -- local
-from HAL.classes.metadata.abstract import AbstractMetaData
+from .abstract import AbstractMetaData
 
 
 # %% TOOL

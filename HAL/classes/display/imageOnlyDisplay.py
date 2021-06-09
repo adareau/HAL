@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-07 16:47:32
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -15,7 +14,7 @@ import pyqtgraph as pg
 import numpy as np
 
 # -- local
-from HAL.classes.display.abstractImage import AbstractImageDisplay
+from .abstractImage import AbstractImageDisplay
 
 
 # %% CLASS DEFINITION
@@ -87,11 +86,11 @@ class ImageOnlyDisplay(AbstractImageDisplay):
         self.current_data_object = dataobject
 
         # redefine limits
-        '''
+        """
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
-        '''
+        """
         # get background
         if self.background is not None:
             background, _ = self.background.getArrayRegion(
@@ -102,9 +101,7 @@ class ImageOnlyDisplay(AbstractImageDisplay):
             background_value = 0
 
         # update image
-        self.current_image.updateImage(
-            image=image - background_value, levels=levels
-        )
+        self.current_image.updateImage(image=image - background_value, levels=levels)
         self.current_data = image - background_value
         self._data_in = image
         self._current_levels = levels

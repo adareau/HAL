@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 14:35:55
 
 Comments : Abstract classes for data handling
 """
@@ -16,7 +15,7 @@ class AbstractData(object):
 
     def __init__(self):
 
-        self.name = 'Abstract Data'
+        self.name = "Abstract Data"
         self.dimension = None  # should be 1, 2 or 3
         self.path = Path(".")
         self.pixel_scale = ()  # should be a tuple, with same size as dimension

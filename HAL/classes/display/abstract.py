@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-17 12:52:24
 
 Comments : Abstract classes for data display
 """
@@ -10,7 +9,7 @@ Comments : Abstract classes for data display
 # %% IMPORTS
 
 # -- local
-from HAL.classes.display.colormaps import IMPLEMENTED_COLORMAPS
+from .colormaps import IMPLEMENTED_COLORMAPS
 
 
 # %% CLASS DEFINITION

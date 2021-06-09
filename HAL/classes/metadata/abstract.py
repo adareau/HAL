@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-12 16:50:37
 
 Comments : Abstract classes for data handling
 """
@@ -77,8 +76,8 @@ class AbstractMetaData(object):
             "display": "%.3g",
             "unit": "",
             "comment": "",
-            "hidden" : False,
-            "special" : None
+            "hidden": False,
+            "special": None,
         }
         checked_param.update(param)
 
@@ -92,7 +91,5 @@ class AbstractMetaData(object):
 
     def get_numeric_keys(self):
         """return the list of names of the 'numeric' parameters"""
-        numeric_keys = [
-            p["name"] for p in self._data if isinstance(p["value"], Number)
-        ]
+        numeric_keys = [p["name"] for p in self._data if isinstance(p["value"], Number)]
         return numeric_keys

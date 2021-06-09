@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 16:36:29
 
 Comments : Functions related to (meta)data exploration
 """
@@ -32,10 +31,8 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
-import HAL.gui.quickplot as quickplot
-import HAL.gui.advancedplot as advancedplot
-from HAL.gui import quotes
-from HAL.gui.misc import wrap_text
+from . import quickplot, advancedplot, quotes
+from .misc import wrap_text
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -699,24 +696,3 @@ def refreshDataSetList(self):
                     self.setList.setCurrentItem(item)
 
     self.setList.blockSignals(False)
-
-
-# %% TEST
-if __name__ == "__main__":
-    from HAL.classes.metadata import implemented_metadata
-
-    root = Path().home()
-    path = root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
-
-    print(path.is_file())
-    path_list = [
-        path,
-    ]
-    data_list = [("HeV-fit", "cx"), ("file", "size"), ("HeV-fit", "Nint")]
-
-    class Dummy(object):
-        def __init__(self):
-            self.metadata_classes = implemented_metadata
-
-    mdata = _loadSetMetaData(Dummy(), path_list, data_list)
-    print(mdata)

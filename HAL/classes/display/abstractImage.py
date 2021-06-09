@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-06-09 10:14:41
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -14,8 +13,8 @@ import logging
 import pyqtgraph as pg
 
 # -- local
-from HAL.classes.display.abstract import AbstractDisplay
-from HAL.classes.display.colormaps import get_pyqtgraph_lookuptable
+from .abstract import AbstractDisplay
+from .colormaps import get_pyqtgraph_lookuptable
 
 # -- logger
 logger = logging.getLogger(__name__)

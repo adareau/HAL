@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 10:16:26
 
 Comments : Functions related to data fitting
 """
@@ -19,9 +18,9 @@ from PyQt5.QtWidgets import QMessageBox, QInputDialog
 from PyQt5.QtCore import Qt
 
 # -- local
-from HAL.classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
-from HAL.classes.fit import implemented_fit_dic
-from HAL.classes.data.abstract import AbstractCameraPictureData
+from ..classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
+from ..classes.fit import implemented_fit_dic
+from ..classes.data.abstract import AbstractCameraPictureData
 
 # -- logger
 logger = logging.getLogger(__name__)

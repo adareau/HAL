@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 15:25:18
-Modified : 2021-05-28 17:16:27
 
 Comments : implements the Settings class, that manages user settings
 """
@@ -30,9 +29,6 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QShortcut,
 )
-
-# -- local
-import HAL
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -164,14 +160,8 @@ class SettingsEditor(QDialog):
 class Settings(object):
     """docstring for Settings"""
 
-    def __init__(self, path=None):
+    def __init__(self, path):
         super(Settings, self).__init__()
-
-        # if no path is given, use HAL root folder
-        if path is None:
-            HAL_path = HAL.__file__
-            HAL_root, _ = os.path.split(HAL_path)
-            path = os.path.join(HAL_root, "global.conf")
 
         self.conf_file_path = path
 

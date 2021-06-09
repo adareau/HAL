@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-18 16:13:05
 
 Comments : Functions related to data visualization
 """
@@ -18,9 +17,8 @@ from PyQt5.QtWidgets import QAction, QActionGroup
 from PyQt5.QtGui import QKeySequence
 
 # -- local
-import HAL.gui.fitting as fitting
-import HAL.gui.advancedplot as advancedplot
-from HAL.classes.display import LiveMetaData
+from . import fitting, advancedplot
+from ..classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)

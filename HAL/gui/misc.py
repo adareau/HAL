@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-05 10:24:37
-Modified : 2021-05-19 16:44:37
 
 Comments : miscellaneous functions, that would not fit anywhere else
 """
