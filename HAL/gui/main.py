@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-28 17:27:54
+Modified : 2021-06-09 16:42:49
 
 
 Comments :
@@ -386,7 +386,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _refreshMetadataCachebuttonClicked(self, *args, **kwargs):
         dataexplorer.updateMetadataCache(self, reset_cache=True)
-        
+
     def _createNewDataSet(self, *args, **kwargs):
         dataexplorer.createNewDataSet(self)
 
@@ -478,6 +478,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
+        display.updateFitForSelectedData(self)
+        dataexplorer.displayMetaData(self)
 
     def _deleteFitButtonClicked(self, *args, **kwargs):
         # fit
