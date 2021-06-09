@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 15:20:52
+Modified : 2021-06-09 15:31:30
 
 Comments : Functions related to (meta)data exploration
 """
@@ -414,7 +414,7 @@ def addToDataSet(self):
     """
     Add the currently selected runs to the selected DataSet.
     """
-    # -- get selected data
+    # -- get selected data and set
     # get runs
     selected_runs = self.runList.selectedItems()
     if not selected_runs:
@@ -424,15 +424,38 @@ def addToDataSet(self):
         )
         return
 
-    current_dataset = self.setList.currentItem()
-    # if path is None or not path.is_file():
-    if not current_dataset:
+    # get selected datasets
+    dataset_list = [
+        s for s in self.setList.selectedItems() if s.data(Qt.UserRole) is not None
+    ]
+    if len(dataset_list) == 0:
         QMessageBox.warning(
             self, "No dataset selected", "Please select a dataset to add runs to."
         )
         return  # say the user that no dataset is selected
+    elif len(dataset_list) == 1:
+        current_dataset = dataset_list[0]
+    else:
+        print("AARRRGGG")
+        return
 
+    # get selected dataset path
     path = current_dataset.data(Qt.UserRole)
+
+    # -- ask for confirmation
+    #  are you sure ?
+    n_runs = len(selected_runs)
+    answer = QMessageBox.question(
+        self,
+        "add to dataset",
+        f"add {n_runs} runs to dataset '{path.stem}' ?",
+        QMessageBox.Yes | QMessageBox.No,
+    )
+    if answer == QMessageBox.No:
+        return
+
+    # -- add to dataset
+
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
