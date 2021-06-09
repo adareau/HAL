@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:34:02
-Modified : 2021-05-07 16:05:54
+Modified : 2021-06-09 09:46:48
 
 Comments : Abstract classes for data display, dedicated to image display !
 """
@@ -139,7 +139,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """remove given roi"""
         roi = self.getROI(roi_name)
         if roi is None:
-            return 1
+            return
         self.image_plot.removeItem(roi.label)
         self.image_plot.removeItem(roi)
         self.roi_list.pop(roi_name)
@@ -148,7 +148,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """updates a given ROI"""
         roi = self.getROI(roi_name)
         if roi is None:
-            return 1
+            return
         if pos is not None:
             roi.setPos(pos, finish=True, update=True)
         if size is not None:
@@ -157,11 +157,11 @@ class AbstractImageDisplay(AbstractDisplay):
             if not name or name.isspace():
                 msg = "Chosen roi name is empty."
                 logger.warning(msg)
-                return 1
+                return
             elif name in self.roi_list:
                 msg = f"{name} roi name is already used."
                 logger.warning(msg)
-                return 1
+                return
             else:
                 roi.name = name
                 roi.label.setText(roi.name)

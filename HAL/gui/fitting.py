@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-19 15:59:44
+Modified : 2021-06-09 09:48:28
 
 Comments : Functions related to data fitting
 """
@@ -88,7 +88,7 @@ def removeROI(self):
     selected_ROI = self.selectRoiComboBox.currentText()
     if not selected_run:
         # if empty >> do nothing
-        return 1
+        return
     # get path to datafile
     path = str(selected_run.data(Qt.UserRole))
     # generate saved fit path
@@ -100,7 +100,8 @@ def removeROI(self):
         # if fit exists for the ROI: ask confirmation -> deletion
         if selected_ROI in fit_collection:
             # -- ask for confirmation
-            msg = "This will also delete the associated fit. Do you confirm ?"
+            msg = f"You're about to remove the ROI '{selected_ROI}'. \n"
+            msg += "This will also delete the associated fit. Do you confirm ?"
             title = "This mission is too important..."
             answer = QMessageBox.question(
                 self, title, msg, QMessageBox.Yes | QMessageBox.No
