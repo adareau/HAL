@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 15:56:32
+Modified : 2021-06-09 16:28:02
 
 Comments : Functions related to (meta)data exploration
 """
@@ -424,8 +424,7 @@ def addToDataSet(self):
     """
     Add the currently selected runs to the selected DataSet.
     """
-    # -- get selected data and set
-    # get runs
+    # -- get selected runs
     selected_runs = self.runList.selectedItems()
     if not selected_runs:
         # if empty >> do nothing
@@ -434,20 +433,50 @@ def addToDataSet(self):
         )
         return
 
-    # get selected datasets
+    # -- get selected datasets
+    # selected dataset list
     dataset_list = [
         s for s in self.setList.selectedItems() if s.data(Qt.UserRole) is not None
     ]
+    # if list is empty, use all dataset list, and ask the user which one to select
+    # (see below for the user choice)
     if len(dataset_list) == 0:
-        QMessageBox.warning(
-            self, "No dataset selected", "Please select a dataset to add runs to."
-        )
-        return  # say the user that no dataset is selected
-    elif len(dataset_list) == 1:
+        items = [self.setList.item(i) for i in range(self.setList.count())]
+        dataset_list = [s for s in items if s.data(Qt.UserRole) is not None]
+        # if still empty >> do nothing
+        if len(dataset_list) == 0:
+            QMessageBox.warning(
+                self,
+                "No exising dataset",
+                "You have to create a dataset first, Dave !",
+            )
+            return
+
+    # if only one selected >> OK !
+    if len(dataset_list) == 1:
         current_dataset = dataset_list[0]
+    # if multiple selection >> ask the user
     else:
-        print("AARRRGGG")
-        return
+        # prepare a list of choices
+        # to avoid names that would appear twice (for instance in the current folder
+        # and in the favorite folder), we append a number to the set names in the list
+        name_list = [s.data(Qt.UserRole).stem for s in dataset_list]
+        choice = {
+            f"{i + 1} - {name}": s
+            for i, (name, s) in enumerate(zip(name_list, dataset_list))
+        }
+        item, ok = QInputDialog.getItem(
+            self,
+            "Add to dataset",
+            "In which dataset shall I add those runs, Dave ?",
+            list(choice.keys()),
+            0,
+            False,
+        )
+        if ok and item:
+            current_dataset = choice[item]
+        else:
+            return
 
     # get selected dataset path
     path = current_dataset.data(Qt.UserRole)
