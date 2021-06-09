@@ -17,7 +17,7 @@ import time
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence, QFont
-from PyQt5.QtWidgets import QShortcut, QMessageBox
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QAction
 from pathlib import Path
 from collections import OrderedDict
 from functools import wraps
@@ -126,10 +126,13 @@ CALLBACK_LIST = [
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     ("refreshMetadataCachebutton", "clicked", "_refreshMetadataCachebuttonClicked"),
     # sets management
-    ("newSetButton", "clicked", "_newSetButtonClicked"),
-    ("deleteSetButton", "clicked", "_deleteSetButtonClicked"),
-    ("favSetButton", "clicked", "_favSetButtonClicked"),
-    ("setList", "doubleClicked", "_setListDoubleClicked"),
+    ("setList", "doubleClicked", "_renameDataSet"),
+    ("dataSetCreateAction", "triggered", "_createNewDataSet"),
+    ("dataSetDeleteAction", "triggered", "_deleteDataSet"),
+    ("dataSetFavAction", "triggered", "_favDataSet"),
+    ("dataSetAddAction", "triggered", "_addToDataSet"),
+    ("dataSetRenameAction", "triggered", "_renameDataSet"),
+
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
@@ -173,8 +176,6 @@ CALLBACK_LIST = [
     ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
     ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
 
-    # -- DEBUG --
-    ("debugButton", "clicked", "_DEBUG"),
 ]
 # fmt: on
 
@@ -385,17 +386,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _refreshMetadataCachebuttonClicked(self, *args, **kwargs):
         dataexplorer.updateMetadataCache(self, reset_cache=True)
+        
+    def _createNewDataSet(self, *args, **kwargs):
+        dataexplorer.createNewDataSet(self)
 
-    def _newSetButtonClicked(self, *args, **kwargs):
-        dataexplorer.addNewSet(self)
+    def _addToDataSet(self, *args, **kwargs):
+        dataexplorer.addToDataSet(self)
 
-    def _deleteSetButtonClicked(self, *args, **kwargs):
+    def _deleteDataSet(self, *args, **kwargs):
         dataexplorer.deleteDataSet(self)
 
-    def _favSetButtonClicked(self, *args, **kwargs):
+    def _favDataSet(self, *args, **kwargs):
         dataexplorer.favDataSet(self)
 
-    def _setListDoubleClicked(self, *args, **kwargs):
+    def _renameDataSet(self, *args, **kwargs):
         dataexplorer.renameDataSet(self)
 
     def _quickPlotButtonClicked(self, *args, **kwargs):

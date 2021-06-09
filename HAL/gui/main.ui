@@ -393,16 +393,23 @@
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_4">
+           <item row="1" column="0">
+            <widget class="QListWidget" name="runList">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="text">
-              <string>runs</string>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QListWidget" name="seqList">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
@@ -432,23 +439,16 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QListWidget" name="runList">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_4">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QListWidget" name="seqList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+             <property name="text">
+              <string>runs</string>
              </property>
             </widget>
            </item>
@@ -462,25 +462,28 @@
              </property>
             </widget>
            </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_9"/>
+           </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <widget class="QPushButton" name="refreshRunListButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Refresh</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="browserButtonsLayout">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QPushButton" name="refreshRunListButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Refresh</string>
-               </property>
-              </widget>
-             </item>
              <item>
               <widget class="QPushButton" name="fitBrowserButton">
                <property name="sizePolicy">
@@ -489,6 +492,12 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>FIT</string>
                </property>
@@ -496,6 +505,12 @@
              </item>
              <item>
               <widget class="QPushButton" name="deleteFitButton">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Del. Fit</string>
                </property>
@@ -504,7 +519,7 @@
             </layout>
            </item>
            <item>
-            <spacer name="horizontalSpacer">
+            <spacer name="browserHorizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -522,59 +537,9 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <widget class="QPushButton" name="newSetButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
+              <widget class="QToolButton" name="dataSetToolButton">
                <property name="text">
-                <string>new</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="deleteSetButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>del</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="favSetButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>40</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>⭐</string>
+                <string>manage sets</string>
                </property>
               </widget>
              </item>
@@ -607,19 +572,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="debugButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>DEBUG</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
@@ -639,7 +591,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -677,7 +629,7 @@
             <x>20</x>
             <y>20</y>
             <width>191</width>
-            <height>51</height>
+            <height>55</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout">
@@ -808,7 +760,7 @@
            <rect>
             <x>500</x>
             <y>0</y>
-            <width>259</width>
+            <width>272</width>
             <height>31</height>
            </rect>
           </property>

@@ -18,7 +18,13 @@ from pathlib import Path
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize, QDate
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QListWidgetItem, QStyle, QAbstractItemView
+from PyQt5.QtWidgets import (
+    QListWidgetItem,
+    QStyle,
+    QAbstractItemView,
+    QSpacerItem,
+    QSizePolicy,
+)
 
 # -- local
 import HAL.gui.fitting as fitting
@@ -205,6 +211,14 @@ def setupFileListBrowser(self):
     self.dateEdit.setCalendarPopup(True)
     self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
     self.dateEdit.setDisplayFormat("yyyy/MM/dd")
+
+    # -- horizontal spacer in browser layout
+    layout = self.browserButtonsLayout
+    # find the spacer from the layout items
+    for i in range(layout.count()):
+        item = layout.itemAt(i)
+        if isinstance(item, QSpacerItem):
+            item.changeSize(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
 
 # %%  CALLBACKS

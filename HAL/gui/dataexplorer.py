@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 17:08:25
+Modified : 2021-06-09 16:36:29
 
 Comments : Functions related to (meta)data exploration
 """
@@ -26,6 +26,9 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
+    QMenu,
+    QAction,
+    QToolButton,
 )
 
 # -- local
@@ -47,6 +50,22 @@ PREFIX_LAST = "└─ "
 
 
 def setupDataExplorer(self):
+    # -- dataset managements
+    menu = QMenu()
+    self.dataSetCreateAction = QAction("create new set", self.dataSetToolButton)
+    menu.addAction(self.dataSetCreateAction)
+    self.dataSetDeleteAction = QAction("delete sets", self.dataSetToolButton)
+    menu.addAction(self.dataSetDeleteAction)
+    self.dataSetRenameAction = QAction("rename set", self.dataSetToolButton)
+    menu.addAction(self.dataSetRenameAction)
+    self.dataSetAddAction = QAction("add run(s) to set", self.dataSetToolButton)
+    menu.addAction(self.dataSetAddAction)
+    self.dataSetFavAction = QAction("add set to favorite", self.dataSetToolButton)
+    menu.addAction(self.dataSetFavAction)
+    self.dataSetToolButtonMenu = menu
+    self.dataSetToolButton.setMenu(menu)
+    self.dataSetToolButton.setPopupMode(QToolButton.InstantPopup)
+
     # -- meta data text display
     self.metaDataText.setReadOnly(True)
     self.metaDataText.setLineWrapMode(self.metaDataText.NoWrap)
@@ -320,7 +339,56 @@ def displayMetaData(self):
 # %% SET MANAGEMENT
 
 
-def addNewSet(self):
+def _writeDataSet(self, setname, selected_paths, overwrite_ok=False, dataset_dir=None):
+    """
+    Low-level function to write data sets. Called by createNewDataSet()
+    or addToDataSet()
+    """
+    # -- process selected paths
+    # replace the data root by '{data_root}'
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = root.expanduser()
+    pattern = "^%s" % root  # only replace at the beginning of the path
+    tag = "{data_root}"
+    selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
+
+    # -- save dataset
+    # prepare json content
+    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    json_content = {
+        "created": date_str,
+        "program": self._name,
+        "version": self._version,
+        "root tag": tag,
+        "local root": str(root),
+        "paths": selected_paths,
+    }
+
+    # prepare .dataset dir (create if does not exist)
+    if dataset_dir is None:
+        root = self.current_folder
+        dataset_dir = root / ".datasets"
+        dataset_dir.mkdir(exist_ok=True)
+
+    json_file = dataset_dir / ("%s.json" % setname)
+    # check if file exists
+    if json_file.is_file() and not overwrite_ok:
+        # are you sure ?
+        answer = QMessageBox.question(
+            self,
+            "This mission is too important...",
+            f"Overwrite the existing dataset '{setname}' ?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if answer == QMessageBox.No:
+            return
+    # create dataset
+    json_txt = json.dumps(json_content)
+    json_file.write_text(json_txt)
+
+
+def createNewDataSet(self):
     """
     Add a new dataset, consisting of the currently selected runs.
     The dataset is saved in the day folder, in a '.datasets' subfolder
@@ -335,6 +403,122 @@ def addNewSet(self):
     # get paths
     selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
 
+    # ask name
+    default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
+    setname, ok = QInputDialog.getText(
+        self, "create new data set", "Enter dataset name:", text=default_name
+    )
+    # write json file
+    if ok:
+        _writeDataSet(self, setname, selected_paths, overwrite_ok=False)
+
+    # refresh
+    refreshDataSetList(self)
+
+
+def addToDataSet(self):
+    """
+    Add the currently selected runs to the selected DataSet.
+    """
+    # -- get selected runs
+    selected_runs = self.runList.selectedItems()
+    if not selected_runs:
+        # if empty >> do nothing
+        QMessageBox.warning(
+            self, "No run selected", "Please select runs to add to the dataset."
+        )
+        return
+
+    # -- get selected datasets
+    # selected dataset list
+    dataset_list = [
+        s for s in self.setList.selectedItems() if s.data(Qt.UserRole) is not None
+    ]
+    # if list is empty, use all dataset list, and ask the user which one to select
+    # (see below for the user choice)
+    if len(dataset_list) == 0:
+        items = [self.setList.item(i) for i in range(self.setList.count())]
+        dataset_list = [s for s in items if s.data(Qt.UserRole) is not None]
+        # if still empty >> do nothing
+        if len(dataset_list) == 0:
+            QMessageBox.warning(
+                self,
+                "No exising dataset",
+                "You have to create a dataset first, Dave !",
+            )
+            return
+
+    # if only one selected >> OK !
+    if len(dataset_list) == 1:
+        current_dataset = dataset_list[0]
+    # if multiple selection >> ask the user
+    else:
+        # prepare a list of choices
+        # to avoid names that would appear twice (for instance in the current folder
+        # and in the favorite folder), we append a number to the set names in the list
+        name_list = [s.data(Qt.UserRole).stem for s in dataset_list]
+        choice = {
+            f"{i + 1} - {name}": s
+            for i, (name, s) in enumerate(zip(name_list, dataset_list))
+        }
+        item, ok = QInputDialog.getItem(
+            self,
+            "Add to dataset",
+            "In which dataset shall I add those runs, Dave ?",
+            list(choice.keys()),
+            0,
+            False,
+        )
+        if ok and item:
+            current_dataset = choice[item]
+        else:
+            return
+
+    # get selected dataset path
+    path = current_dataset.data(Qt.UserRole)
+
+    # -- ask for confirmation
+    #  are you sure ?
+    n_runs = len(selected_runs)
+    answer = QMessageBox.question(
+        self,
+        "add to dataset",
+        f"add {n_runs} runs to dataset '{path.stem}' ?",
+        QMessageBox.Yes | QMessageBox.No,
+    )
+    if answer == QMessageBox.No:
+        return
+
+    # -- add to dataset
+
+    # - paths to append
+    selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
+
+    # - current path list
+    # prepare "root" substitution
+    conf = self.settings.config
+    root = Path(conf["data"]["root"])
+    root = str(root.expanduser())
+    with open(str(path)) as json_file:
+        data = json.load(json_file)
+        tag = data["root tag"]
+        pattern = "^%s" % tag
+        json_paths = [re.sub(pattern, root, p) for p in data["paths"]]
+        total_paths = json_paths + selected_paths
+
+    # -- save set
+    _writeDataSet(
+        self, path.stem, total_paths, overwrite_ok=True, dataset_dir=path.parents[0]
+    )
+
+    # refresh
+    refreshDataSetList(self)
+
+    # -- add to dataset
+
+    # get paths
+    selected_paths = [str(s.data(Qt.UserRole)) for s in selected_runs]
+
     # replace the data root by '{data_root}'
     conf = self.settings.config
     root = Path(conf["data"]["root"])
@@ -342,6 +526,10 @@ def addNewSet(self):
     pattern = "^%s" % root  # only replace at the beginning of the path
     tag = "{data_root}"
     selected_paths = [re.sub(pattern, tag, p) for p in selected_paths]
+
+    with open(str(path)) as json_file:
+        data = json.load(json_file)
+        total_paths = data["paths"] + selected_paths
 
     # -- save set
     # prepare json file
@@ -352,7 +540,7 @@ def addNewSet(self):
         "version": self._version,
         "root tag": tag,
         "local root": str(root),
-        "paths": selected_paths,
+        "paths": total_paths,
     }
 
     # prepare .dataset dir (create if does not exist)
@@ -360,16 +548,13 @@ def addNewSet(self):
     dataset_dir = root / ".datasets"
     dataset_dir.mkdir(exist_ok=True)
 
-    # ask name
-    default_name = str(selected_runs[0].data(Qt.UserRole).parent.name)
-    name, ok = QInputDialog.getText(
-        self, "create new data set", "Enter dataset name:", text=default_name
-    )
+    # get name
+    name = str(path.stem)
+
     # write json file
-    if ok:
-        json_file = root / ".datasets" / ("%s.json" % name)
-        json_txt = json.dumps(json_content)
-        json_file.write_text(json_txt)
+    json_file = path
+    json_txt = json.dumps(json_content)
+    json_file.write_text(json_txt)
 
     # refresh
     refreshDataSetList(self)
