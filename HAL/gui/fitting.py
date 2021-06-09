@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-19 15:59:44
+Modified : 2021-06-09 10:16:26
 
 Comments : Functions related to data fitting
 """
@@ -15,7 +15,7 @@ import json
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
-from PyQt5.QtWidgets import QMessageBox,QInputDialog
+from PyQt5.QtWidgets import QMessageBox, QInputDialog
 from PyQt5.QtCore import Qt
 
 # -- local
@@ -37,6 +37,10 @@ def _isnumber(x):
         return False
 
 
+def updateFit(self, *args, **kwargs):
+    self.display.updateFit(*args, **kwargs)
+
+
 # %% SETUP FUNCTIONS
 
 
@@ -50,7 +54,7 @@ def setupFitting(self):
 
 
 def addROI(self, roi_name=None):
-    """ adds a new roi to the current display"""
+    """adds a new roi to the current display"""
 
     # define roi style
     roi_style = {"color": "#3FFF53FF", "width": 2}
@@ -76,33 +80,89 @@ def addROI(self, roi_name=None):
     # add the ROI to the RoiComboBox
     self.selectRoiComboBox.addItem(roi_name)
 
+
 def removeROI(self):
-    """ removes the currently selected ROI"""
+    """removes the currently selected ROI"""
+    # get run & ROI
+    selected_run = self.runList.currentItem()
     selected_ROI = self.selectRoiComboBox.currentText()
+    if not selected_run:
+        # if empty >> do nothing
+        return
+    # get path to datafile
+    path = str(selected_run.data(Qt.UserRole))
+    # generate saved fit path
+    fit_file = _gen_saved_fit_path(self, path)
+    if fit_file.is_file():
+        # load
+        fit_json = json.loads(fit_file.read_text())
+        fit_collection = fit_json["collection"]
+        # if fit exists for the ROI: ask confirmation -> deletion
+        if selected_ROI in fit_collection:
+            # -- ask for confirmation
+            msg = f"You're about to remove the ROI '{selected_ROI}'. \n"
+            msg += "This will also delete the associated fit. Do you confirm ?"
+            title = "This mission is too important..."
+            answer = QMessageBox.question(
+                self, title, msg, QMessageBox.Yes | QMessageBox.No
+            )
+            if answer == QMessageBox.No:
+                return
+            elif len(fit_collection) == 1:
+                fit_file.unlink()
+            else:
+                fit_collection.pop(selected_ROI)
+                fit_json["collection"] = fit_collection
+                data_object = self.display.getCurrentDataObject()
+                _save_fit_result_as_json(self, fit_json, data_object)
+        else:
+            pass
+
     self.display.removeROI(selected_ROI)
     # removes ROI from ComboBox
     selected_idx = self.selectRoiComboBox.currentIndex()
     self.selectRoiComboBox.removeItem(selected_idx)
 
+
 def renameROI(self):
-    """ renames the currently selected ROI"""
-    selected_idx = self.selectRoiComboBox.currentIndex()
+    """renames the currently selected ROI"""
+    selected_run = self.runList.currentItem()
+    selected_ROI_idx = self.selectRoiComboBox.currentIndex()
     selected_ROI_name = self.selectRoiComboBox.currentText()
-    new_name, ok = QInputDialog.getText(
-        self, "Rename ROI", "Choose a new name for " + selected_ROI_name + " :")
-    self.display.updateROI(roi_name=selected_ROI_name,name=new_name)
-    self.selectRoiComboBox.setItemText(selected_idx, new_name)
+    msg = f"Choose a new name for {selected_ROI_name} :"
+    new_name, ok = QInputDialog.getText(self, "Rename ROI", msg)
+    if self.display.updateROI(roi_name=selected_ROI_name, name=new_name):
+        # if diplay.updateROI() worked fine, it returned True
+        self.selectRoiComboBox.setItemText(selected_ROI_idx, new_name)
+
+        # get path to datafile
+        path = str(selected_run.data(Qt.UserRole))
+        # generate saved fit path
+        fit_file = _gen_saved_fit_path(self, path)
+        if fit_file.is_file():
+            # load
+            fit_json = json.loads(fit_file.read_text())
+            fit_collection = fit_json["collection"]
+            # if fit exists for the ROI: ask confirmation -> deletion
+            if selected_ROI_name in fit_collection:
+                fit_collection[new_name] = fit_collection.pop(selected_ROI_name)
+                fit_json["collection"] = fit_collection
+                data_object = self.display.getCurrentDataObject()
+                _save_fit_result_as_json(self, fit_json, data_object)
+
 
 def clearROIs(self):
-    """ removes all the ROIs"""
-    self.display.clearROIs()
+    """removes all the ROIs"""
     self.selectRoiComboBox.clear()
+    self.display.clearROIs()
+    deleteSavedFits(self)
+
 
 # %% BACKGROUND MANAGEMENT
 
 
 def addBackground(self):
-    """ add a background"""
+    """add a background"""
 
     # define roi style
     background_style = {"color": "#FF3F3FFF", "width": 2}
@@ -162,8 +222,8 @@ def _fit_2D_data(self, Z, XY, data_object):
 
 def _generate_roi_result_dic(display, roi_name, fit):
     """generates a dictionnary with the fit results for a given roi,
-       including information about the roi itself, in order to be
-       saved as part of the global fit result """
+    including information about the roi itself, in order to be
+    saved as part of the global fit result"""
 
     # -- initialize the dictionnary
     roi_dic = {}
@@ -229,7 +289,8 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
         fit_info["count_conversion_factor"] = {
             "value": fit.count_conversion_factor,
             "unit": fit.converted_count_unit,
-            "comment": "converts image counts into physically meaning quantity (e.g. atom number)",
+            "comment": "converts image counts into physically meaning quantity \
+            (e.g. atom number)",
         }
 
     # get background
@@ -318,8 +379,8 @@ def _gen_saved_fit_path(self, data_path):
 
 def saved_fit_exist(self, data_path=None):
     """checks whether there is a saved fit for the data. If a path is provided,
-       look for a fit linked to this data path. Otherwise, use current data
-       path"""
+    look for a fit linked to this data path. Otherwise, use current data
+    path"""
 
     # if no path provided: use current data
     if data_path is None:
@@ -402,7 +463,7 @@ def load_saved_fit(self, data_path=None):
 
 def fit_data(self):
     """high level function for data fitting. Loop on all defined ROIs,
-       fit the data, and save results"""
+    fit the data, and save results"""
 
     # -- check current data object (for dimension)
     data_object = self.display.getCurrentDataObject()
@@ -461,9 +522,7 @@ def deleteSavedFits(self):
     # -- ask for confirmation
     msg = "delete saved fits for current run selection ?"
     title = "This mission is too important..."
-    answer = QMessageBox.question(
-        self, title, msg, QMessageBox.Yes | QMessageBox.No
-    )
+    answer = QMessageBox.question(self, title, msg, QMessageBox.Yes | QMessageBox.No)
     if answer == QMessageBox.No:
         return
 

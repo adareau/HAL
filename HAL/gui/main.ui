@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1508</width>
-    <height>903</height>
+    <width>1335</width>
+    <height>823</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -188,7 +188,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="settingsDataTab">
            <attribute name="title">
@@ -262,19 +262,19 @@
              <rect>
               <x>130</x>
               <y>170</y>
-              <width>43</width>
+              <width>51</width>
               <height>23</height>
              </rect>
             </property>
             <property name="text">
-             <string>fit type</string>
+             <string>fit type:</string>
             </property>
            </widget>
            <widget class="QComboBox" name="selectRoiComboBox">
             <property name="geometry">
              <rect>
               <x>120</x>
-              <y>10</y>
+              <y>20</y>
               <width>151</width>
               <height>23</height>
              </rect>
@@ -306,7 +306,7 @@
            <widget class="QCheckBox" name="backgroundCheckBox">
             <property name="geometry">
              <rect>
-              <x>130</x>
+              <x>10</x>
               <y>140</y>
               <width>101</width>
               <height>21</height>
@@ -355,17 +355,17 @@
              <string>Rename ROI</string>
             </property>
            </widget>
-           <widget class="QPushButton" name="addBackgroundButton">
+           <widget class="QLabel" name="label_11">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>140</y>
-              <width>111</width>
+              <x>120</x>
+              <y>0</y>
+              <width>71</width>
               <height>23</height>
              </rect>
             </property>
             <property name="text">
-             <string>add background</string>
+             <string>select ROI:</string>
             </property>
            </widget>
           </widget>
@@ -903,6 +903,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="refreshMetadataCachebutton">
+        <property name="text">
+         <string>refresh metadata cache</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -912,7 +919,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1508</width>
+     <width>1335</width>
      <height>20</height>
     </rect>
    </property>

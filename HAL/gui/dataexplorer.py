@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-06-09 16:28:02
+Modified : 2021-05-28 17:08:25
 
 Comments : Functions related to (meta)data exploration
 """
@@ -12,7 +12,6 @@ Comments : Functions related to (meta)data exploration
 # -- global
 import json
 import logging
-import time
 import re
 from numpy import NaN
 from random import choice
@@ -27,10 +26,6 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
-    QAction,
-    QActionGroup,
-    QMenu,
-    QToolButton,
 )
 
 # -- local
@@ -149,7 +144,6 @@ def updateMetadataCache(self, reset_cache=False):
         item.data(Qt.UserRole) for item in self.setList.selectedItems()
     ]
     # get corresponding paths
-    dataset_list = {}
     for dataset in selected_datasets:
         if dataset is None:
             continue
@@ -176,7 +170,6 @@ def updateMetadataCache(self, reset_cache=False):
             self.metadata_cache.pop(cached_file)
 
     # -- update cache
-    n_files = len(all_selected_files)
     for i_file, file_to_cache in enumerate(all_selected_files):
         if file_to_cache in self.metadata_cache:
             # ignore
@@ -582,7 +575,7 @@ def renameDataSet(self):
     )
     # OK, let's do it
     if ok:
-        path.rename(path.with_stem(new_name))
+        path.rename(path.with_name(f"{new_name}.json"))
 
     # -- refresh
     refreshDataSetList(self)
@@ -664,6 +657,13 @@ def refreshDataSetList(self):
                 fav_datasets.append(content)
 
     # -- show in setList
+    # save dataset selection
+    selection = [item.data(Qt.UserRole) for item in self.setList.selectedItems()]
+    item = self.setList.currentItem()
+    current_set = item.data(Qt.UserRole) if item is not None else None
+
+    # refresh set list
+    self.setList.blockSignals(True)
     self.setList.clear()
     for name, datasets in zip(
         ["current folder", "favorite"], [current_datasets, fav_datasets]
@@ -689,6 +689,13 @@ def refreshDataSetList(self):
                 item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
+                # restore selection ?
+                if file in selection:
+                    item.setSelected(True)
+                if file == current_set:
+                    self.setList.setCurrentItem(item)
+
+    self.setList.blockSignals(False)
 
 
 # %% TEST
