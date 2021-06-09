@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-28 17:08:25
+Modified : 2021-06-09 16:36:29
 
 Comments : Functions related to (meta)data exploration
 """
@@ -26,6 +26,9 @@ from PyQt5.QtWidgets import (
     QStyle,
     QListWidgetItem,
     QMessageBox,
+    QMenu,
+    QAction,
+    QToolButton,
 )
 
 # -- local
