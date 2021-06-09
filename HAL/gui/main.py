@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-05-25 14:30:55
+Modified : 2021-06-09 13:04:28
 
 
 Comments :
@@ -17,7 +17,7 @@ import time
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence, QFont
-from PyQt5.QtWidgets import QShortcut, QMessageBox
+from PyQt5.QtWidgets import QShortcut, QMessageBox, QAction
 from pathlib import Path
 from collections import OrderedDict
 
@@ -99,6 +99,12 @@ CALLBACK_LIST = [
     ("addtoSetButton", "clicked", "_addtoSetButtonClicked"),
     ("favSetButton", "clicked", "_favSetButtonClicked"),
     ("setList", "doubleClicked", "_setListDoubleClicked"),
+    ("dataSetCreateAction", "triggered", "_newSetButtonClicked"),
+    ("dataSetDeleteAction", "triggered", "_deleteSetButtonClicked"),
+    ("dataSetFavAction", "triggered", "_favSetButtonClicked"),
+    ("dataSetAddAction", "triggered", "_addtoSetButtonClicked"),
+    ("dataSetRenameAction", "triggered", "_setListDoubleClicked"),
+
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
@@ -138,8 +144,6 @@ CALLBACK_LIST = [
     ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
     ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
 
-    # -- DEBUG --
-    ("debugButton", "clicked", "_DEBUG"),
 ]
 # fmt: on
 
@@ -448,7 +452,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         if self.settings.openGuiEditor(parent=self):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
-
 
     # -- DEBUG
 

@@ -2,7 +2,7 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 16:28:03
-Modified : 2021-05-25 14:54:31
+Modified : 2021-06-09 13:05:57
 
 Comments : Functions related to (meta)data exploration
 """
@@ -52,6 +52,22 @@ PREFIX_LAST = "└─ "
 
 
 def setupDataExplorer(self):
+    # -- dataset managements
+    menu = QMenu()
+    self.dataSetCreateAction = QAction("create new set", self.dataSetToolButton)
+    menu.addAction(self.dataSetCreateAction)
+    self.dataSetDeleteAction = QAction("delete sets", self.dataSetToolButton)
+    menu.addAction(self.dataSetDeleteAction)
+    self.dataSetRenameAction = QAction("rename set", self.dataSetToolButton)
+    menu.addAction(self.dataSetRenameAction)
+    self.dataSetAddAction = QAction("add run(s) to set", self.dataSetToolButton)
+    menu.addAction(self.dataSetAddAction)
+    self.dataSetFavAction = QAction("add set to favorite", self.dataSetToolButton)
+    menu.addAction(self.dataSetFavAction)
+    self.dataSetToolButtonMenu = menu
+    self.dataSetToolButton.setMenu(menu)
+    self.dataSetToolButton.setPopupMode(QToolButton.InstantPopup)
+
     # -- meta data text display
     self.metaDataText.setReadOnly(True)
     self.metaDataText.setLineWrapMode(self.metaDataText.NoWrap)
@@ -91,9 +107,7 @@ def _loadFileMetaData(self, path):
     """
     # -- get metadata
     # get selected metadata sources
-    selected_metadata = [
-        item.text() for item in self.metaDataList.selectedItems()
-    ]
+    selected_metadata = [item.text() for item in self.metaDataList.selectedItems()]
 
     # values are then sorted in an ordered dict
     metadata_dic = OrderedDict()
@@ -267,9 +281,7 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
             dataset_list[dataset.stem] = json_paths
 
     # add the current selection
-    selected_runs = [
-        item.data(Qt.UserRole) for item in self.runList.selectedItems()
-    ]
+    selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
     if len(selected_runs) > 1:
         dataset_list["current selection"] = selected_runs
 
@@ -395,14 +407,18 @@ def addtoDataSet(self):
     selected_runs = self.runList.selectedItems()
     if not selected_runs:
         # if empty >> do nothing
-        QMessageBox.warning(self, "No run selected", "Please select runs to add to the dataset.")
+        QMessageBox.warning(
+            self, "No run selected", "Please select runs to add to the dataset."
+        )
         return
 
     current_dataset = self.setList.currentItem()
-    #if path is None or not path.is_file():
+    # if path is None or not path.is_file():
     if not current_dataset:
-        QMessageBox.warning(self, "No dataset selected", "Please select a dataset to add runs to.")
-        return #say the user that no dataset is selected
+        QMessageBox.warning(
+            self, "No dataset selected", "Please select a dataset to add runs to."
+        )
+        return  # say the user that no dataset is selected
 
     path = current_dataset.data(Qt.UserRole)
     # get paths
@@ -418,7 +434,7 @@ def addtoDataSet(self):
 
     with open(str(path)) as json_file:
         data = json.load(json_file)
-        total_paths = data['paths']+selected_paths
+        total_paths = data["paths"] + selected_paths
 
     # -- save set
     # prepare json file
@@ -431,7 +447,6 @@ def addtoDataSet(self):
         "local root": str(root),
         "paths": total_paths,
     }
-
 
     # prepare .dataset dir (create if does not exist)
     root = self.current_folder
@@ -448,7 +463,6 @@ def addtoDataSet(self):
 
     # refresh
     refreshDataSetList(self)
-
 
 
 def renameDataSet(self):
@@ -573,9 +587,7 @@ def refreshDataSetList(self):
                     prefix = "├─ "
                 # add item
                 item = QListWidgetItem()
-                item.setText(
-                    prefix + file.stem
-                )  # NB: use file.stem to remove ext
+                item.setText(prefix + file.stem)  # NB: use file.stem to remove ext
                 item.setData(Qt.UserRole, file)
                 self.setList.addItem(item)
 
@@ -585,9 +597,7 @@ if __name__ == "__main__":
     from HAL.classes.metadata import implemented_metadata
 
     root = Path().home()
-    path = (
-        root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
-    )
+    path = root / "gus_data_dummy" / "cam_example" / "033_Raman" / "033_001.png"
 
     print(path.is_file())
     path_list = [
