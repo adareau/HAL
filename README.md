@@ -11,7 +11,7 @@ $> pyuic5 main.ui > MainUI.py
 ```
 
 **Add folder to python path (conda)**
-
+**NOTE :** should not be necessary now...
 ```bash
 $> conda develop /path/to/folder
 ```
