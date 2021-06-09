@@ -22,8 +22,8 @@ from .abstractImage import AbstractImageDisplay
 
 class ImageOnlyDisplay(AbstractImageDisplay):
     """a basic (2D) image display, with no cuts nor fit display
-       NB : inherits a LOT of methods from AbstractImageDisplay().
-            Have a look at this class if you do not find a method here !
+    NB : inherits a LOT of methods from AbstractImageDisplay().
+         Have a look at this class if you do not find a method here !
     """
 
     def __init__(self, **kwargs):
@@ -132,7 +132,9 @@ class ImageOnlyDisplay(AbstractImageDisplay):
         pass
 
     def updateFit(
-        self, fit_dic, selected_ROI,
+        self,
+        fit_dic,
+        selected_ROI,
     ):
         """updates the fit display"""
         # DOES NOTHING :)

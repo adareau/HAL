@@ -45,7 +45,7 @@ from ..classes.display import implemented_display_dic
 
 # %% DECORATOR FOR DEBUGGING
 def logCallback(f):
-    """a wrapper for callback, for debug purposes """
+    """a wrapper for callback, for debug purposes"""
 
     @wraps(f)
     def wrapper(*args, **kwds):

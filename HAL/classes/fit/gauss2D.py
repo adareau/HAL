@@ -26,7 +26,7 @@ def Gauss1D(x, *p):
 
 
 def Gauss2D(xy, *p):
-    """ p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
+    """p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
     (x, y) = xy
     return p[0] + p[1] * Gauss(x, 1, p[2], p[4]) * Gauss(y, 1, p[3], p[5])
 
@@ -34,7 +34,7 @@ def Gauss2D(xy, *p):
 # %% CLASS DEFINITION
 class Gauss2DFit(Abstract2DBellShaped):
     """a 2D Gauss fit. Inherits methods from the Abstract2DBellShaped
-       (for instance the do_guess() one)"""
+    (for instance the do_guess() one)"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -54,7 +54,7 @@ class Gauss2DFit(Abstract2DBellShaped):
 
     def do_guess(self):
         """guess fit parameters. use the guess_center_size_ampl_offset()
-           method defined in the Abstract2DBellShaped class"""
+        method defined in the Abstract2DBellShaped class"""
 
         # guess amplitude / offset / center / size
         res = self.guess_center_size_ampl_offset()

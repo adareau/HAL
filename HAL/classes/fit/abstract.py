@@ -221,7 +221,7 @@ class Abstract2DFit(AbstractFit):
 
     def _get_spatial_stats(self, Z_offset=0):
         """returns the spatial center of mass and standard deviation.
-           intended to be used in compute_values(), to add stats values"""
+        intended to be used in compute_values(), to add stats values"""
 
         # -- get data
         if len(self.z) * len(self.x) == 0:
@@ -299,8 +299,8 @@ class Abstract2DFit(AbstractFit):
 
 class Abstract2DBellShaped(Abstract2DFit):
     """abstract class for 'bell shaped' functions. the idea is to define once
-       and for all some methods (such as do_guess()) that will be shared by
-       all fit models based such functions (that is, basically, all of them)"""
+    and for all some methods (such as do_guess()) that will be shared by
+    all fit models based such functions (that is, basically, all of them)"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -308,8 +308,8 @@ class Abstract2DBellShaped(Abstract2DFit):
 
     def guess_center_size_ampl_offset(self):
         """guess some parameters from preliminary data analysis. this is done
-           by fitting the integrated data along the two axes using a Gaussian
-           shape"""
+        by fitting the integrated data along the two axes using a Gaussian
+        shape"""
 
         # -- check that the data and coordinates were provided
         if len(self.z) == 0 or len(self.x) == 0:

@@ -42,7 +42,7 @@ class AbstractDisplay(object):
 
     def updatePlot(self, *args, **kwargs):
         """to update the current plot with image, 3D atoms position...
-           depending on the display type"""
+        depending on the display type"""
         pass
 
     def updateColormap(self, *args, **kwargs):
