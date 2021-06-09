@@ -78,4 +78,4 @@ GREINER_CM = [
 
 
 # %% Dict
-colormap_dic = {'Greiner': GREINER_CM}
+colormap_dic = {"Greiner": GREINER_CM}

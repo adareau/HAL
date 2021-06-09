@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-03 10:08:22
-Modified : 2021-05-07 14:09:30
 
 Comments : Abstract classes for data fitting
 """
@@ -122,9 +121,7 @@ class AbstractFit(object):
         """exports fit info and results as a json string"""
         # get dictionnary
         out_dic = self.export_dic()
-        json_str = json.dumps(
-            out_dic, ensure_ascii=False, cls=NumpyArrayEncoder
-        )
+        json_str = json.dumps(out_dic, ensure_ascii=False, cls=NumpyArrayEncoder)
         json_str = jsb.beautify(json_str)
         return json_str
 

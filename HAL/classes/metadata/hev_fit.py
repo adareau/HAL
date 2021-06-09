@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-04-21 15:38:07
-Modified : 2021-05-04 15:48:29
 
 Comments : Imports fit information, as saved by our former image analysis
            program HeV
@@ -14,7 +13,7 @@ from pathlib import Path
 from scipy.io import loadmat
 
 # -- local
-from HAL.classes.metadata.abstract import AbstractMetaData
+from .abstract import AbstractMetaData
 
 
 # %% TOOL

@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-06 10:55:48
-Modified : 2021-05-26 10:13:39
 
 Comments : a basic (2D) image display. Can be used as an example when building
            more complex display objects
@@ -15,7 +14,7 @@ import pyqtgraph as pg
 import numpy as np
 
 # -- local
-from HAL.classes.display.abstractImage import AbstractImageDisplay
+from .abstractImage import AbstractImageDisplay
 
 
 # %% CLASS DEFINITION
@@ -23,8 +22,8 @@ from HAL.classes.display.abstractImage import AbstractImageDisplay
 
 class FocusOnFit2D(AbstractImageDisplay):
     """a basic (2D) image display
-       NB : inherits a LOT of methods from AbstractImageDisplay().
-            Have a look at this class if you do not find a method here !
+    NB : inherits a LOT of methods from AbstractImageDisplay().
+         Have a look at this class if you do not find a method here !
     """
 
     def __init__(self, **kwargs):
@@ -54,18 +53,10 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.screen.clear()
 
         # -- create plot layout
-        if False:  # old version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 2, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 2, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(3, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 1, rowspan=3, title="Data (all)")
-        else:  # new version
-            # add plots
-            roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
-            fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
-            err_plot = self.screen.addPlot(2, 2, title="Error")
-            im_plot = self.screen.addPlot(1, 2, title="Data (all)")
+        roi_plot = self.screen.addPlot(1, 1, title="Data (ROI)")
+        fit_plot = self.screen.addPlot(2, 1, title="Fit (ROI)")
+        err_plot = self.screen.addPlot(2, 2, title="Error")
+        im_plot = self.screen.addPlot(1, 2, title="Data (all)")
 
         # stretch
         layout = self.screen.ci.layout
@@ -121,11 +112,11 @@ class FocusOnFit2D(AbstractImageDisplay):
         self.current_data_object = dataobject
 
         # redefine limits
-        '''
+        """
         self.image_plot.setLimits(
             xMin=0, yMin=0, xMax=image.shape[0], yMax=image.shape[1]
         )
-        '''
+        """
         # get background
         if self.background is not None:
             background, _ = self.background.getArrayRegion(
@@ -136,9 +127,7 @@ class FocusOnFit2D(AbstractImageDisplay):
             background_value = 0
 
         # update image
-        self.current_image.updateImage(
-            image=image - background_value, levels=levels
-        )
+        self.current_image.updateImage(image=image - background_value, levels=levels)
         self.current_data = image - background_value
         self._data_in = image
         self._current_levels = levels
@@ -178,7 +167,7 @@ class FocusOnFit2D(AbstractImageDisplay):
         image = np.zeros((10, 10))
         self.current_fit_image.updateImage(image=image, levels=(0, 1))
         self.current_err_image.updateImage(image=image, levels=(0, 1))
-        self.err_plot.setTitle('Error')
+        self.err_plot.setTitle("Error")
 
     def updateFit(
         self, fit_dic, selected_ROI,
@@ -200,27 +189,21 @@ class FocusOnFit2D(AbstractImageDisplay):
 
         # -- display
         # roi
-        self.current_roi_image.updateImage(
-            image=Z, levels=self._current_levels
-        )
+        self.current_roi_image.updateImage(image=Z, levels=self._current_levels)
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_roi_image
         )
 
         # fit
-        self.current_fit_image.updateImage(
-            image=Zfit, levels=self._current_levels
-        )
+        self.current_fit_image.updateImage(image=Zfit, levels=self._current_levels)
         self.updateColormap(
             colormap=self._current_colormap, image=self.current_fit_image
         )
 
         # err
         err_ampl = np.max(np.abs(Zerr))
-        self.current_err_image.updateImage(
-            image=Zerr, levels=(-err_ampl, err_ampl)
-        )
-        new_title = 'Error : range = ± %.2g' % err_ampl
+        self.current_err_image.updateImage(image=Zerr, levels=(-err_ampl, err_ampl))
+        new_title = "Error : range = ± %.2g" % err_ampl
         self.err_plot.setTitle(new_title)
         self.updateColormap(
             colormap="RdBu", image=self.current_err_image, update_current=False

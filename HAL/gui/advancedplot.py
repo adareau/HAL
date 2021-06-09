@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-17 09:36:42
-Modified : 2021-05-20 16:03:53
 
 Comments : Implement the "Advanced data analysis"
 """
@@ -30,8 +29,8 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
-import HAL.gui.dataexplorer as dataexplorer
-from HAL.classes.display import LiveMetaData
+from . import dataexplorer
+from ..classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -226,9 +225,7 @@ def setupAdvancedPlot(self):
             if not content.is_file():
                 continue
             if content.suffix == ".json":
-                self.advancedPlotSelectionBox.addItem(
-                    content.stem, userData=content
-                )
+                self.advancedPlotSelectionBox.addItem(content.stem, userData=content)
 
 
 # %% LOW-LEVEL FUNCTIONS AND TOOLS
@@ -623,9 +620,7 @@ def _refreshAvailableConfigs(self):
             if not content.is_file():
                 continue
             if content.suffix == ".json":
-                self.advancedPlotSelectionBox.addItem(
-                    content.stem, userData=content
-                )
+                self.advancedPlotSelectionBox.addItem(content.stem, userData=content)
     # -- retrieve saved selection (if still exists)
     self.advancedPlotSelectionBox.blockSignals(False)
     self.advancedPlotSelectionBox.setCurrentText(current_selection)

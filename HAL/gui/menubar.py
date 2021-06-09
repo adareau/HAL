@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-12 09:26:01
-Modified : 2021-05-20 15:01:24
 
 Comments : Functions related to the window menubar
 """
@@ -74,7 +73,7 @@ def getOnlineHelp(self):
     try:
         webbrowser.open_new_tab(online_help_url)
         time.sleep(3)
-        pyautogui.press('space')
+        pyautogui.press("space")
     except Exception as e:
         logger.error("error when opening online help")
         logger.error(e)

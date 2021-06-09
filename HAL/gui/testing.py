@@ -2,7 +2,6 @@
 """
 Author   : Alexandre
 Created  : 2021-05-04 09:30:49
-Modified : 2021-05-17 14:22:07
 
 Comments : developer functions, meant to test / debug the gui
 """
@@ -15,11 +14,8 @@ from datetime import datetime
 from PyQt5.QtCore import Qt
 
 # -- LOCAL
-import HAL.gui.filebrowser as filebrowser
-import HAL.gui.dataexplorer as dataexplorer
-import HAL.gui.fitting as fitting
-import HAL.gui.display as display
-from HAL.classes.display import LiveMetaData
+from . import filebrowser, dataexplorer, fitting, display
+from ..classes.display import LiveMetaData
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -87,5 +83,3 @@ def select_livemetadata_display(self):
         if isinstance(displayClass(), LiveMetaData):
             action.setChecked(True)
             display.displaySelectionChanged(self, action)
-
-
