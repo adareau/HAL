@@ -112,7 +112,11 @@ CALLBACK_LIST = [
     ("advancedPlotSaveButton", "clicked", "_advancedPlotSaveButtonClicked"),
     ("advancedPlotSaveAsButton", "clicked", "_advancedPlotSaveAsButtonClicked"),
     ("advancedPlotDeleteButton", "clicked", "_advancedPlotDeleteButtonClicked"),
-    ("advancedPlotSelectionBox", "currentIndexChanged", "_advancedPlotSelectionBoxSelectionChanged"),
+    (
+        "advancedPlotSelectionBox",
+        "currentIndexChanged",
+        "_advancedPlotSelectionBoxSelectionChanged"
+    ),
     ("exportDataButton", "clicked", "_exportDataButtonClicked"),
     ("advancedStatButton", "clicked", "_advancedStatButtonClicked"),
     ("advancedPlotResetButton", "clicked", "_advancedPlotResetButtonClicked"),
@@ -123,7 +127,7 @@ CALLBACK_LIST = [
     ("renameRoiButton", "clicked", "_renameRoiButtonClicked"),
     ("deleteRoiButton", "clicked", "_deleteRoiButtonClicked"),
     ("resetRoiButton", "clicked", "_resetRoiButtonClicked"),
-    ("addBackgroundButton", "clicked", "_addBackgroundButtonClicked"),
+    ("selectRoiComboBox", "currentIndexChanged", "_selectRoiComboBoxSelectionChanged"),
     # background
     ("backgroundCheckBox", "stateChanged", "_backgroundCheckBoxChanged"),
 
@@ -403,15 +407,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _renameRoiButtonClicked(self):
         fitting.renameROI(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _deleteRoiButtonClicked(self):
         fitting.removeROI(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
     def _resetRoiButtonClicked(self):
         fitting.clearROIs(self)
+        # refresh
+        filebrowser.refreshCurrentFolder(self)
+        dataexplorer.refreshDataSetList(self)
 
-    def _addBackgroundButtonClicked(self):
-        fitting.addBackground(self)
+    def _selectRoiComboBoxSelectionChanged(self):
+        display.updateFitForSelectedData(self)
 
     def _fitButtonClicked(self):
         # fit
