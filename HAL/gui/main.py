@@ -13,6 +13,7 @@ Comments :
 import sys
 import logging
 import time
+import inspect
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence, QFont
@@ -42,6 +43,9 @@ from ..classes.metadata import implemented_metadata
 from ..classes.fit import implemented_fit_dic
 from ..classes.display import implemented_display_dic
 
+# -- user modules
+from .. import modules
+from ..classes.metadata.abstract import AbstractMetaData
 
 # %% DECORATOR FOR DEBUGGING
 def logCallback(f):
@@ -230,6 +234,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.fit_classes = implemented_fit_dic
         # implemented display classes
         self.display_classes = implemented_display_dic
+
+        # -- USER CLASSES
+        for module_name in modules.loaded_modules:
+            mod = modules.__dict__[module_name]
+            for name, object in mod.__dict__.items():
+                if inspect.isclass(object):
+                    if (
+                        issubclass(object, AbstractMetaData)
+                        and object is not AbstractMetaData
+                    ):
+                        self.metadata_classes.append(object)
 
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
