@@ -3,7 +3,7 @@
 """
 Author   : alex
 Created  : 2020-09-11 15:18:05
-Modified : 2021-06-09 14:46:51
+Modified : 2021-06-09 15:13:52
 
 
 Comments :
@@ -94,12 +94,12 @@ CALLBACK_LIST = [
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     ("metaDataList", "itemSelectionChanged", "_metaDataListSelectionChanged"),
     # sets management
-    ("setList", "doubleClicked", "_setListDoubleClicked"),
-    ("dataSetCreateAction", "triggered", "_newSetButtonClicked"),
-    ("dataSetDeleteAction", "triggered", "_deleteSetButtonClicked"),
-    ("dataSetFavAction", "triggered", "_favSetButtonClicked"),
-    ("dataSetAddAction", "triggered", "_addtoSetButtonClicked"),
-    ("dataSetRenameAction", "triggered", "_setListDoubleClicked"),
+    ("setList", "doubleClicked", "_renameDataSet"),
+    ("dataSetCreateAction", "triggered", "_createNewDataSet"),
+    ("dataSetDeleteAction", "triggered", "_deleteDataSet"),
+    ("dataSetFavAction", "triggered", "_favDataSet"),
+    ("dataSetAddAction", "triggered", "_addToDataSet"),
+    ("dataSetRenameAction", "triggered", "_renameDataSet"),
 
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
@@ -339,19 +339,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         dataexplorer.updateMetadataCache(self, reset_cache=True)
         quickplot.refreshMetaDataList(self)
 
-    def _newSetButtonClicked(self):
+    def _createNewDataSet(self):
         dataexplorer.addNewSet(self)
 
-    def _addtoSetButtonClicked(self):
+    def _addToDataSet(self):
         dataexplorer.addtoDataSet(self)
 
-    def _deleteSetButtonClicked(self):
+    def _deleteDataSet(self):
         dataexplorer.deleteDataSet(self)
 
-    def _favSetButtonClicked(self):
+    def _favDataSet(self):
         dataexplorer.favDataSet(self)
 
-    def _setListDoubleClicked(self):
+    def _renameDataSet(self):
         dataexplorer.renameDataSet(self)
 
     def _quickPlotButtonClicked(self):
