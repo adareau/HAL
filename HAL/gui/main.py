@@ -39,7 +39,6 @@ from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
 from ..classes.data import implemented_data_dic
-from ..classes.metadata import implemented_metadata
 from ..classes.fit import implemented_fit_dic
 from ..classes.display import implemented_display_dic
 
@@ -244,7 +243,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # init "lists" of available meta data
         # those are in fact "sets", so that the fields are only
         # counted once
-        meta_names = [m().name for m in implemented_metadata]
+        meta_names = [m().name for m in self.metadata_classes]
         ordered_dic_init = [(m, set()) for m in meta_names]
         self.available_metadata = OrderedDict(ordered_dic_init)
         self.available_numeric_metadata = OrderedDict(ordered_dic_init)
@@ -274,7 +273,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # implemented data classes
         self.data_classes = implemented_data_dic
         # implemented metadata classes
-        self.metadata_classes = implemented_metadata
+        self.metadata_classes = []
         # implemented fit classes
         self.fit_classes = implemented_fit_dic
         # implemented display classes
