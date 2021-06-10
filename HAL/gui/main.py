@@ -47,6 +47,7 @@ from ..classes.display import implemented_display_dic
 from .. import modules
 from ..classes.metadata.abstract import AbstractMetaData
 
+
 # %% DECORATOR FOR DEBUGGING
 def logCallback(f):
     """a wrapper for callback, for debug purposes"""
@@ -199,15 +200,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- SETUP LOGGER
         # setup log level
         self.__DEBUG__ = debug  # debug mode
-        if self.__DEBUG__:
-            log_level = logging.DEBUG
-        else:
-            log_level = logging.WARNING
-        # setup format
-        fmt = "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s"
-        # config
-        logging.basicConfig(format=fmt, datefmt="%H:%M:%S", level=log_level)
-        # define logger
         self.logger = logging.getLogger(__name__)
         # print first log
         self.logger.debug("HAL started")
@@ -226,25 +218,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
-        # implemented data classes
-        self.data_classes = implemented_data_dic
-        # implemented metadata classes
-        self.metadata_classes = implemented_metadata
-        # implemented fit classes
-        self.fit_classes = implemented_fit_dic
-        # implemented display classes
-        self.display_classes = implemented_display_dic
 
-        # -- USER CLASSES
-        for module_name in modules.loaded_modules:
-            mod = modules.__dict__[module_name]
-            for name, object in mod.__dict__.items():
-                if inspect.isclass(object):
-                    if (
-                        issubclass(object, AbstractMetaData)
-                        and object is not AbstractMetaData
-                    ):
-                        self.metadata_classes.append(object)
+        # -- USER MODULES
+        self.loadUserModules()
 
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
@@ -291,6 +267,39 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
         self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
         self.ctrlMinus.activated.connect(self._ctrlMinus)
+
+    def loadUserModules(self):
+
+        # -- init lists / dict
+        # implemented data classes
+        self.data_classes = implemented_data_dic
+        # implemented metadata classes
+        self.metadata_classes = implemented_metadata
+        # implemented fit classes
+        self.fit_classes = implemented_fit_dic
+        # implemented display classes
+        self.display_classes = implemented_display_dic
+
+        # -- parse the content of ..module and append to lists
+        for module, name in zip(modules.loaded_modules, modules.loaded_modules_names):
+            self.logger.debug(f"parsing user module {name}")
+            # check that the module has a 'user_module' list implemented
+            # this should be already checked in the __init__.py of ..modules
+            # but ¯\_(ツ)_/¯ why not check again ?
+            if "user_modules" not in module.__dict__.keys():
+                msg = f"user module '{name}' has no 'user_module' list defined"
+                self.logger.warning(msg)
+                continue
+            # parse the user modules
+            for usermod in module.user_modules:
+                # if it is not a class: we do not want it
+                if not inspect.isclass(usermod):
+                    self.logger.debug("skipped one 'non-class' object.. strange..")
+                    continue
+                # if it is a child of AbstractMetaData >> to self.metadata_classes !
+                if issubclass(usermod, AbstractMetaData):
+                    self.logger.debug(f"found one metadata class '{usermod.__name__}'")
+                    self.metadata_classes.append(usermod)
 
     def setupElements(self):
         # -- File Browser
@@ -572,11 +581,3 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def main(self):
         self.show()
-
-
-# %% RUN
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow(debug=True)
-    window.main()
-    app.exec_()
