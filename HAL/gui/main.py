@@ -279,6 +279,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # implemented display classes
         self.display_classes = implemented_display_dic
 
+        # -- generate list of ignored packages
+        ignored = self.settings.config["global"]["ignored modules list"]
+        ignored = ignored.split(",")
+        ignored = [name.replace(" ", "") for name in ignored]
+        self.logger.debug(f"ignored packages : {', '.join(ignored)}")
         # -- parse the content of ..module and append to lists
         for module, name in zip(modules.loaded_modules, modules.loaded_modules_names):
             self.logger.debug(f"parsing user module {name}")
@@ -294,6 +299,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 # if it is not a class: we do not want it
                 if not inspect.isclass(usermod):
                     self.logger.debug("skipped one 'non-class' object.. strange..")
+                    continue
+                # is it ignored ?
+                if usermod.__name__ in ignored:
+                    self.logger.debug(f"ignored package '{usermod.__name__}'")
                     continue
                 # if it is a child of AbstractMetaData >> to self.metadata_classes !
                 if issubclass(usermod, AbstractMetaData):
