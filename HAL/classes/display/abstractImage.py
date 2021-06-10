@@ -212,7 +212,7 @@ class AbstractImageDisplay(AbstractDisplay):
         """adds a background"""
         # check if background exists
         if self.background is not None:
-            logger.debug("background already added : skip")
+            # logger.debug("background already added : skip")
             return
 
         # check that plot is initialized

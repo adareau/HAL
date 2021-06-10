@@ -19,7 +19,6 @@ from PyQt5.QtCore import Qt
 
 # -- local
 from ..classes.fit.abstract import NumpyArrayEncoder, Abstract2DFit
-from ..classes.fit import implemented_fit_dic
 from ..classes.data.abstract import AbstractCameraPictureData
 
 # -- logger
@@ -45,8 +44,9 @@ def updateFit(self, *args, **kwargs):
 
 def setupFitting(self):
     # -- setup fit selection combo box
-    for fit_name in self.fit_classes:
-        self.fitTypeComboBox.addItem(fit_name)
+    for fit_class in self.fit_classes:
+        fit_name = fit_class().name
+        self.fitTypeComboBox.addItem(fit_name, fit_class)
 
 
 # %% ROI MANAGEMENT
@@ -195,11 +195,12 @@ def removeBackground(self):
 def _fit_2D_data(self, Z, XY, data_object):
     """handles data fitting"""
     # -- get selected fit
-    selected_fit = self.fitTypeComboBox.currentText()
-    if selected_fit not in self.fit_classes:
-        logger.error("fit '%s' is not implemented ?!" % selected_fit)
-        return
-    fit_class = self.fit_classes[selected_fit]
+    # selected_fit = self.fitTypeComboBox.currentText()
+    # if selected_fit not in self.fit_classes:
+    #     logger.error("fit '%s' is not implemented ?!" % selected_fit)
+    #     return
+    # fit_class = self.fit_classes[selected_fit]
+    fit_class = self.fitTypeComboBox.currentData()
     # -- fit
     # init fit object
     fit = fit_class(x=XY, z=Z)
@@ -423,13 +424,14 @@ def load_saved_fit(self, data_path=None):
     fit_name = fit_info["fit name"]
     fit_version = fit_info["fit version"]
 
+    # generate a dictionnary of implemented fits
     # check fit name
-    if fit_name not in implemented_fit_dic:
+    if fit_name not in self.fit_classes_dic:
         logger.warning("saved fit '%s' is not implemented !" % fit_name)
         return None, None
 
     # check fit version
-    fit_class = implemented_fit_dic[fit_name]
+    fit_class = self.fit_classes_dic[fit_name]
     if fit_class()._version != fit_version:
         msg = "saved fit version (%s) does not match " % fit_version
         msg += "the current implemented version (%s) " % fit_class()._version

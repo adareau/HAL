@@ -34,6 +34,11 @@ from PyQt5.QtWidgets import (
 logger = logging.getLogger(__name__)
 
 # %% GLOBAL VARIABLES
+
+GLOBAL_DEFAULTS = {
+    "ignored modules list": "",
+}
+
 DATA_DEFAULTS = {
     "root": "~/gus_data",
     "day folder": "%d",
@@ -180,6 +185,7 @@ class Settings(object):
 
     def initDefaults(self):
         self.config["data"] = DATA_DEFAULTS
+        self.config["global"] = GLOBAL_DEFAULTS
         self.config["fit"] = FIT_DEFAULTS
         self.config["gui"] = GUI_DEFAULT
         self.config["dev"] = DEV_DEFAULT

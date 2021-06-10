@@ -11,7 +11,7 @@ Comments : implements a "null" fit, that only returns spatial stats
 import numpy as np
 
 # -- local
-from .abstract import Abstract2DBellShaped
+from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 
 # %% CLASS DEFINITION

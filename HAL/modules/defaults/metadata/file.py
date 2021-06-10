@@ -12,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 # -- local
-from .abstract import AbstractMetaData
+from HAL.classes.metadata.abstract import AbstractMetaData
 
 
 # %% CLASS DEFINITION
