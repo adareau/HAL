@@ -3,9 +3,9 @@
 """
 Author   : Alexandre
 Created  : 2021-04-07 14:35:18
-Modified : 2021-04-07 16:22:13
+Modified : 2021-06-10 15:47:38
 
-Comments : starts the HAL gui
+Comments : starts the HAL gui in debug mode
 """
 
 # %% IMPORTS
