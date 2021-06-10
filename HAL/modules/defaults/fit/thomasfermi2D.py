@@ -11,7 +11,7 @@ Comments : implements a 2D Thomas Fermi fit
 import numpy as np
 
 # -- local
-from .abstract import Abstract2DBellShaped
+from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 
 # %% FUNCTIONS

@@ -39,12 +39,12 @@ from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
 from ..classes.data import implemented_data_dic
-from ..classes.fit import implemented_fit_dic
 from ..classes.display import implemented_display_dic
 
 # -- user modules
 from .. import modules
 from ..classes.metadata.abstract import AbstractMetaData
+from ..classes.fit.abstract import Abstract2DFit
 
 
 # %% DECORATOR FOR DEBUGGING
@@ -275,7 +275,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # implemented metadata classes
         self.metadata_classes = []
         # implemented fit classes
-        self.fit_classes = implemented_fit_dic
+        self.fit_classes = []
         # implemented display classes
         self.display_classes = implemented_display_dic
 
@@ -299,6 +299,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 if issubclass(usermod, AbstractMetaData):
                     self.logger.debug(f"found one metadata class '{usermod.__name__}'")
                     self.metadata_classes.append(usermod)
+                # if it is a child of Abstract2DFit >> to self.fit_classes !
+                elif issubclass(usermod, Abstract2DFit):
+                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
+                    self.fit_classes.append(usermod)
+
+        # -- generate a list of implemented fit names
+        # this will be useful for loading fit
+        self.fit_classes_dic = {}
+        for fit_class in self.fit_classes:
+            name = fit_class().name
+            if name in self.fit_classes_dic:
+                msg = f"fit name '{name}' was already taken... it will be overriden "
+                msg += "in the fit dictionnary. This might cause bugs when loading "
+                msg += "saved fit. You should rename your fits so that they have "
+                msg += "unique names !"
+                self.logger.warning(msg)
+            self.fit_classes_dic[name] = fit_class
 
     def setupElements(self):
         # -- File Browser
