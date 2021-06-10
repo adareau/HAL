@@ -38,13 +38,16 @@ from . import (
 from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
-from ..classes.display import implemented_display_dic
 
 # -- user modules
-from .. import modules
+# - abstract classes
 from ..classes.metadata.abstract import AbstractMetaData
 from ..classes.fit.abstract import Abstract2DFit
 from ..classes.data.abstract import AbstractData
+from ..classes.display.abstract import AbstractDisplay
+
+# - user-defined modules
+from .. import modules
 
 
 # %% DECORATOR FOR DEBUGGING
@@ -277,7 +280,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # implemented fit classes
         self.fit_classes = []
         # implemented display classes
-        self.display_classes = implemented_display_dic
+        self.display_classes = []
 
         # -- generate list of ignored packages
         ignored = self.settings.config["global"]["ignored modules list"]
@@ -316,6 +319,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 elif issubclass(usermod, AbstractData):
                     self.logger.debug(f"found one fit class '{usermod.__name__}'")
                     self.data_classes.append(usermod)
+                # if it is a child of AbstractDisplay >> to self.display_classes !
+                elif issubclass(usermod, AbstractDisplay):
+                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
+                    self.display_classes.append(usermod)
+                # otherwise raise warning
+                else:
+                    msg = f"Unknown class type for user module '{usermod.__name__}'"
+                    self.logger.warning(msg)
 
         # -- generate a list of implemented fit names
         # this will be useful for loading fit

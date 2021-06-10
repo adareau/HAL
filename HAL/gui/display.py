@@ -47,7 +47,7 @@ def setupDisplay(self):
     # - display mode list
     # get list of implemented display types
     # we use a set {...} in order to get the values once
-    display_type_set = {disp().type for disp in self.display_classes.values()}
+    display_type_set = {disp().type for disp in self.display_classes}
     # update the menu "Data Display" accordingly
     menu = self.menuDataDisplay
     self.menu_data_display_cat_list = {}
@@ -56,23 +56,25 @@ def setupDisplay(self):
         self.menu_data_display_cat_list[display_type] = new_menu  # store
 
     # chose default display
-    default_display = "Basic 2D"  # FIXME migrate to config ?
-    if default_display not in self.display_classes:
-        default_display = list(self.display_classes)[0]
+    default_display_name = "Basic 2D"  # FIXME migrate to config ?
+    default_display = None
+    if default_display_name not in self.display_classes:
+        default_display_name = list(self.display_classes)[0]
 
     # add actions corresponding to available displays
     # we make it such that only one action can be selected
     # cf. https://stackoverflow.com/a/48447711
     displaySelectionGroup = QActionGroup(menu)  # group for display selection
     n_shortcut = 1
-    for display_name, display in self.display_classes.items():
+    for display in self.display_classes:
         display_type = display().type
+        display_name = display().name
         displaySubmenu = self.menu_data_display_cat_list[display_type]
         action = QAction(
             display_name,
             displaySubmenu,
             checkable=True,
-            checked=(display_name == default_display),
+            checked=(display_name == default_display_name),
         )
         # set shortcut
         seq = "%s+%i" % (SWITCH_DISPLAY_SHORTCUT, n_shortcut)
@@ -82,6 +84,9 @@ def setupDisplay(self):
         action.setData(display)
         displaySubmenu.addAction(action)
         displaySelectionGroup.addAction(action)
+        # did we find the default display ?
+        if display == default_display_name:
+            default_display = display
 
     # special case : the "live meta data" class
     # this is a basically empty class, used when we
@@ -90,7 +95,7 @@ def setupDisplay(self):
         "Live metadata plot",
         menu,
         checkable=True,
-        checked=(display_name == default_display),
+        checked=(display_name == default_display_name),
     )
     action.setData(LiveMetaData)
     # keyboard shortcut
@@ -106,8 +111,10 @@ def setupDisplay(self):
     self.displaySelectionGroup = displaySelectionGroup
 
     # - setup display
-    display_class = self.display_classes[default_display]
-    self.display = display_class(screen=self.mainScreen)
+    # if we did not find the default display name, use the first one in the list
+    if default_display is None:
+        default_display = self.display_classes[0]
+    self.display = default_display(screen=self.mainScreen)
     self.display.setup()
 
     # setup colormaps

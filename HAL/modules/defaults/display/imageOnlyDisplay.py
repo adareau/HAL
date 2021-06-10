@@ -14,7 +14,7 @@ import pyqtgraph as pg
 import numpy as np
 
 # -- local
-from .abstractImage import AbstractImageDisplay
+from HAL.classes.display.abstractImage import AbstractImageDisplay
 
 
 # %% CLASS DEFINITION
