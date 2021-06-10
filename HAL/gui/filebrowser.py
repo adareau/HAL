@@ -207,6 +207,7 @@ def setupFileListBrowser(self):
     self.runList.setIconSize(QSize(15, 15))
     # context menu
     self.runList.setContextMenuPolicy(Qt.CustomContextMenu)
+    self.setList.setContextMenuPolicy(Qt.CustomContextMenu)
 
     # -- calendar
     self.dateEdit.setCalendarPopup(True)

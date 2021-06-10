@@ -113,6 +113,7 @@ CALLBACK_LIST = [
     ("setList", "itemSelectionChanged", "_setListSelectionChanged"),
     # custom context menu (when right click on list)
     ("runList", "customContextMenuRequested", "_runListShowContextMenu"),
+    ("setList", "customContextMenuRequested", "_setListShowContextMenu"),
     # buttons
     ("refreshRunListButton", "clicked", "_refreshRunListButtonClicked"),
     ("todayButton", "clicked", "_todayButtonClicked"),
@@ -402,27 +403,52 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- create context menu
         contextMenu = QMenu()
         # -- Fit related actions
-        # fit action
+        # do fit
         fitAction = QAction("fit", self)
         fitAction.triggered.connect(self._fitButtonClicked)
         contextMenu.addAction(fitAction)
-        # fit action
+        # delete fit
         delFitAction = QAction("delete fit", self)
         delFitAction.triggered.connect(self._deleteFitButtonClicked)
         contextMenu.addAction(delFitAction)
         # -- Dataset related
         contextMenu.addSeparator()
-        # fit action
-        createSetAction = QAction("add to new set", self)
+        # crate dataset
+        createSetAction = QAction("create set", self)
         createSetAction.triggered.connect(self._createNewDataSet)
         contextMenu.addAction(createSetAction)
-        # fit action
+        # add to selected set
         addToSetAction = QAction("add to selected set", self)
         addToSetAction.triggered.connect(self._addToDataSet)
         contextMenu.addAction(addToSetAction)
-
-        # show
+        # -- show
         contextMenu.exec_(self.runList.mapToGlobal(position))
+
+    def _setListShowContextMenu(self, position, *args, **kwargs):
+        # -- return if no item
+        if not self.setList.itemAt(position):
+            return
+        # -- create context menu
+        contextMenu = QMenu()
+        # -- Dataset related
+        # rename
+        renameSetAction = QAction("rename", self)
+        renameSetAction.triggered.connect(self._renameDataSet)
+        contextMenu.addAction(renameSetAction)
+        # delete
+        deleteSetAction = QAction("delete", self)
+        deleteSetAction.triggered.connect(self._deleteDataSet)
+        contextMenu.addAction(deleteSetAction)
+        # add to favorite
+        favDataSetAction = QAction("add to favorite", self)
+        favDataSetAction.triggered.connect(self._favDataSet)
+        contextMenu.addAction(favDataSetAction)
+        # add to selected set
+        addToSetAction = QAction("add selected runs", self)
+        addToSetAction.triggered.connect(self._addToDataSet)
+        contextMenu.addAction(addToSetAction)
+        # -- show
+        contextMenu.exec_(self.setList.mapToGlobal(position))
 
     def _seqListSelectionChanged(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
