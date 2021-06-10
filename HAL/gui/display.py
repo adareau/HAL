@@ -35,8 +35,9 @@ def setupDisplay(self):
     global SWITCH_DISPLAY_SHORTCUT
 
     # -- setup data classes list selector
-    for name in self.data_classes.keys():
-        self.dataTypeComboBox.addItem(name)
+    for data_class in self.data_classes:
+        name = data_class().name
+        self.dataTypeComboBox.addItem(name, data_class)
     # -- setup min / max scale
     self.scaleMinEdit.setText("0")
     self.scaleMaxEdit.setText("65535")
@@ -166,8 +167,8 @@ def plotSelectedData(self, update_fit=True):
 
     # -- init object data
     # get object data type
-    data_type = self.dataTypeComboBox.currentText()
-    data = self.data_classes[data_type]
+    data_class = self.dataTypeComboBox.currentData()
+    data = data_class()
     # get path
     item = selection[0]
     data.path = item.data(QtCore.Qt.UserRole)

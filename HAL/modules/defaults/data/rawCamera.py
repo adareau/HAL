@@ -14,25 +14,25 @@ from pathlib import Path
 
 
 # -- local
-from .abstract import AbstractCameraPictureData
+from HAL.classes.data.abstract import AbstractCameraPictureData
 
 
 # %% CLASS DEFINITION
-class XenicsData(AbstractCameraPictureData):
+class RawCamData(AbstractCameraPictureData):
     """docstring for Dummy"""
 
     def __init__(self, path=Path(".")):
         super().__init__()
 
         # - general
-        self.name = "Xenics"
+        self.name = "Camera"
         self.dimension = 2  # should be 1, 2 or 3
         self.path = path
 
         # - special for camera
-        self.pixel_size = 6.45  # µm
+        self.pixel_size = 1  # µm
         self.pixel_size_unit = "µm"
-        self.magnification = 0.27
+        self.magnification = 1
 
         # - data related
         x = self.pixel_size / self.magnification
@@ -47,21 +47,6 @@ class XenicsData(AbstractCameraPictureData):
     def load(self):
         """loads data"""
         # load (as 16bit array)
-        data_in = cv2.imread(str(self.path), cv2.IMREAD_UNCHANGED)
-        # rotate to match former orientation
-        data = np.rot90(data_in, -1)
+        data = cv2.imread(str(self.path), cv2.IMREAD_UNCHANGED)
         # store
         self.data = data
-
-
-# %% TEST
-if __name__ == "__main__":
-    import numpy as np
-
-    root = Path().home()
-    path = root / "gus_data_dummy" / "cam_example" / "001" / "001_001.png"
-
-    data = XenicsData(path)
-    if data.filter():
-        data.load()
-    print(np.max(data.data))

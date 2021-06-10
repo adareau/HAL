@@ -38,13 +38,13 @@ from . import (
 from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
-from ..classes.data import implemented_data_dic
 from ..classes.display import implemented_display_dic
 
 # -- user modules
 from .. import modules
 from ..classes.metadata.abstract import AbstractMetaData
 from ..classes.fit.abstract import Abstract2DFit
+from ..classes.data.abstract import AbstractData
 
 
 # %% DECORATOR FOR DEBUGGING
@@ -271,7 +271,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- init lists / dict
         # implemented data classes
-        self.data_classes = implemented_data_dic
+        self.data_classes = []
         # implemented metadata classes
         self.metadata_classes = []
         # implemented fit classes
@@ -303,6 +303,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 elif issubclass(usermod, Abstract2DFit):
                     self.logger.debug(f"found one fit class '{usermod.__name__}'")
                     self.fit_classes.append(usermod)
+                # if it is a child of AbstractData >> to self.data_classes !
+                elif issubclass(usermod, AbstractData):
+                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
+                    self.data_classes.append(usermod)
 
         # -- generate a list of implemented fit names
         # this will be useful for loading fit
@@ -396,6 +400,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _dataTypeComboBoxSelectionChanged(self, *args, **kwargs):
         filebrowser.refreshCurrentFolder(self)
+        display.plotSelectedData(self)
 
     def _colorMapComboBoxSelectionChanged(self, *args, **kwargs):
         display.updateColormap(self)
