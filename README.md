@@ -1,11 +1,11 @@
-# HAL Atom Locator
+# HAL 🔴 Atom Locator
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
-## Start with HAL without problems
+## 👍 Start with HAL without problems
 
-### ⚠️ preamble
+### ⚠️ preamble ⚠️
 
 We try to develop HAL using recent versions of python 🐍🐍🐍 (currently 3.9). HAL was found to work for earlier version (such as 3.8), but we cannot guarantee that this compatibility will be maintained during future development. We thus strongly encourage you to use the latest version of python for HAL.
 
@@ -120,8 +120,9 @@ Third party modules can be found in a dedicated github respository: https://gith
 
 **TODO** some documentation on how to write modules ?
 
-## Notes for programmers
-### Some useful commands
+## 👩‍💻 Notes for programmers 👨‍💻
+
+### 📝 Some useful commands
 
 **Build the gui**
 
@@ -129,7 +130,7 @@ Third party modules can be found in a dedicated github respository: https://gith
 $> pyuic5 main.ui > MainUI.py
 ```
 
-### PyQtGraph
+### 🖼️ PyQtGraph
 
 We use the PyQtGraph package for image and data display (mostly because it is faster than matplotlib). Useful links :
 
