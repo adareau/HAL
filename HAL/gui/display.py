@@ -210,17 +210,18 @@ def plotSelectedData(self, update_fit=True):
         scale_max = float(self.scaleMaxEdit.text())
 
     # plot
-    self.display.updatePlot(
-        image=data.data,
-        levels=(scale_min, scale_max),
-        colormap=colormap_name,
-        dataobject=data,
-        selected_ROI=selected_roi,
-    )
+    if len(data.data) > 0:
+        self.display.updatePlot(
+            image=data.data,
+            levels=(scale_min, scale_max),
+            colormap=colormap_name,
+            dataobject=data,
+            selected_ROI=selected_roi,
+        )
 
-    # update fit
-    if update_fit:
-        updateFitForSelectedData(self)
+        # update fit
+        if update_fit:
+            updateFitForSelectedData(self)
 
 
 def updateFitForSelectedData(self):
