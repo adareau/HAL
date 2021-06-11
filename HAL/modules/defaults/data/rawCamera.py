@@ -9,7 +9,6 @@ Comments : Abstract classes for data handling
 
 # -- global
 import cv2
-import numpy as np
 from pathlib import Path
 
 
@@ -33,6 +32,7 @@ class RawCamData(AbstractCameraPictureData):
         self.pixel_size = 1  # µm
         self.pixel_size_unit = "µm"
         self.magnification = 1
+        self.default_display_scale = (0, 65535)
 
         # - data related
         x = self.pixel_size / self.magnification
