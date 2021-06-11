@@ -121,7 +121,7 @@ def refreshListContent(list, folder, date_format, display_format):
         list.addItem(item)
 
 
-def exploreDayFolder(folder):
+def exploreDayFolder(folder, data_class=None):
     # -- check that a directory is provided
     if not folder.is_dir():
         return []
@@ -152,9 +152,15 @@ def exploreDayFolder(folder):
         file_list = []
         for file in subdir.iterdir():
             if file.is_file():
-                # TODO : implement filer per type here !!
-                # right now, only dummy filtering
-                if file.suffix in [".png", ".atoms"]:
+                # if no data class is provided : take all !
+                if data_class is None:
+                    good_file = True
+                # otherwise, use the filter() method
+                else:
+                    data = data_class(path=file)
+                    good_file = data.filter()
+                # append
+                if good_file:
                     file_list.append(file)
         # sort
         # old version : by name
@@ -432,7 +438,8 @@ def refreshCurrentFolder(self, new_folder=None):
         return
 
     # -- get content and update list
-    dir_content = exploreDayFolder(self.current_folder)
+    data_class = self.dataTypeComboBox.currentData()
+    dir_content = exploreDayFolder(self.current_folder, data_class)
 
     for content in dir_content:
         # - skip if empty
