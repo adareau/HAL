@@ -483,10 +483,13 @@ def refreshCurrentFolder(self, new_folder=None):
                 # see https://emojipedia.org
                 suffix += " ✔️"
 
+            # format display name with the data object
+            data = data_class(path=file)
+            display_name = data.getDisplayName()
             # add item
             item = QListWidgetItem()
             # NB: use file.stem to remove ext
-            item.setText(prefix + file.stem + suffix)
+            item.setText(prefix + display_name + suffix)
             item.setData(Qt.UserRole, file)
             self.runList.addItem(item)
 

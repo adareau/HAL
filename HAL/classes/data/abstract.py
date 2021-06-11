@@ -26,6 +26,10 @@ class AbstractData(object):
         """should filter from name"""
         return True
 
+    def getDisplayName(self):
+        """returns the name to be displayed"""
+        return self.path.stem
+
     def load(self):
         """should load data"""
         pass
