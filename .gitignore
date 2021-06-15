@@ -10,8 +10,6 @@ tests/
 
 # modules folder
 # ignore all by default
-HAL/modules/*
-# include the __init__: important for module import
-!HAL/modules/__init__.py
-!HAL/modules/defaults/
-
+HAL/modules/LCF*
+HAL/modules/.*
+HAL/modules/README.md
