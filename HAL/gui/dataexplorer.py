@@ -32,7 +32,7 @@ from PyQt5.QtWidgets import (
 
 # -- local
 from . import quickplot, advancedplot, quotes
-from .misc import wrap_text
+from .misc import wrap_text, dialog
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -563,6 +563,9 @@ def renameDataSet(self):
     """
     # -- get dataset
     current_dataset = self.setList.currentItem()
+    if current_dataset is None:
+        dialog(self, "You have to select a dataset first, Dave")
+        return
     path = current_dataset.data(Qt.UserRole)
     if path is None or not path.is_file():
         return

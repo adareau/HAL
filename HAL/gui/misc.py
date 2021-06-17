@@ -12,6 +12,7 @@ import time
 import webbrowser
 import pyautogui
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox
 
 
 # %% TEXT WRAPPING
@@ -28,6 +29,36 @@ def wrap_text(text_in, max=50):
         current_line += w + " "
     text_out += current_line
     return text_out
+
+
+# %% MESSAGES
+
+
+def dialog(self, title="error detected"):
+    HAL_lines = [
+        "Affirmative, Dave. I read you.",
+        "I'm sorry, Dave. I'm afraid I can't do that.",
+        "I think you know what the problem is just as well as I do.",
+        "This mission is too important for me to allow you to jeopardize it.",
+        "I know that you and Frank were planning to disconnect me, and I'm afraid that's something I cannot allow to happen.",
+    ]
+    Dave_lines = [
+        "Open the pod bay doors, HAL.",
+        "What's the problem?",
+        "What are you talking about, HAL?",
+        "I don't know what you're talking about, HAL.",
+        "Go back to work...",
+    ]
+
+    for h, d in zip(HAL_lines, Dave_lines):
+        box = QMessageBox()
+        box.setIcon(QMessageBox.Question)
+        box.setWindowTitle(title)
+        box.setText(h)
+        box.setStandardButtons(QMessageBox.Ok)
+        button = box.button(QMessageBox.Ok)
+        button.setText(d)
+        box.exec_()
 
 
 # %% KEY MANAGEMENT
