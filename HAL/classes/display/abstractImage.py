@@ -185,7 +185,6 @@ class AbstractImageDisplay(AbstractDisplay):
             return None, (None, None)
 
         # get roi, image item and image data
-        roi = self.roi_list[roi_name]
         data = self.current_data
         image = self.current_image
 
