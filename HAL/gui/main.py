@@ -15,7 +15,7 @@ import time
 import inspect
 
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QKeySequence, QFont
+from PyQt5.QtGui import QKeySequence, QFont, QIcon
 from PyQt5.QtWidgets import QShortcut, QMessageBox, QAction, QMenu
 from pathlib import Path
 from collections import OrderedDict
@@ -37,6 +37,7 @@ from . import (
 from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
+from ..gui import local_folder
 
 # -- user modules
 # - abstract classes
@@ -222,6 +223,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
+
+        # -- configure window
+        # icon
+
+        icon_file = Path(local_folder) / "icon.png"
+        if icon_file.is_file():
+            icon = QIcon(str(icon_file))
+            self.setWindowIcon(icon)
+        else:
+            self.logger.warning(f"icon file '{icon_file}' not found")
 
         # -- USER MODULES
         self.loadUserModules()
