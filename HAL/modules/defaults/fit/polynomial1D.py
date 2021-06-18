@@ -14,16 +14,28 @@ import numpy as np
 from HAL.classes.fit.abstract import Abstract1DFit
 
 
+# %% POLYNOMIAL FIT GENERATOR
+def polyfit_generator(order):
+    name = f"PolynomialDeg{order}"
+    return type(name, (Polynomial1D,), {"_overload_order": lambda x: order})
+
+
 # %% CLASS DEFINITION
 class Polynomial1D(Abstract1DFit):
     """a 1D polynomial fit"""
 
-    def __init__(self, order, **kwargs):
+    def __init__(self, order=2, **kwargs):
         super().__init__(**kwargs)
 
+        # -- allows one to overload order
+        # will be used to automatically generate classes of polyfit with a given order
+        if self._overload_order() is not None:
+            order = self._overload_order()
+
         # -- attributes specific to 2D Gauss fit
-        self.name = "AbstractPolynomial1D"
         self.order = order
+        self.name = f"poly deg. {order}"
+        self.category = "polynomial"
         self.formula_help = "f(x) = p[0]"
         for n in np.arange(1, order + 1):
             self.formula_help += f" + p[{n}] * x"
@@ -31,6 +43,9 @@ class Polynomial1D(Abstract1DFit):
                 self.formula_help += f" ** {n}"
         self.parameters_help = ""
         self._version = "1.0"
+
+    def _overload_order(self):
+        return None
 
     def _fitfunc(self, x, *p):
         return np.polyval(p[::-1], x)
@@ -121,38 +136,40 @@ class Polynomial1D(Abstract1DFit):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    try:
-        n = 3
-        fit = Polynomial1D(order=n)
-        print(fit.formula_help)
-        # -- generate noisy data
-        x = np.linspace(-10, 10, 200)
-        p = np.arange(n + 1)
-        z = fit.eval(x, p)
-        noise = (np.random.rand(*x.shape) - 0.5) * 2
-        z += noise
-        # -- Fit
-        fit.x = x
-        fit.z = z
-        fit.z_unit = "km"
-        fit.x_unit = "h"
-        fit.do_guess()
-        print(">> guess")
-        print(fit.guess)
-        fit.do_fit()
-        xfit = np.linspace(x.min(), x.max(), 1000)
-        zfit = fit.eval(xfit)
+    if False:
+        try:
+            n = 3
+            fitClass = polyfit_generator(n)
+            fit = fitClass()
+            print(fit.formula_help)
+            # -- generate noisy data
+            x = np.linspace(-10, 10, 200)
+            p = np.arange(n + 1)
+            z = fit.eval(x, p)
+            noise = (np.random.rand(*x.shape) - 0.5) * 2
+            z += noise
+            # -- Fit
+            fit.x = x
+            fit.z = z
+            fit.z_unit = "km"
+            fit.x_unit = "h"
+            fit.do_guess()
+            print(">> guess")
+            print(fit.guess)
+            fit.do_fit()
+            xfit = np.linspace(x.min(), x.max(), 1000)
+            zfit = fit.eval(xfit)
 
-        print(">> popt")
-        print(fit.popt)
+            print(">> popt")
+            print(fit.popt)
 
-        fit.compute_values()
-        print(fit.export_json_str())
+            fit.compute_values()
+            print(fit.export_json_str())
 
-        plt.figure()
-        plt.plot(x, z, "o")
-        plt.plot(xfit, zfit)
-        plt.show()
-    except Exception as e:
-        print(e)
-    sys.path.remove(hal_path)
+            plt.figure()
+            plt.plot(x, z, "o")
+            plt.plot(xfit, zfit)
+            plt.show()
+        except Exception as e:
+            print(e)
+        sys.path.remove(hal_path)

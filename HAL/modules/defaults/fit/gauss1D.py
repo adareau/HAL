@@ -29,7 +29,8 @@ class Gauss1DFit(Abstract1DFit):
         super().__init__(**kwargs)
 
         # -- attributes specific to 2D Gauss fit
-        self.name = "Gauss"
+        self.name = "gaussian"
+        self.category = "math"
         self.formula_help = "f(x) = p[0] "
         self.formula_help += "+ p[1] * exp(-(x - p[3]) ** 2 / (2 * p[2]**2))"
         self.parameters_help = "p = [offset, amplitude, size, center]"
