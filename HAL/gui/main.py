@@ -475,6 +475,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # -- DATA VISUALIZATION
 
     def _dataTypeComboBoxSelectionChanged(self, *args, **kwargs):
+        # update scale
+        data_class = self.dataTypeComboBox.currentData()
+        sc_min, sc_max = data_class().default_display_scale
+        self.scaleMinEdit.setText(str(sc_min))
+        self.scaleMaxEdit.setText(str(sc_max))
+        # refresh
         filebrowser.refreshCurrentFolder(self)
         display.plotSelectedData(self)
 

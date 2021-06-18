@@ -21,10 +21,15 @@ class AbstractData(object):
         self.pixel_scale = ()  # should be a tuple, with same size as dimension
         self.pixel_unit = ()  # should be a tuple, with same size as dimension
         self.data = []
+        self.default_display_scale = (0, 1)
 
     def filter(self):
         """should filter from name"""
         return True
+
+    def getDisplayName(self):
+        """returns the name to be displayed"""
+        return self.path.stem
 
     def load(self):
         """should load data"""
