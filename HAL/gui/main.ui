@@ -394,7 +394,7 @@
          <item>
           <layout class="QGridLayout" name="gridLayout">
            <item row="1" column="0">
-            <widget class="QListWidget" name="runList">
+            <widget class="QListWidget" name="seqList">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -404,7 +404,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QListWidget" name="seqList">
+            <widget class="QListWidget" name="runList">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -422,7 +422,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>sequences</string>
+              <string>runs</string>
              </property>
             </widget>
            </item>
@@ -448,7 +448,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>runs</string>
+              <string>sequences</string>
              </property>
             </widget>
            </item>
