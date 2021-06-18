@@ -208,16 +208,6 @@ class Ui_mainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.runList = QtWidgets.QListWidget(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.runList.sizePolicy().hasHeightForWidth())
-        self.runList.setSizePolicy(sizePolicy)
-        self.runList.setObjectName("runList")
-        self.gridLayout.addWidget(self.runList, 1, 0, 1, 1)
         self.seqList = QtWidgets.QListWidget(self.runBrowserBox)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
@@ -227,7 +217,17 @@ class Ui_mainWindow(object):
         sizePolicy.setHeightForWidth(self.seqList.sizePolicy().hasHeightForWidth())
         self.seqList.setSizePolicy(sizePolicy)
         self.seqList.setObjectName("seqList")
-        self.gridLayout.addWidget(self.seqList, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.seqList, 1, 0, 1, 1)
+        self.runList = QtWidgets.QListWidget(self.runBrowserBox)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.runList.sizePolicy().hasHeightForWidth())
+        self.runList.setSizePolicy(sizePolicy)
+        self.runList.setObjectName("runList")
+        self.gridLayout.addWidget(self.runList, 1, 1, 1, 1)
         self.label_5 = QtWidgets.QLabel(self.runBrowserBox)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
@@ -520,7 +520,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(1)
+        self.dataAnalysisTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -549,9 +549,9 @@ class Ui_mainWindow(object):
             _translate("mainWindow", "FIT"),
         )
         self.runBrowserBox.setTitle(_translate("mainWindow", "Run Browser"))
-        self.label_5.setText(_translate("mainWindow", "sequences"))
+        self.label_5.setText(_translate("mainWindow", "runs"))
         self.label_6.setText(_translate("mainWindow", "sets"))
-        self.label_4.setText(_translate("mainWindow", "runs"))
+        self.label_4.setText(_translate("mainWindow", "sequences"))
         self.refreshRunListButton.setText(_translate("mainWindow", "Refresh"))
         self.fitBrowserButton.setText(_translate("mainWindow", "FIT"))
         self.deleteFitButton.setText(_translate("mainWindow", "Del. Fit"))
