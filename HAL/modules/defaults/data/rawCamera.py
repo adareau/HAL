@@ -50,3 +50,7 @@ class RawCamData(AbstractCameraPictureData):
         data = cv2.imread(str(self.path), cv2.IMREAD_UNCHANGED)
         # store
         self.data = data
+
+    def getDisplayName(self):
+        """returns the name to be displayed"""
+        return self.path.stem
