@@ -42,7 +42,7 @@ from ..gui import local_folder
 # -- user modules
 # - abstract classes
 from ..classes.metadata.abstract import AbstractMetaData
-from ..classes.fit.abstract import Abstract2DFit
+from ..classes.fit.abstract import Abstract2DFit, Abstract1DFit
 from ..classes.data.abstract import AbstractData
 from ..classes.display.abstract import AbstractDisplay
 
@@ -148,6 +148,7 @@ CALLBACK_LIST = [
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlotFitToolButtonActionGroup", "triggered", "_quickPlotFitSelectionChanged"),
 
     # -- ADVANCED DATA ANALYSIS / PLOT
     ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
@@ -290,10 +291,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.data_classes = []
         # implemented metadata classes
         self.metadata_classes = []
-        # implemented fit classes
+        # implemented 2D fit classes
         self.fit_classes = []
         # implemented display classes
         self.display_classes = []
+        # implemented 1D fit classes
+        self.fit_classes_1D = []
 
         # -- generate list of ignored packages
         ignored = self.settings.config["global"]["ignored modules list"]
@@ -336,6 +339,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
                 elif issubclass(usermod, AbstractDisplay):
                     self.logger.debug(f"found one fit class '{usermod.__name__}'")
                     self.display_classes.append(usermod)
+                # if it is a child of Abstract1DFit >> to self.fit_classes_1D !
+                elif issubclass(usermod, Abstract1DFit):
+                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
+                    self.fit_classes_1D.append(usermod)
                 # otherwise raise warning
                 else:
                     msg = f"Unknown class type for user module '{usermod.__name__}'"
@@ -543,6 +550,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotSelectionChanged(self)
+
+    def _quickPlotFitSelectionChanged(self, *args, **kwargs):
+        quickplot.quickPlotFitSelectionChanged(self)
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 

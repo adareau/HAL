@@ -344,13 +344,13 @@ class Ui_mainWindow(object):
         self.quickAnalysisTab = QtWidgets.QWidget()
         self.quickAnalysisTab.setObjectName("quickAnalysisTab")
         self.quickPlotButton = QtWidgets.QPushButton(self.quickAnalysisTab)
-        self.quickPlotButton.setGeometry(QtCore.QRect(230, 20, 61, 51))
+        self.quickPlotButton.setGeometry(QtCore.QRect(230, 20, 61, 41))
         self.quickPlotButton.setObjectName("quickPlotButton")
         self.quickStatsButton = QtWidgets.QPushButton(self.quickAnalysisTab)
-        self.quickStatsButton.setGeometry(QtCore.QRect(300, 20, 61, 51))
+        self.quickStatsButton.setGeometry(QtCore.QRect(300, 20, 61, 41))
         self.quickStatsButton.setObjectName("quickStatsButton")
         self.formLayoutWidget = QtWidgets.QWidget(self.quickAnalysisTab)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(20, 20, 191, 55))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(20, 20, 191, 81))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -361,21 +361,34 @@ class Ui_mainWindow(object):
         self.formLayout.setWidget(
             0, QtWidgets.QFormLayout.LabelRole, self.quickPlotXToolButton
         )
-        self.quickPlotYToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
-        self.quickPlotYToolButton.setObjectName("quickPlotYToolButton")
-        self.formLayout.setWidget(
-            1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton
-        )
         self.quickPlotXLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotXLabel.setObjectName("quickPlotXLabel")
         self.formLayout.setWidget(
             0, QtWidgets.QFormLayout.FieldRole, self.quickPlotXLabel
+        )
+        self.quickPlotYToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
+        self.quickPlotYToolButton.setObjectName("quickPlotYToolButton")
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton
         )
         self.quickPlotYLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotYLabel.setObjectName("quickPlotYLabel")
         self.formLayout.setWidget(
             1, QtWidgets.QFormLayout.FieldRole, self.quickPlotYLabel
         )
+        self.quickPlotFitToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
+        self.quickPlotFitToolButton.setObjectName("quickPlotFitToolButton")
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.quickPlotFitToolButton
+        )
+        self.quickPlotFitLabel = QtWidgets.QLabel(self.formLayoutWidget)
+        self.quickPlotFitLabel.setObjectName("quickPlotFitLabel")
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.quickPlotFitLabel
+        )
+        self.quickPlotEnableFitBox = QtWidgets.QCheckBox(self.quickAnalysisTab)
+        self.quickPlotEnableFitBox.setGeometry(QtCore.QRect(230, 80, 111, 16))
+        self.quickPlotEnableFitBox.setObjectName("quickPlotEnableFitBox")
         self.dataAnalysisTabWidget.addTab(self.quickAnalysisTab, "")
         self.advancedAnalysisTab = QtWidgets.QWidget()
         self.advancedAnalysisTab.setObjectName("advancedAnalysisTab")
@@ -559,9 +572,12 @@ class Ui_mainWindow(object):
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))
         self.quickStatsButton.setText(_translate("mainWindow", "STATS"))
         self.quickPlotXToolButton.setText(_translate("mainWindow", "X"))
-        self.quickPlotYToolButton.setText(_translate("mainWindow", "Y"))
         self.quickPlotXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
+        self.quickPlotYToolButton.setText(_translate("mainWindow", "Y"))
         self.quickPlotYLabel.setText(_translate("mainWindow", "quickPlotYLabel"))
+        self.quickPlotFitToolButton.setText(_translate("mainWindow", "fit"))
+        self.quickPlotFitLabel.setText(_translate("mainWindow", "fit type"))
+        self.quickPlotEnableFitBox.setText(_translate("mainWindow", "fit data"))
         self.dataAnalysisTabWidget.setTabText(
             self.dataAnalysisTabWidget.indexOf(self.quickAnalysisTab),
             _translate("mainWindow", "Quick Analysis"),

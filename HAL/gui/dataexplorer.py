@@ -699,3 +699,51 @@ def refreshDataSetList(self):
                     self.setList.setCurrentItem(item)
 
     self.setList.blockSignals(False)
+
+
+# %% 1D FIT DISPLAY
+
+
+def display1DFitResults(self, fit_results={}):
+    """
+    loads related meta data and display it
+    """
+    if len(fit_results) == 0:
+        return
+
+    # -- display fit info
+    # init
+    fit = fit_results["__fit__"]
+    text = f" ▶▷▶ {fit.name.upper()} FIT ◀◁◀ \n"
+    help_str = wrap_text(fit.formula_help, 33)
+    text += help_str + "\n"
+    if fit.parameters_help:
+        text += f" {fit.parameters_help} \n"
+    text += "\n"
+    # -- display fit parameters
+    for name, value_list in fit_results.items():
+        # exclude hidden
+        if name.startswith("__"):
+            continue
+        # loop on parameters
+        n_value = len(value_list)
+        text += TITLE_STR % name
+        for i, val in enumerate(value_list):
+            # choose good prefix
+            if i == n_value - 1:
+                param_str = PREFIX_LAST
+            else:
+                param_str = PREFIX_CORE
+            # prepare param string
+            param_str += val["name"] + " : " + val["display"] % val["value"]
+            if "error" in val:
+                param_str += " ± " + val["display"] % val["error"]
+            if val["unit"]:
+                param_str += " %s" % val["unit"]
+            param_str += "\n"
+            # append
+            text += param_str
+
+        text += "\n"
+
+    self.metaDataText.setPlainText(text)

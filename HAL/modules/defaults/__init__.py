@@ -11,10 +11,14 @@ Comments : test
 from .metadata.fit import HALFitData
 from .metadata.file import FileData
 
-# -- fit
+# -- fit (2D)
 from .fit.gauss2D import Gauss2DFit
 from .fit.statsOnly2D import StatsOnly2D
 from .fit.thomasfermi2D import ThomasFermi2DFit
+
+# -- fit (1D)
+from .fit.gauss1D import Gauss1DFit
+from .fit.polynomial1D import polyfit_generator
 
 # -- data
 from .data.rawCamera import RawCamData
@@ -39,4 +43,11 @@ user_modules = [
     BasicImageDisplay,
     ImageOnlyDisplay,
     FocusOnFit2D,
+    # fits (1D)
+    Gauss1DFit,
 ]
+
+# - add poly fit
+n_max = 4
+for order in range(1, n_max + 1):
+    user_modules.append(polyfit_generator(order))
