@@ -714,11 +714,12 @@ def display1DFitResults(self, fit_results={}):
     # -- display fit info
     # init
     fit = fit_results["__fit__"]
-    text = f">>> {fit.name} fit <<<\n"
+    text = f" ▶▷▶ {fit.name.upper()} FIT ◀◁◀ \n"
     help_str = wrap_text(fit.formula_help, 33)
     text += help_str + "\n"
     if fit.parameters_help:
         text += f"  + params : {fit.formula_help} \n"
+    text += "\n"
     # -- display fit parameters
     for name, value_list in fit_results.items():
         # exclude hidden
