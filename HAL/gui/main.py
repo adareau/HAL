@@ -344,20 +344,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             self.fit_classes_dic[name] = fit_class
 
     def setupElements(self):
-        # -- File Browser
-        filebrowser.setupFileListBrowser(self)
-        # -- Data Visualization
-        display.setupDisplay(self)
-        # -- Meta data
-        dataexplorer.setupDataExplorer(self)
-        # -- Quick Plot
-        quickplot.setupQuickPlot(self)
-        # -- Advanced Plot
-        advancedplot.setupAdvancedPlot(self)
-        # -- Fitting
-        fitting.setupFitting(self)
-        # -- Menu Bar
-        menubar.setupMenubar(self)
+        submodule_list = [
+            filebrowser,
+            display,
+            dataexplorer,
+            quickplot,
+            advancedplot,
+            fitting,
+            menubar,
+        ]
+        for submodule in submodule_list:
+            submodule.setupUi(self)
 
     def connectActions(self):
         # automatic definition of callbacks

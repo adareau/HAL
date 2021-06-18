@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # %% SETUP FUNCTIONS
 
 
-def setupMenubar(self):
+def setupUi(self):
     # -- Get menubar
     menuBar = self.menubar
     # -- Preferences

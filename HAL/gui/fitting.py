@@ -42,7 +42,7 @@ def updateFit(self, *args, **kwargs):
 # %% SETUP FUNCTIONS
 
 
-def setupFitting(self):
+def setupUi(self):
     # -- setup fit selection combo box
     for fit_class in self.fit_classes:
         fit_name = fit_class().name

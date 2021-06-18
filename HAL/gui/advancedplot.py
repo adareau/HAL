@@ -127,7 +127,7 @@ def gimmeSymbol(i=0):
 # %% SETUP FUNCTIONS
 
 
-def setupAdvancedPlot(self):
+def setupUi(self):
     global NAME_REGEXP_FORMAT, VARIABLE_REGEXP_FORMAT, CONF_SAVE_SUFOLDER
 
     # -- Variable declaration table
