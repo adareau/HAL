@@ -126,6 +126,9 @@ class AbstractFit(object):
         return json_str
 
 
+# %% 2D ABSTRACT CLASSES
+
+
 class Abstract2DFit(AbstractFit):
     """Abstract 2D fit object"""
 
@@ -388,6 +391,50 @@ class Abstract2DBellShaped(Abstract2DFit):
             "cy": cy,
         }
         return res
+
+
+class Abstract1DFit(AbstractFit):
+    """Abstract 1D fit object"""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "Abstract1DFit"
+        self.x_unit = ""
+        self.z_unit = ""
+
+    def do_fit(self, **fit_options):
+        """fits the data. Any keyword option is passed to the fitting routine
+        (scipy.optimize.curve_fit)"""
+
+        # -- check that the data and coordinates were provided
+        if self.z == [] or self.x == []:
+            return
+
+        # -- prepare data
+        # get data
+        z = self.z
+        x = self.x  # this is a 2D fit !
+
+        # should be arrays
+        x = np.asarray(x)
+        z = np.asarray(z)
+
+        # -- fit
+        # guess
+        p0 = self.guess  # guess
+        if not p0:
+            p0 = None
+
+        # do the fit
+        popt, pcov = opt.curve_fit(self._fitfunc, x, z, p0=p0, **fit_options)
+
+        # estimate standard dev
+        perr = np.sqrt(np.diag(pcov))
+
+        # -- store
+        self.popt = popt
+        self.pcov = pcov
+        self.perr = perr
 
 
 # %% TESTS
