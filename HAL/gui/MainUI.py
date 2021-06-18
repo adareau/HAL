@@ -14,9 +14,7 @@ class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
         mainWindow.resize(1335, 823)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(mainWindow.sizePolicy().hasHeightForWidth())
@@ -32,29 +30,21 @@ class Ui_mainWindow(object):
         self.horizontalLayout_3.setSpacing(5)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.dayBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.dayBrowserBox.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.dayBrowserBox.sizePolicy().hasHeightForWidth())
         self.dayBrowserBox.setSizePolicy(sizePolicy)
         self.dayBrowserBox.setMaximumSize(QtCore.QSize(170, 500))
         self.dayBrowserBox.setObjectName("dayBrowserBox")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.dayBrowserBox)
         self.verticalLayout.setObjectName("verticalLayout")
         self.dayBrowserDateLayout = QtWidgets.QHBoxLayout()
-        self.dayBrowserDateLayout.setSizeConstraint(
-            QtWidgets.QLayout.SetDefaultConstraint
-        )
+        self.dayBrowserDateLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.dayBrowserDateLayout.setSpacing(1)
         self.dayBrowserDateLayout.setObjectName("dayBrowserDateLayout")
         self.dateEdit = QtWidgets.QDateEdit(self.dayBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dateEdit.sizePolicy().hasHeightForWidth())
@@ -63,9 +53,7 @@ class Ui_mainWindow(object):
         self.dateEdit.setObjectName("dateEdit")
         self.dayBrowserDateLayout.addWidget(self.dateEdit)
         self.todayButton = QtWidgets.QPushButton(self.dayBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.todayButton.sizePolicy().hasHeightForWidth())
@@ -78,9 +66,7 @@ class Ui_mainWindow(object):
         self.dayBrowserListLayout = QtWidgets.QHBoxLayout()
         self.dayBrowserListLayout.setObjectName("dayBrowserListLayout")
         self.yearList = QtWidgets.QListWidget(self.dayBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.yearList.sizePolicy().hasHeightForWidth())
@@ -90,9 +76,7 @@ class Ui_mainWindow(object):
         self.yearList.setObjectName("yearList")
         self.dayBrowserListLayout.addWidget(self.yearList)
         self.monthList = QtWidgets.QListWidget(self.dayBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.monthList.sizePolicy().hasHeightForWidth())
@@ -102,9 +86,7 @@ class Ui_mainWindow(object):
         self.monthList.setObjectName("monthList")
         self.dayBrowserListLayout.addWidget(self.monthList)
         self.dayList = QtWidgets.QListWidget(self.dayBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dayList.sizePolicy().hasHeightForWidth())
@@ -116,14 +98,10 @@ class Ui_mainWindow(object):
         self.verticalLayout.addLayout(self.dayBrowserListLayout)
         self.horizontalLayout_3.addWidget(self.dayBrowserBox)
         self.settingsTabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.settingsTabWidget.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.settingsTabWidget.sizePolicy().hasHeightForWidth())
         self.settingsTabWidget.setSizePolicy(sizePolicy)
         self.settingsTabWidget.setMaximumSize(QtCore.QSize(285, 16777215))
         self.settingsTabWidget.setObjectName("settingsTabWidget")
@@ -193,14 +171,10 @@ class Ui_mainWindow(object):
         self.horizontalLayout_3.addWidget(self.settingsTabWidget)
         self.browserColumn.addLayout(self.horizontalLayout_3)
         self.runBrowserBox = QtWidgets.QGroupBox(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.runBrowserBox.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.runBrowserBox.sizePolicy().hasHeightForWidth())
         self.runBrowserBox.setSizePolicy(sizePolicy)
         self.runBrowserBox.setMaximumSize(QtCore.QSize(460, 16777215))
         self.runBrowserBox.setObjectName("runBrowserBox")
@@ -208,30 +182,24 @@ class Ui_mainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.runList = QtWidgets.QListWidget(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.runList.sizePolicy().hasHeightForWidth())
-        self.runList.setSizePolicy(sizePolicy)
-        self.runList.setObjectName("runList")
-        self.gridLayout.addWidget(self.runList, 1, 0, 1, 1)
         self.seqList = QtWidgets.QListWidget(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.seqList.sizePolicy().hasHeightForWidth())
         self.seqList.setSizePolicy(sizePolicy)
         self.seqList.setObjectName("seqList")
-        self.gridLayout.addWidget(self.seqList, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.seqList, 1, 0, 1, 1)
+        self.runList = QtWidgets.QListWidget(self.runBrowserBox)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.runList.sizePolicy().hasHeightForWidth())
+        self.runList.setSizePolicy(sizePolicy)
+        self.runList.setObjectName("runList")
+        self.gridLayout.addWidget(self.runList, 1, 1, 1, 1)
         self.label_5 = QtWidgets.QLabel(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
@@ -239,9 +207,7 @@ class Ui_mainWindow(object):
         self.label_5.setObjectName("label_5")
         self.gridLayout.addWidget(self.label_5, 0, 1, 1, 1)
         self.label_6 = QtWidgets.QLabel(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
@@ -249,9 +215,7 @@ class Ui_mainWindow(object):
         self.label_6.setObjectName("label_6")
         self.gridLayout.addWidget(self.label_6, 0, 2, 1, 1)
         self.label_4 = QtWidgets.QLabel(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
@@ -259,9 +223,7 @@ class Ui_mainWindow(object):
         self.label_4.setObjectName("label_4")
         self.gridLayout.addWidget(self.label_4, 0, 0, 1, 1)
         self.setList = QtWidgets.QListWidget(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.setList.sizePolicy().hasHeightForWidth())
@@ -273,14 +235,10 @@ class Ui_mainWindow(object):
         self.gridLayout.addLayout(self.horizontalLayout_9, 2, 1, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
         self.refreshRunListButton = QtWidgets.QPushButton(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.refreshRunListButton.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.refreshRunListButton.sizePolicy().hasHeightForWidth())
         self.refreshRunListButton.setSizePolicy(sizePolicy)
         self.refreshRunListButton.setObjectName("refreshRunListButton")
         self.verticalLayout_2.addWidget(self.refreshRunListButton)
@@ -289,14 +247,10 @@ class Ui_mainWindow(object):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.fitBrowserButton = QtWidgets.QPushButton(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.fitBrowserButton.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.fitBrowserButton.sizePolicy().hasHeightForWidth())
         self.fitBrowserButton.setSizePolicy(sizePolicy)
         self.fitBrowserButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.fitBrowserButton.setObjectName("fitBrowserButton")
@@ -306,9 +260,7 @@ class Ui_mainWindow(object):
         self.deleteFitButton.setObjectName("deleteFitButton")
         self.horizontalLayout_5.addWidget(self.deleteFitButton)
         self.browserButtonsLayout.addLayout(self.horizontalLayout_5)
-        spacerItem = QtWidgets.QSpacerItem(
-            40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
-        )
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         self.browserButtonsLayout.addItem(spacerItem)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -318,9 +270,7 @@ class Ui_mainWindow(object):
         self.browserButtonsLayout.addLayout(self.horizontalLayout_4)
         self.verticalLayout_2.addLayout(self.browserButtonsLayout)
         self.progressBar = QtWidgets.QProgressBar(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.progressBar.sizePolicy().hasHeightForWidth())
@@ -358,24 +308,16 @@ class Ui_mainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.quickPlotXToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
         self.quickPlotXToolButton.setObjectName("quickPlotXToolButton")
-        self.formLayout.setWidget(
-            0, QtWidgets.QFormLayout.LabelRole, self.quickPlotXToolButton
-        )
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.quickPlotXToolButton)
         self.quickPlotYToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
         self.quickPlotYToolButton.setObjectName("quickPlotYToolButton")
-        self.formLayout.setWidget(
-            1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton
-        )
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton)
         self.quickPlotXLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotXLabel.setObjectName("quickPlotXLabel")
-        self.formLayout.setWidget(
-            0, QtWidgets.QFormLayout.FieldRole, self.quickPlotXLabel
-        )
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.quickPlotXLabel)
         self.quickPlotYLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotYLabel.setObjectName("quickPlotYLabel")
-        self.formLayout.setWidget(
-            1, QtWidgets.QFormLayout.FieldRole, self.quickPlotYLabel
-        )
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.quickPlotYLabel)
         self.dataAnalysisTabWidget.addTab(self.quickAnalysisTab, "")
         self.advancedAnalysisTab = QtWidgets.QWidget()
         self.advancedAnalysisTab.setObjectName("advancedAnalysisTab")
@@ -407,15 +349,11 @@ class Ui_mainWindow(object):
         self.advancedPlotSaveButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.advancedPlotSaveButton.setObjectName("advancedPlotSaveButton")
         self.horizontalLayout_2.addWidget(self.advancedPlotSaveButton)
-        self.advancedPlotSaveAsButton = QtWidgets.QPushButton(
-            self.horizontalLayoutWidget
-        )
+        self.advancedPlotSaveAsButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         self.advancedPlotSaveAsButton.setMaximumSize(QtCore.QSize(70, 16777215))
         self.advancedPlotSaveAsButton.setObjectName("advancedPlotSaveAsButton")
         self.horizontalLayout_2.addWidget(self.advancedPlotSaveAsButton)
-        self.advancedPlotDeleteButton = QtWidgets.QPushButton(
-            self.horizontalLayoutWidget
-        )
+        self.advancedPlotDeleteButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         self.advancedPlotDeleteButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.advancedPlotDeleteButton.setObjectName("advancedPlotDeleteButton")
         self.horizontalLayout_2.addWidget(self.advancedPlotDeleteButton)
@@ -431,9 +369,7 @@ class Ui_mainWindow(object):
         self.exportDataButton = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.exportDataButton.setObjectName("exportDataButton")
         self.horizontalLayout_7.addWidget(self.exportDataButton)
-        self.exportToMatplotlibButton = QtWidgets.QPushButton(
-            self.horizontalLayoutWidget_2
-        )
+        self.exportToMatplotlibButton = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.exportToMatplotlibButton.setObjectName("exportToMatplotlibButton")
         self.horizontalLayout_7.addWidget(self.exportToMatplotlibButton)
         self.verticalLayoutWidget = QtWidgets.QWidget(self.advancedAnalysisTab)
@@ -449,9 +385,7 @@ class Ui_mainWindow(object):
         self.label_8.setMaximumSize(QtCore.QSize(40, 16777215))
         self.label_8.setObjectName("label_8")
         self.horizontalLayout_8.addWidget(self.label_8)
-        self.updateSubplotLayoutButton = QtWidgets.QPushButton(
-            self.verticalLayoutWidget
-        )
+        self.updateSubplotLayoutButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.updateSubplotLayoutButton.setMaximumSize(QtCore.QSize(60, 16777215))
         self.updateSubplotLayoutButton.setObjectName("updateSubplotLayoutButton")
         self.horizontalLayout_8.addWidget(self.updateSubplotLayoutButton)
@@ -472,9 +406,7 @@ class Ui_mainWindow(object):
         self.metaColumn = QtWidgets.QVBoxLayout()
         self.metaColumn.setObjectName("metaColumn")
         self.metaDataText = QtWidgets.QPlainTextEdit(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.metaDataText.sizePolicy().hasHeightForWidth())
@@ -485,9 +417,7 @@ class Ui_mainWindow(object):
         self.label_7.setObjectName("label_7")
         self.metaColumn.addWidget(self.label_7)
         self.metaDataList = QtWidgets.QListWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.metaDataList.sizePolicy().hasHeightForWidth())
@@ -520,7 +450,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(1)
+        self.dataAnalysisTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -532,10 +462,7 @@ class Ui_mainWindow(object):
         self.label_3.setText(_translate("mainWindow", "Scale"))
         self.autoScaleCheckBox.setText(_translate("mainWindow", "auto"))
         self.label_2.setText(_translate("mainWindow", "Colormap"))
-        self.settingsTabWidget.setTabText(
-            self.settingsTabWidget.indexOf(self.settingsDataTab),
-            _translate("mainWindow", "Data"),
-        )
+        self.settingsTabWidget.setTabText(self.settingsTabWidget.indexOf(self.settingsDataTab), _translate("mainWindow", "Data"))
         self.fitButton.setText(_translate("mainWindow", "FIT"))
         self.label_10.setText(_translate("mainWindow", "fit type:"))
         self.addRoiButton.setText(_translate("mainWindow", "add ROI"))
@@ -544,14 +471,11 @@ class Ui_mainWindow(object):
         self.resetRoiButton.setText(_translate("mainWindow", "Reset ROIs"))
         self.renameRoiButton.setText(_translate("mainWindow", "Rename ROI"))
         self.label_11.setText(_translate("mainWindow", "select ROI:"))
-        self.settingsTabWidget.setTabText(
-            self.settingsTabWidget.indexOf(self.settingsFitTab),
-            _translate("mainWindow", "FIT"),
-        )
+        self.settingsTabWidget.setTabText(self.settingsTabWidget.indexOf(self.settingsFitTab), _translate("mainWindow", "FIT"))
         self.runBrowserBox.setTitle(_translate("mainWindow", "Run Browser"))
-        self.label_5.setText(_translate("mainWindow", "sequences"))
+        self.label_5.setText(_translate("mainWindow", "runs"))
         self.label_6.setText(_translate("mainWindow", "sets"))
-        self.label_4.setText(_translate("mainWindow", "runs"))
+        self.label_4.setText(_translate("mainWindow", "sequences"))
         self.refreshRunListButton.setText(_translate("mainWindow", "Refresh"))
         self.fitBrowserButton.setText(_translate("mainWindow", "FIT"))
         self.deleteFitButton.setText(_translate("mainWindow", "Del. Fit"))
@@ -562,10 +486,7 @@ class Ui_mainWindow(object):
         self.quickPlotYToolButton.setText(_translate("mainWindow", "Y"))
         self.quickPlotXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
         self.quickPlotYLabel.setText(_translate("mainWindow", "quickPlotYLabel"))
-        self.dataAnalysisTabWidget.setTabText(
-            self.dataAnalysisTabWidget.indexOf(self.quickAnalysisTab),
-            _translate("mainWindow", "Quick Analysis"),
-        )
+        self.dataAnalysisTabWidget.setTabText(self.dataAnalysisTabWidget.indexOf(self.quickAnalysisTab), _translate("mainWindow", "Quick Analysis"))
         self.advancedPlotSaveButton.setText(_translate("mainWindow", "save"))
         self.advancedPlotSaveAsButton.setText(_translate("mainWindow", "save as..."))
         self.advancedPlotDeleteButton.setText(_translate("mainWindow", "delete"))
@@ -576,18 +497,11 @@ class Ui_mainWindow(object):
         self.updateSubplotLayoutButton.setText(_translate("mainWindow", "update"))
         self.resetSubplotLayoutButton.setText(_translate("mainWindow", "reset"))
         self.advancedPlotResetButton.setText(_translate("mainWindow", "reset all"))
-        self.dataAnalysisTabWidget.setTabText(
-            self.dataAnalysisTabWidget.indexOf(self.advancedAnalysisTab),
-            _translate("mainWindow", "Advanced Analysis"),
-        )
+        self.dataAnalysisTabWidget.setTabText(self.dataAnalysisTabWidget.indexOf(self.advancedAnalysisTab), _translate("mainWindow", "Advanced Analysis"))
         self.label_7.setText(_translate("mainWindow", "Metadata sources:"))
-        self.refreshMetadataCachebutton.setText(
-            _translate("mainWindow", "refresh metadata cache")
-        )
+        self.refreshMetadataCachebutton.setText(_translate("mainWindow", "refresh metadata cache"))
         self.menuDataDisplay.setTitle(_translate("mainWindow", "Data Display"))
         self.actionv1s.setText(_translate("mainWindow", "v1s"))
         self.actionl.setText(_translate("mainWindow", "l"))
         self.actionlol.setText(_translate("mainWindow", "lol"))
-
-
 from pyqtgraph import GraphicsLayoutWidget
