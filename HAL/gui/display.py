@@ -38,12 +38,14 @@ def setupDisplay(self):
     for data_class in self.data_classes:
         name = data_class().name
         self.dataTypeComboBox.addItem(name, data_class)
+
     # -- setup min / max scale
-    self.scaleMinEdit.setText("0")
-    self.scaleMaxEdit.setText("65535")
+    data_class = self.dataTypeComboBox.currentData()
+    sc_min, sc_max = data_class().default_display_scale
+    self.scaleMinEdit.setText(str(sc_min))
+    self.scaleMaxEdit.setText(str(sc_max))
 
     # -- initialize display
-
     # - display mode list
     # get list of implemented display types
     # we use a set {...} in order to get the values once
@@ -210,17 +212,18 @@ def plotSelectedData(self, update_fit=True):
         scale_max = float(self.scaleMaxEdit.text())
 
     # plot
-    self.display.updatePlot(
-        image=data.data,
-        levels=(scale_min, scale_max),
-        colormap=colormap_name,
-        dataobject=data,
-        selected_ROI=selected_roi,
-    )
+    if len(data.data) > 0:
+        self.display.updatePlot(
+            image=data.data,
+            levels=(scale_min, scale_max),
+            colormap=colormap_name,
+            dataobject=data,
+            selected_ROI=selected_roi,
+        )
 
-    # update fit
-    if update_fit:
-        updateFitForSelectedData(self)
+        # update fit
+        if update_fit:
+            updateFitForSelectedData(self)
 
 
 def updateFitForSelectedData(self):
