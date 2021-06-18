@@ -49,5 +49,5 @@ user_modules = [
 
 # - add poly fit
 n_max = 4
-for order in range(2, n_max + 1):
+for order in range(1, n_max + 1):
     user_modules.append(polyfit_generator(order))

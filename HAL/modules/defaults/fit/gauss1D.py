@@ -30,6 +30,7 @@ class Gauss1DFit(Abstract1DFit):
 
         # -- attributes specific to 2D Gauss fit
         self.name = "gaussian"
+        self.short_name = self.name
         self.category = "math"
         self.formula_help = "f(x) = p[0] "
         self.formula_help += "+ p[1] * exp(-(x - p[3]) ** 2 / (2 * p[2]**2))"
@@ -68,14 +69,16 @@ class Gauss1DFit(Abstract1DFit):
 
         # filter to remove noise
         i_filter = (z - offset_guess) > threshold * amp_guess
-        weights = z[i_filter] - offset_guess
-        xf = x[i_filter]
-
-        # center = center of mass
-        c_guess = np.average(xf, weights=weights)
-
-        # size = standard deviation
-        s_guess = np.sqrt(np.average((xf - c_guess) ** 2, weights=weights))
+        if len(i_filter) > 0:
+            weights = z[i_filter] - offset_guess
+            xf = x[i_filter]
+            # center = center of mass
+            c_guess = np.average(xf, weights=weights)
+            # size = standard deviation
+            s_guess = np.sqrt(np.average((xf - c_guess) ** 2, weights=weights))
+        else:
+            c_guess = np.mean(x)
+            s_guess = 0.5 * (x.max() - x.min())
 
         # -- adapt to the current fit function
         p0 = [offset_guess, amp_guess, s_guess, c_guess]

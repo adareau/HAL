@@ -34,7 +34,8 @@ class Polynomial1D(Abstract1DFit):
 
         # -- attributes specific to 2D Gauss fit
         self.order = order
-        self.name = f"poly deg. {order}"
+        self.name = f"polynomial deg. {order}"
+        self.short_name = f"deg. {order}"
         self.category = "polynomial"
         self.formula_help = "f(x) = p[0]"
         for n in np.arange(1, order + 1):

@@ -603,7 +603,7 @@
             <x>230</x>
             <y>20</y>
             <width>61</width>
-            <height>51</height>
+            <height>41</height>
            </rect>
           </property>
           <property name="text">
@@ -616,7 +616,7 @@
             <x>300</x>
             <y>20</y>
             <width>61</width>
-            <height>51</height>
+            <height>41</height>
            </rect>
           </property>
           <property name="text">
@@ -629,7 +629,7 @@
             <x>20</x>
             <y>20</y>
             <width>191</width>
-            <height>55</height>
+            <height>81</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout">
@@ -643,17 +643,17 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QToolButton" name="quickPlotYToolButton">
-             <property name="text">
-              <string>Y</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QLabel" name="quickPlotXLabel">
              <property name="text">
               <string>quickPlotXLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="quickPlotYToolButton">
+             <property name="text">
+              <string>Y</string>
              </property>
             </widget>
            </item>
@@ -664,7 +664,34 @@
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QToolButton" name="quickPlotFitToolButton">
+             <property name="text">
+              <string>fit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="quickPlotFitLabel">
+             <property name="text">
+              <string>fit type</string>
+             </property>
+            </widget>
+           </item>
           </layout>
+         </widget>
+         <widget class="QCheckBox" name="quickPlotEnableFitBox">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>80</y>
+            <width>111</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>fit data</string>
+          </property>
          </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">

@@ -399,6 +399,7 @@ class Abstract1DFit(AbstractFit):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.name = "Abstract1DFit"
+        self.short_name = "AbsFit"
         self.category = None
         self.x_unit = ""
         self.z_unit = ""
