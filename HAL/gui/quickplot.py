@@ -48,7 +48,7 @@ def _isnumber(x):
 # %% SETUP FUNCTIONS
 
 
-def setupQuickPlot(self):
+def setupUi(self):
     # -- data selection in quickplot
     # - X
     # define menu and selection group

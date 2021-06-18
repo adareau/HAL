@@ -31,7 +31,7 @@ SWITCH_DISPLAY_SHORTCUT = "ALT+SHIFT"
 # %% SETUP FUNCTIONS
 
 
-def setupDisplay(self):
+def setupUi(self):
     global SWITCH_DISPLAY_SHORTCUT
 
     # -- setup data classes list selector

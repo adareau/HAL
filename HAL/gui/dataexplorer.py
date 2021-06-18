@@ -46,7 +46,7 @@ PREFIX_LAST = "└─ "
 # %% SETUP FUNCTIONS
 
 
-def setupDataExplorer(self):
+def setupUi(self):
     # -- dataset managements
     menu = QMenu()
     self.dataSetCreateAction = QAction("create new set", self.dataSetToolButton)
