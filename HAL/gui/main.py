@@ -216,6 +216,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
         self._user_modules_folder = self._settings_folder / "user_modules"
+        self._user_scripts_folder = self._settings_folder / "user_scripts"
         self._kl = []
         self._t0 = 0
 
@@ -223,6 +224,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # create HAL settings folder
         self._settings_folder.mkdir(exist_ok=True)
         self._user_modules_folder.mkdir(exist_ok=True)
+        self._user_scripts_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
@@ -237,8 +239,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         else:
             self.logger.warning(f"icon file '{icon_file}' not found")
 
-        # -- USER MODULES
+        # -- USER MODULES AND SCRIPTS
         self.loadUserModules()
+        self.user_scripts = loader.scripts.load(self)
 
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
@@ -663,10 +666,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
         # testing.open_image_and_fit(self)
-        testing.open_image(self)
+        # testing.open_image(self)
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
+        script = self.user_scripts[0]
+        self.logger.debug(f"Running {script.NAME}")
+        script.main(self)
 
     def _tic(self, msg=None, name=""):
         if msg is not None:

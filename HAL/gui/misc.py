@@ -51,7 +51,7 @@ def dialog(self, title="error detected"):
     ]
 
     for h, d in zip(HAL_lines, Dave_lines):
-        box = QMessageBox()
+        box = QMessageBox(self)
         box.setIcon(QMessageBox.Question)
         box.setWindowTitle(title)
         box.setText(h)
