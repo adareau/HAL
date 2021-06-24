@@ -215,12 +215,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._name = "HAL"
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
+        self._user_modules_folder = self._settings_folder / "user_modules"
         self._kl = []
         self._t0 = 0
 
         # -- FIRST
         # create HAL settings folder
         self._settings_folder.mkdir(exist_ok=True)
+        self._user_modules_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
