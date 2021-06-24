@@ -7,9 +7,3 @@ tests/
 
 # sublime tex files
 *.sublime-*
-
-# modules folder
-# ignore all by default
-HAL/modules/LCF*
-HAL/modules/.*
-HAL/modules/README.md

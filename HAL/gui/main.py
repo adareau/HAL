@@ -47,7 +47,7 @@ from ..classes.data.abstract import AbstractData
 from ..classes.display.abstract import AbstractDisplay
 
 # - user-defined modules
-from .. import modules
+from .. import loader
 
 
 # %% DECORATOR FOR DEBUGGING
@@ -215,12 +215,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._name = "HAL"
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
+        self._user_modules_folder = self._settings_folder / "user_modules"
         self._kl = []
         self._t0 = 0
 
         # -- FIRST
         # create HAL settings folder
         self._settings_folder.mkdir(exist_ok=True)
+        self._user_modules_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
@@ -286,6 +288,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def loadUserModules(self):
 
+        # -- load modules
+        loaded_modules, loaded_modules_names = loader.modules.load(self)
         # -- init lists / dict
         # implemented data classes
         self.data_classes = []
@@ -304,7 +308,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         ignored = [name.replace(" ", "") for name in ignored]
         self.logger.debug(f"ignored packages : {', '.join(ignored)}")
         # -- parse the content of ..module and append to lists
-        for module, name in zip(modules.loaded_modules, modules.loaded_modules_names):
+        for module, name in zip(loaded_modules, loaded_modules_names):
             self.logger.debug(f"parsing user module {name}")
             # check that the module has a 'user_module' list implemented
             # this should be already checked in the __init__.py of ..modules
