@@ -2,6 +2,10 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+## 🚨🚨🚨 DISCLAIMER 🚨🚨🚨
+
+**2021-06-24 : The user-module structure was modified. User scripts, that used to be located in `HAL.modules` should now be put in the user configuration folder, i.e. in `~/.HAL/user_modules`. Refer to the section 3 of this README file "Install user modules"**
+
 
 ## 👍 Start with HAL without problems
 
@@ -97,25 +101,27 @@ HAL is based on user modules. Those modules are in fact python classes, that sho
 + fit the data with the `fit` classes
 + organize the main display with the `display` classes
 
-The modules are located in `HAL/modules`, with the following structure
+Some default modules are shipped with HAL. They are located in `HAL/default_modules`, with the following structure
 
 ```
 └── HAL
-    ├── classes
+    ├── default_modules
     │   ├── data
     │   ├── display
     │   ├── fit
     │   └── metadata
     │
-    └── modules
-        ├── defaults
-        ├── LCF_He1
-        ├── LCF_He2
+    ...
 ```
 
-The `defaults` directory is included in HAL git repository, and contains some generic models for fits, metadata, displays and data. Users can provide their own modules by adding subfolders in `modules` (in the above example, `modules/LCF_He1` and `modules/LCF_He2` contain modules used by two different experiments at LCF). The `.gitignore` file of this repository is configured such that those extra folders are ignored by git, allowing you to add your modules while keeping your repository synchronize with the main one.
+User-defined modules should be located in `~/.HAL/user_modules`. Some examples of user-defined modules can be found in a dedicated github respository: https://github.com/adareau/HAL-modules. The content of is repository is meant to be cloned / copied directly in the `~/.HAL/user_modules` folder. If you would like to contribute your modules to this repository, just make a pull request (making sure that your modules are in a folder whose name is not alreay used).
 
-Third party modules can be found in a dedicated github respository: https://github.com/adareau/HAL-modules. This repository is meant to be cloned / copied directly in the `HAL/modules` folder. It is configured to ignore the `defaults` folder (maintained by the main HAL repository). If you would like to contribute your modules to this repository, just make a pull request (making sure that your modules are in a folder whose name is not alreay used).
+In order to prevent some modules to be loaded (for instance, the `RawCamData` data example that is provided in the default_modules), just add this line to the config file:
+
+```
+[global]
+ignored modules list = RawCamData,
+```
 
 
 **TODO** some documentation on how to write modules ?
