@@ -37,8 +37,7 @@ def load(self):
             logger.debug(f"found user script '{content.name}'")
             try:
                 script = importlib.import_module(f"user_scripts.{content.stem}")
-                keys = script.__dict__.keys()
-                if "NAME" in keys and "main" in keys:
+                if {"CATEGORY", "NAME", "main"} <= script.__dict__.keys():
                     logger.debug(f">> user script '{content.name}' loaded !")
                     loaded_scripts.append(script)
                 else:
@@ -49,4 +48,5 @@ def load(self):
                 logger.warning(e)
                 raise (e)
 
-    return loaded_scripts
+    # store
+    self.user_scripts = loaded_scripts
