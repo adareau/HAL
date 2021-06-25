@@ -12,7 +12,6 @@ Comments :
 # -- global
 import logging
 import time
-import inspect
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QKeySequence, QFont, QIcon
@@ -22,6 +21,7 @@ from collections import OrderedDict
 from functools import wraps
 
 # -- local
+from .. import loader
 from . import (
     filebrowser,
     display,
@@ -32,22 +32,13 @@ from . import (
     misc,
     menubar,
     advancedplot,
+    commandpalette,
 )
 
 from .MainUI import Ui_mainWindow
 from ..classes.dummy import Dummy
 from ..classes.settings import Settings
 from ..gui import local_folder
-
-# -- user modules
-# - abstract classes
-from ..classes.metadata.abstract import AbstractMetaData
-from ..classes.fit.abstract import Abstract2DFit, Abstract1DFit
-from ..classes.data.abstract import AbstractData
-from ..classes.display.abstract import AbstractDisplay
-
-# - user-defined modules
-from .. import loader
 
 
 # %% TOOLS
@@ -196,6 +187,10 @@ CALLBACK_LIST = [
     ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
     ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
     ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
+    ("menuScriptsActionGroup", "triggered", "_playScript"),
+    ("openScriptFolderMenuAction", "triggered", "_openUserScriptFolder"),
+    ("openModuleFolderAction", "triggered", "_openUserModuleFolder"),
+    ("menuDataOpenDataFolderAction", "triggered", "_openDataFolder"),
 
 ]
 # fmt: on
@@ -225,6 +220,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
         self._user_modules_folder = self._settings_folder / "user_modules"
+        self._user_scripts_folder = self._settings_folder / "user_scripts"
         self._kl = []
         self._t0 = 0
 
@@ -232,13 +228,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # create HAL settings folder
         self._settings_folder.mkdir(exist_ok=True)
         self._user_modules_folder.mkdir(exist_ok=True)
+        self._user_scripts_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
 
         # -- configure window
         # icon
-
         icon_file = Path(local_folder) / "icon.png"
         if icon_file.is_file():
             icon = QIcon(str(icon_file))
@@ -246,8 +242,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         else:
             self.logger.warning(f"icon file '{icon_file}' not found")
 
-        # -- USER MODULES
-        self.loadUserModules()
+        # -- USER MODULES AND SCRIPTS
+        loader.modules.load(self)
+        loader.scripts.load(self)
 
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
@@ -264,6 +261,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.setupElements()
         # connect callbacks
         self.connectActions()
+        # setup palette
+        commandpalette.setupPaletteList(self)
 
         # -- Metadata cache
         # cache
@@ -294,85 +293,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
         self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
         self.ctrlMinus.activated.connect(self._ctrlMinus)
-
-    def loadUserModules(self):
-
-        # -- load modules
-        loaded_modules, loaded_modules_names = loader.modules.load(self)
-        # -- init lists / dict
-        # implemented data classes
-        self.data_classes = []
-        # implemented metadata classes
-        self.metadata_classes = []
-        # implemented 2D fit classes
-        self.fit_classes = []
-        # implemented display classes
-        self.display_classes = []
-        # implemented 1D fit classes
-        self.fit_classes_1D = []
-
-        # -- generate list of ignored packages
-        ignored = self.settings.config["global"]["ignored modules list"]
-        ignored = ignored.split(",")
-        ignored = [name.replace(" ", "") for name in ignored]
-        self.logger.debug(f"ignored packages : {', '.join(ignored)}")
-        # -- parse the content of ..module and append to lists
-        for module, name in zip(loaded_modules, loaded_modules_names):
-            self.logger.debug(f"parsing user module {name}")
-            # check that the module has a 'user_module' list implemented
-            # this should be already checked in the __init__.py of ..modules
-            # but ¯\_(ツ)_/¯ why not check again ?
-            if "user_modules" not in module.__dict__.keys():
-                msg = f"user module '{name}' has no 'user_module' list defined"
-                self.logger.warning(msg)
-                continue
-            # parse the user modules
-            for usermod in module.user_modules:
-                # if it is not a class: we do not want it
-                if not inspect.isclass(usermod):
-                    self.logger.debug("skipped one 'non-class' object.. strange..")
-                    continue
-                # is it ignored ?
-                if usermod.__name__ in ignored:
-                    self.logger.debug(f"ignored package '{usermod.__name__}'")
-                    continue
-                # if it is a child of AbstractMetaData >> to self.metadata_classes !
-                if issubclass(usermod, AbstractMetaData):
-                    self.logger.debug(f"found one metadata class '{usermod.__name__}'")
-                    self.metadata_classes.append(usermod)
-                # if it is a child of Abstract2DFit >> to self.fit_classes !
-                elif issubclass(usermod, Abstract2DFit):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.fit_classes.append(usermod)
-                # if it is a child of AbstractData >> to self.data_classes !
-                elif issubclass(usermod, AbstractData):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.data_classes.append(usermod)
-                # if it is a child of AbstractDisplay >> to self.display_classes !
-                elif issubclass(usermod, AbstractDisplay):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.display_classes.append(usermod)
-                # if it is a child of Abstract1DFit >> to self.fit_classes_1D !
-                elif issubclass(usermod, Abstract1DFit):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.fit_classes_1D.append(usermod)
-                # otherwise raise warning
-                else:
-                    msg = f"Unknown class type for user module '{usermod.__name__}'"
-                    self.logger.warning(msg)
-
-        # -- generate a list of implemented fit names
-        # this will be useful for loading fit
-        self.fit_classes_dic = {}
-        for fit_class in self.fit_classes:
-            name = fit_class().name
-            if name in self.fit_classes_dic:
-                msg = f"fit name '{name}' was already taken... it will be overriden "
-                msg += "in the fit dictionnary. This might cause bugs when loading "
-                msg += "saved fit. You should rename your fits so that they have "
-                msg += "unique names !"
-                self.logger.warning(msg)
-            self.fit_classes_dic[name] = fit_class
+        self.ctrlP = QShortcut(QKeySequence("Ctrl+P"), self)
+        self.ctrlP.activated.connect(self._ctrlP)
 
     def setupElements(self):
         submodule_list = [
@@ -397,7 +319,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             signal = getattr(widget, signal_name)
             callback = getattr(self, callback_name)
             signal.connect(callback)
-
         return
 
     # == CALLBACKS
@@ -496,7 +417,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _todayButtonClicked(self, checked):
+    def _todayButtonClicked(self, checked=False):
         filebrowser.todayButtonClicked(self)
         dataexplorer.refreshDataSetList(self)
 
@@ -671,12 +592,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
 
+    def _playScript(self, action, *args, **kwargs):
+        """runs the selected script"""
+        # get script info from action data
+        cat, name, func = action.data()
+        # play
+        sname = cat + ":" + name if cat else name
+        self.logger.debug(f"running script {sname}")
+        func(self)
+
+    def _openUserScriptFolder(self, *args, **kwargs):
+        menubar.openUserScriptFolder(self)
+
+    def _openUserModuleFolder(self, *args, **kwargs):
+        menubar.openUserModuleFolder(self)
+
+    def _openDataFolder(self, *args, **kwargs):
+        menubar.openDataFolder(self)
+
     # -- DEBUG
 
     def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
-        # testing.open_image_and_fit(self)
-        testing.open_image(self)
+        testing.open_image_and_fit(self)
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
@@ -705,6 +643,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _ctrlR(self, *args, **kwargs):
         """called when 'Ctrl+R' is pressed"""
         self._refreshRunListButtonClicked()
+
+    def _ctrlP(self, *args, **kwargs):
+        """called when 'Ctrl+P' is pressed"""
+        commandpalette.showPalette(self)
 
     def _ctrlMinus(self, *args, **kwargs):
         """called when 'Ctrl+-' is pressed"""
