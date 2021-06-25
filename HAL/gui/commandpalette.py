@@ -86,7 +86,10 @@ def setupPaletteList(self):
 
     # - add user scripts
     for script in self.user_scripts:
-        cmd = "scripts" + SEP + script.NAME
+        cmd = "scripts"
+        if script.CATEGORY:
+            cmd += SEP + script.CATEGORY
+        cmd += SEP + script.NAME
         palette_commands[cmd] = script.main
     self.palette_commands = palette_commands
 
