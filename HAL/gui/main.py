@@ -407,7 +407,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _todayButtonClicked(self, checked):
+    def _todayButtonClicked(self, checked=False):
         filebrowser.todayButtonClicked(self)
         dataexplorer.refreshDataSetList(self)
 

@@ -243,7 +243,7 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
     """
     # -- update cache if requested
     if update_cache:
-        self.updateMetadataCache()
+        updateMetadataCache(self)
 
     # -- get run selections
     # get selected datasets
