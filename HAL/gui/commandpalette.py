@@ -44,7 +44,7 @@ class CommandPalette(QDialog):
         layout.addWidget(cmdline)
         self.cmdline = cmdline
         # connect callback
-        cmdline.returnPressed.connect(self.runCommand)
+        cmdline.returnPressed.connect(self.accept)
         # setup completer
         command_list = sorted(parent.palette_commands.keys())
         autoCompleter = QCompleter(command_list, self)
@@ -52,16 +52,6 @@ class CommandPalette(QDialog):
         autoCompleter.setCompletionMode(QCompleter.UnfilteredPopupCompletion)
         autoCompleter.setFilterMode(Qt.MatchContains)
         cmdline.setCompleter(autoCompleter)
-
-    def runCommand(self):
-        command = self.cmdline.text()
-        logger.debug(f"running command '{command}'")
-        if command in self.hal.palette_commands:
-            cmd = self.hal.palette_commands[command]
-            cmd(self.hal)
-        else:
-            logger.debug("command not found...")
-        self.accept()
 
 
 # %% BUILTIN COMMAND LIST
@@ -80,7 +70,9 @@ def setupPaletteList(self):
     Builds a dictionnary containing command names and functions to call
     """
     global BUILTIN_COMMAND_LIST
+    # - initialize the dictionnary
     palette_commands = {}
+    # - include builtin commands
     for command in BUILTIN_COMMAND_LIST:
         cat, name, method = command
         if hasattr(self, method):
@@ -91,6 +83,11 @@ def setupPaletteList(self):
             palette_commands[cmd] = getattr(self, method)
         else:
             logger.debug(f"method '{method}' not found")
+
+    # - add user scripts
+    for script in self.user_scripts:
+        cmd = "scripts" + SEP + script.NAME
+        palette_commands[cmd] = script.main
     self.palette_commands = palette_commands
 
 
@@ -99,4 +96,11 @@ def showPalette(self):
     shows the command palette
     """
     palette = CommandPalette(self)
-    palette.exec_()
+    if palette.exec():
+        command = palette.cmdline.text()
+        logger.debug(f"running command '{command}'")
+        if command in self.palette_commands:
+            cmd = self.palette_commands[command]
+            cmd(self)
+        else:
+            logger.debug("command not found...")
