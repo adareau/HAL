@@ -101,7 +101,7 @@ def _setupScripts(self):
 
     # add a "open script folder"
     menu.addSeparator()
-    action = QAction("Open script folder", submenu)
+    action = QAction("Open script folder", menu)
     menu.addAction(action)
     self.openScriptFolderMenuAction = action
 
