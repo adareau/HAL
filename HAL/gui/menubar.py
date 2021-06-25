@@ -13,8 +13,11 @@ import logging
 import pyautogui
 import time
 import webbrowser
-from PyQt5.QtWidgets import QAction, QMenu
+from PyQt5.QtWidgets import QAction, QMenu, QActionGroup
 from PyQt5.QtGui import QKeySequence
+
+# -- local
+from .misc import open_file
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -36,6 +39,16 @@ def setupUi(self):
     editSettingsAction.setToolTip("Edit user settings")
     menuPreferences.addAction(editSettingsAction)
     self.menuPreferencesEditSettingsAction = editSettingsAction
+    # add "open module folder"
+    openModuleFolderAction = QAction("Open user modules folder", menuPreferences)
+    menuPreferences.addAction(openModuleFolderAction)
+    self.openModuleFolderAction = openModuleFolderAction
+    # -- Scripts
+    menuScripts = QMenu("Scripts", menuBar)
+    menuBar.addMenu(menuScripts)
+    self.menuScripts = menuScripts
+    self.menuScriptsActionGroup = QActionGroup(menuScripts)
+    _setupScripts(self)
     # -- About section
     # add section
     menuAbout = QMenu("About", menuBar)
@@ -52,6 +65,45 @@ def setupUi(self):
     onlineHelpAction.setShortcut(QKeySequence("CTRL+H"))
     menuAbout.addAction(onlineHelpAction)
     self.menuAboutOnlineHelpAction = onlineHelpAction
+
+
+# %% SETUP SUBROUTINES
+def _setupScripts(self):
+    """Setup the 'Script' menu, allowing to run user-defined scripts"""
+    # initialize some variables
+    menu = self.menuScripts
+    script_list = self.user_scripts
+    actionGroup = self.menuScriptsActionGroup
+    script_dic = {}
+    # sort all scripts in a dic
+    for script in script_list:
+        cat = script.CATEGORY
+        name = script.NAME
+        func = script.main
+        if cat not in script_dic:
+            script_dic[cat] = {}
+        script_dic[cat][name] = func
+    # populate
+    for cat in sorted(script_dic.keys()):
+        cat_dic = script_dic[cat]
+        if cat:
+            submenu = QMenu(cat.title(), menu)
+        else:
+            submenu = menu
+        for name in sorted(cat_dic.keys()):
+            func = cat_dic[name]
+            action = QAction(name.title(), submenu)
+            action.setData((cat, name, func))
+            submenu.addAction(action)
+            actionGroup.addAction(action)
+        if cat:
+            menu.addMenu(submenu)
+
+    # add a "open script folder"
+    menu.addSeparator()
+    action = QAction("Open script folder", submenu)
+    menu.addAction(action)
+    self.openScriptFolderMenuAction = action
 
 
 # %% CALLBACKS
@@ -77,3 +129,15 @@ def getOnlineHelp(self):
     except Exception as e:
         logger.error("error when opening online help")
         logger.error(e)
+
+
+def openUserScriptFolder(self):
+    folder = self._user_scripts_folder
+    logger.debug(f"open script folder : {folder.expanduser()} ")
+    open_file(str(folder.expanduser()))
+
+
+def openUserModuleFolder(self):
+    folder = self._user_modules_folder
+    logger.debug(f"open module folder : {folder.expanduser()} ")
+    open_file(str(folder.expanduser()))

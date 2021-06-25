@@ -178,6 +178,9 @@ CALLBACK_LIST = [
     ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
     ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
     ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
+    ("menuScriptsActionGroup", "triggered", "_playScript"),
+    ("openScriptFolderMenuAction", "triggered", "_openUserScriptFolder"),
+    ("openModuleFolderAction", "triggered", "_openUserModuleFolder"),
 
 ]
 # fmt: on
@@ -222,7 +225,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
         # -- configure window
         # icon
-
         icon_file = Path(local_folder) / "icon.png"
         if icon_file.is_file():
             icon = QIcon(str(icon_file))
@@ -575,6 +577,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         if self.settings.openGuiEditor(parent=self):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
+
+    def _playScript(self, action, *args, **kwargs):
+        """runs the selected script"""
+        # get script info from action data
+        cat, name, func = action.data()
+        # play
+        sname = cat + ":" + name if cat else name
+        self.logger.debug(f"running script {sname}")
+        func(self)
+
+    def _openUserScriptFolder(self, *args, **kwargs):
+        menubar.openUserScriptFolder(self)
+
+    def _openUserModuleFolder(self, *args, **kwargs):
+        menubar.openUserModuleFolder(self)
 
     # -- DEBUG
 

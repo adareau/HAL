@@ -7,12 +7,26 @@ Comments : miscellaneous functions, that would not fit anywhere else
 """
 
 # %% IMPORTS
+import os
+import platform
+import subprocess
 import logging
 import time
 import webbrowser
 import pyautogui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
+
+# %% UTILITY
+
+
+def open_file(path):
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
 
 
 # %% TEXT WRAPPING
