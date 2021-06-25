@@ -50,6 +50,15 @@ from ..classes.display.abstract import AbstractDisplay
 from .. import loader
 
 
+# %% TOOLS
+def _isnumber(x):
+    try:
+        float(x)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
 # %% DECORATOR FOR DEBUGGING
 def logCallback(f):
     """a wrapper for callback, for debug purposes"""
@@ -508,14 +517,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _scaleMaxEditChanged(self, *args, **kwargs):
         new_max = self.scaleMaxEdit.text()
-        if not new_max.isnumeric():
-            self.scaleMaxEdit.setText("65535")
+        if not _isnumber(new_max):
+            data_class = self.dataTypeComboBox.currentData()
+            _, sc_max = data_class().default_display_scale
+            self.scaleMaxEdit.setText(str(sc_max))
         display.plotSelectedData(self, update_fit=False)
 
     def _scaleMinEditChanged(self, *args, **kwargs):
         new_min = self.scaleMinEdit.text()
-        if not new_min.isnumeric():
-            self.scaleMinEdit.setText("0")
+        if not _isnumber(new_min):
+            data_class = self.dataTypeComboBox.currentData()
+            sc_min, _ = data_class().default_display_scale
+            self.scaleMinEdit.setText(str(sc_min))
         display.plotSelectedData(self, update_fit=False)
 
     def _displaySelectionChanged(self, action):
