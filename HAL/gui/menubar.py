@@ -43,6 +43,15 @@ def setupUi(self):
     openModuleFolderAction = QAction("Open user modules folder", menuPreferences)
     menuPreferences.addAction(openModuleFolderAction)
     self.openModuleFolderAction = openModuleFolderAction
+    # -- Data
+    # add section
+    menuData = QMenu("Data", menuBar)
+    menuBar.addMenu(menuData)
+    self.menuData = menuData
+    # add "data"
+    openDataFolderAction = QAction("Open current folder", menuData)
+    menuData.addAction(openDataFolderAction)
+    self.menuDataOpenDataFolderAction = openDataFolderAction
     # -- Scripts
     menuScripts = QMenu("Scripts", menuBar)
     menuBar.addMenu(menuScripts)
@@ -140,4 +149,12 @@ def openUserScriptFolder(self):
 def openUserModuleFolder(self):
     folder = self._user_modules_folder
     logger.debug(f"open module folder : {folder.expanduser()} ")
+    open_file(str(folder.expanduser()))
+
+
+def openDataFolder(self):
+    folder = self.current_folder
+    if folder is None:
+        return
+    logger.debug(f"open current data folder : {folder.expanduser()} ")
     open_file(str(folder.expanduser()))

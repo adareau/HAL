@@ -58,8 +58,17 @@ class CommandPalette(QDialog):
 # format = ("category", "name", "method name")
 SEP = ":"
 BUILTIN_COMMAND_LIST = [
-    ("fit", "fit", "_fitButtonClicked"),
-    ("fit", "delete", "_deleteFitButtonClicked"),
+    # -- global
+    ("HAL", "go to github", "_gotoGithub"),
+    ("HAL", "edit settings", "_editSettings"),
+    ("HAL", "get online help", "_getOnlineHelp"),
+    # -- data related
+    ("data", "fit", "_fitButtonClicked"),
+    ("data", "fit:delete", "_deleteFitButtonClicked"),
+    ("data", "open current folder", "_openDataFolder"),
+    # -- display related
+    ("display", "add ROI", "_addRoiButtonClicked"),
+    ("display", "reset ROI", "_resetRoiButtonClicked"),
 ]
 
 # %% CORE FUNCTIONS

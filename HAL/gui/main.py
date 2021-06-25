@@ -181,6 +181,7 @@ CALLBACK_LIST = [
     ("menuScriptsActionGroup", "triggered", "_playScript"),
     ("openScriptFolderMenuAction", "triggered", "_openUserScriptFolder"),
     ("openModuleFolderAction", "triggered", "_openUserModuleFolder"),
+    ("menuDataOpenDataFolderAction", "triggered", "_openDataFolder"),
 
 ]
 # fmt: on
@@ -592,6 +593,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _openUserModuleFolder(self, *args, **kwargs):
         menubar.openUserModuleFolder(self)
+
+    def _openDataFolder(self, *args, **kwargs):
+        menubar.openDataFolder(self)
 
     # -- DEBUG
 
