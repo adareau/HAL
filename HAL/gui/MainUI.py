@@ -533,7 +533,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(0)
+        self.dataAnalysisTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):

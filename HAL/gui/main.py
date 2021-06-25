@@ -32,6 +32,7 @@ from . import (
     misc,
     menubar,
     advancedplot,
+    commandpalette,
 )
 
 from .MainUI import Ui_mainWindow
@@ -255,6 +256,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.setupElements()
         # connect callbacks
         self.connectActions()
+        # setup palette
+        commandpalette.setupPaletteList(self)
 
         # -- Metadata cache
         # cache
@@ -285,6 +288,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
         self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
         self.ctrlMinus.activated.connect(self._ctrlMinus)
+        self.ctrlP = QShortcut(QKeySequence("Ctrl+P"), self)
+        self.ctrlP.activated.connect(self._ctrlP)
 
     def loadUserModules(self):
 
@@ -388,7 +393,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             signal = getattr(widget, signal_name)
             callback = getattr(self, callback_name)
             signal.connect(callback)
-
         return
 
     # == CALLBACKS
@@ -667,6 +671,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
+        # commandpalette.showPalette(self)
 
     def _tic(self, msg=None, name=""):
         if msg is not None:
@@ -692,6 +697,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _ctrlR(self, *args, **kwargs):
         """called when 'Ctrl+R' is pressed"""
         self._refreshRunListButtonClicked()
+
+    def _ctrlP(self, *args, **kwargs):
+        """called when 'Ctrl+P' is pressed"""
+        commandpalette.showPalette(self)
 
     def _ctrlMinus(self, *args, **kwargs):
         """called when 'Ctrl+-' is pressed"""
