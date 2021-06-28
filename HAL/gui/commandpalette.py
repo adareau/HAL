@@ -15,7 +15,7 @@ from PyQt5.QtGui import QKeySequence, QDialog, QVBoxLayout, QLineEdit
 from PyQt5.QtWidgets import QShortcut, QCompleter
 
 # -- local
-
+from ..gui import misc
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -114,5 +114,7 @@ def showPalette(self):
         if command in self.palette_commands:
             cmd = self.palette_commands[command]
             cmd(self)
+        elif command == "darkside":
+            misc.toggle_dark_theme(self)
         else:
             logger.debug("command not found...")

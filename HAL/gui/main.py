@@ -281,6 +281,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.dummy = Dummy()
         self.current_folder = None
         self.current_fig = None
+        self.dark_theme = False
+        self.default_palette = self.palette()
 
         # -- Keyboard shortcuts
         self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
