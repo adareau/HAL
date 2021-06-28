@@ -286,26 +286,10 @@ class Ui_mainWindow(object):
         self.verticalLayout_2.addWidget(self.refreshRunListButton)
         self.browserButtonsLayout = QtWidgets.QHBoxLayout()
         self.browserButtonsLayout.setObjectName("browserButtonsLayout")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.fitBrowserButton = QtWidgets.QPushButton(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.fitBrowserButton.sizePolicy().hasHeightForWidth()
-        )
-        self.fitBrowserButton.setSizePolicy(sizePolicy)
-        self.fitBrowserButton.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.fitBrowserButton.setObjectName("fitBrowserButton")
-        self.horizontalLayout_5.addWidget(self.fitBrowserButton)
         self.deleteFitButton = QtWidgets.QPushButton(self.runBrowserBox)
         self.deleteFitButton.setMaximumSize(QtCore.QSize(60, 16777215))
         self.deleteFitButton.setObjectName("deleteFitButton")
-        self.horizontalLayout_5.addWidget(self.deleteFitButton)
-        self.browserButtonsLayout.addLayout(self.horizontalLayout_5)
+        self.browserButtonsLayout.addWidget(self.deleteFitButton)
         spacerItem = QtWidgets.QSpacerItem(
             40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
         )
@@ -566,7 +550,6 @@ class Ui_mainWindow(object):
         self.label_6.setText(_translate("mainWindow", "sets"))
         self.label_4.setText(_translate("mainWindow", "sequences"))
         self.refreshRunListButton.setText(_translate("mainWindow", "Refresh"))
-        self.fitBrowserButton.setText(_translate("mainWindow", "FIT"))
         self.deleteFitButton.setText(_translate("mainWindow", "Del. Fit"))
         self.dataSetToolButton.setText(_translate("mainWindow", "manage sets"))
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))

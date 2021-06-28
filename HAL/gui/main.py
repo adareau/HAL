@@ -180,7 +180,6 @@ CALLBACK_LIST = [
 
     # fit buttons
     ("fitButton", "clicked", "_fitButtonClicked"),
-    ("fitBrowserButton", "clicked", "_fitButtonClicked"),
     ("deleteFitButton", "clicked", "_deleteFitButtonClicked"),
 
     # -- MENU BAR --
@@ -285,18 +284,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.default_palette = self.palette()
 
         # -- Keyboard shortcuts
-        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
-        self.ctrlF.activated.connect(self._ctrlF)
+        self.ctrlB = QShortcut(QKeySequence("Ctrl+B"), self)
+        self.ctrlB.activated.connect(self._ctrlB)
         self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
-        self.ctrlD.activated.connect(self._ctrlD)
-        self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
-        self.ctrlR.activated.connect(self._ctrlR)
-        self.ctrlShiftR = QShortcut(QKeySequence("Ctrl+shift+R"), self)
-        self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
-        self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
-        self.ctrlMinus.activated.connect(self._ctrlMinus)
+        self.ctrlD.activated.connect(self._DEBUG)
+        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
+        self.ctrlF.activated.connect(self._fitButtonClicked)
         self.ctrlP = QShortcut(QKeySequence("Ctrl+P"), self)
         self.ctrlP.activated.connect(self._ctrlP)
+        self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
+        self.ctrlR.activated.connect(self._addRoiButtonClicked)
+        self.ctrlShiftR = QShortcut(QKeySequence("Ctrl+shift+R"), self)
+        self.ctrlShiftR.activated.connect(self._resetRoiButtonClicked)
+        self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
+        self.ctrlMinus.activated.connect(self._ctrlMinus)
+        self.F5 = QShortcut(QKeySequence("F5"), self)
+        self.F5.activated.connect(self._refreshRunListButtonClicked)
+        self.ctrlF5 = QShortcut(QKeySequence("shift+F5"), self)
+        self.ctrlF5.activated.connect(self._refreshMetadataCachebuttonClicked)
 
     def setupElements(self):
         submodule_list = [
@@ -560,7 +565,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _fitButtonClicked(self, *args, **kwargs):
         # fit
-        fitting.fit_data(self)
+        fitting.batchFitData(self)
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
@@ -616,7 +621,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
-        testing.open_image_and_fit(self)
+        testing.open_image(self)
+        # testing.open_image_and_fit(self)
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
@@ -634,17 +640,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # == KEYBOARD SHORTCUTS
 
-    def _ctrlF(self, *args, **kwargs):
-        """called when 'Ctrl+F' is pressed"""
-        self._fitButtonClicked()
-
-    def _ctrlD(self, *args, **kwargs):
-        """called when 'Ctrl+D' is pressed"""
-        self._DEBUG()
-
-    def _ctrlR(self, *args, **kwargs):
-        """called when 'Ctrl+R' is pressed"""
-        self._refreshRunListButtonClicked()
+    def _ctrlB(self, *args, **kwargs):
+        """called when 'Ctrl+B' is pressed"""
+        self.backgroundCheckBox.toggle()
 
     def _ctrlP(self, *args, **kwargs):
         """called when 'Ctrl+P' is pressed"""

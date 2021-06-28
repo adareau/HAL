@@ -60,7 +60,7 @@ def open_image_and_fit(self):
     fitting.addROI(self)
     roi_names = self.display.getROINames()
     self.display.updateROI(roi_names[0], pos=(82, 100), size=(164, 94))
-    fitting.fit_data(self)
+    fitting.fitData(self)
 
 
 def declare_variables(self):
