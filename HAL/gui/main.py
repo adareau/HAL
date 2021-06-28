@@ -560,7 +560,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _fitButtonClicked(self, *args, **kwargs):
         # fit
-        fitting.fit_data(self)
+        fitting.batchFitData(self)
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
@@ -616,7 +616,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
-        testing.open_image_and_fit(self)
+        testing.open_image(self)
+        # testing.open_image_and_fit(self)
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
