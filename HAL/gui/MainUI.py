@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(1335, 823)
+        mainWindow.resize(1550, 900)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
         )
@@ -417,7 +417,7 @@ class Ui_mainWindow(object):
         self.advancedPlotDeleteButton.setObjectName("advancedPlotDeleteButton")
         self.horizontalLayout_2.addWidget(self.advancedPlotDeleteButton)
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.advancedAnalysisTab)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(500, 0, 272, 31))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(490, 0, 272, 31))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -499,7 +499,7 @@ class Ui_mainWindow(object):
         self.horizontalLayout.addLayout(self.metaColumn)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1335, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1550, 20))
         self.menubar.setObjectName("menubar")
         self.menuDataDisplay = QtWidgets.QMenu(self.menubar)
         self.menuDataDisplay.setObjectName("menuDataDisplay")
@@ -517,7 +517,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(0)
+        self.dataAnalysisTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):

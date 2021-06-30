@@ -29,7 +29,7 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
-from . import dataexplorer
+from . import dataexplorer, export
 from ..classes.display import LiveMetaData
 
 # -- logger
@@ -519,8 +519,35 @@ def exportToMatplotlib(self):
 
 
 def exportDataButtonClicked(self):
-    """Placeholder. TODO : implement"""
-    logger.debug("export data)")
+    """exports the selected data"""
+
+    # -- get metadata list
+    metadata = dataexplorer.getSelectionMetaDataFromCache(self)
+    if not metadata:
+        return
+    # -- prepare output as a dictionnary
+    # init dic
+    output = {}
+    # loop on all datasets
+    n_values = 0
+    for setname, metadata_dic in metadata.items():
+        output[setname] = {}
+        mapped_variables = mapVariables(self, metadata_dic)
+        for name, values in mapped_variables.items():
+            # skip info
+            if name.startswith("_"):
+                continue
+            # get info dic
+            info_key = "_%s_info" % name
+            info = mapped_variables.get(info_key, {})
+            # prepare unit and name
+            n_values += len(values)
+            output[setname][name] = {"val": values, "info": info}
+    # -- save
+    if n_values:
+        export.exportDataDictAs(self, output)
+    else:
+        logger.warning("no metadata found for current selection")
 
 
 def advancedStatButtonClicked(self):
