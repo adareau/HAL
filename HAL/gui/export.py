@@ -11,8 +11,9 @@ Comments : (low-level) functions handling export of data / figures for HAL
 # -- global
 import logging
 import numpy as np
+from pathlib import Path
 from datetime import datetime
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 # -- local
 
@@ -24,6 +25,8 @@ logger = logging.getLogger(__name__)
 # %% DATA EXPORT FUNCTION
 
 # == LOW LEVEL
+
+
 def _exportDataDictAsCSV(self, dic, file_out):
     # -- gather all data from dic
     # get variable names
@@ -71,17 +74,51 @@ def _exportDataDictAsCSV(self, dic, file_out):
 
 
 # == HIGH LEVEL
+
+
 def exportDataDictAs(self, dic):
     """Exports a data dictionnary in various formats"""
+    # -- prepare available formats
+    export_list = {}
+    export_list["csv file (*.csv)"] = (_exportDataDictAsCSV, ".csv")
     # -- select output file
-    if False:
-        dlg = QFileDialog(self, "Select output file", None)
-        dlg.setNameFilters(["Text files (*.txt)", "Images (*.png *.jpg)"])
-        dlg.selectNameFilter("Images (*.png *.jpg)")
-        dlg.setFileMode(QFileDialog.AnyFile)
-        dlg.setAcceptMode(QFileDialog.AcceptSave)
-        if dlg.exec():
-            filename = dlg.selectedFiles()
-            print(filename)
-    file_out = "test.csv"
-    _exportDataDictAsCSV(self, dic, file_out)
+    folder = self.current_export_folder
+    folder = str(folder) if folder is not None else folder
+    dlg = QFileDialog(self, "Select output file", folder)
+    dlg.setNameFilters(list(export_list.keys()))
+    dlg.setFileMode(QFileDialog.AnyFile)
+    dlg.setAcceptMode(QFileDialog.AcceptSave)
+    if not dlg.exec():
+        logger.debug("Why do you bother me then ?")
+        return
+    # -- save
+    # get file name
+    filename = dlg.selectedFiles()[0]
+    filepath = Path(filename)
+    # check if the file exist, so that we don't ask overwrite confirmation twice
+    license_to_kill = filepath.is_file()
+    # check selected format
+    fmt = dlg.selectedNameFilter()
+    if fmt not in export_list:
+        logger.warning(f"Requested format '{fmt}'' is not implemented")
+        return
+    # get extension / append default if missing
+    export_func, default_suffix = export_list[fmt]
+    if not filepath.suffix:
+        filepath = filepath.with_suffix(default_suffix)
+    # store current folder
+    self.current_export_folder = filepath.parent
+    # if file exist, ask for confirmation
+    # NB : already handled by QFileDialog, but since we might hav
+    # changed the suffix we have to check a second time
+    if filepath.is_file() and not license_to_kill:
+        msg = f"{filepath} exists : overwrite ?"
+        title = "This mission is too important..."
+        answer = QMessageBox.question(
+            self, title, msg, QMessageBox.Yes | QMessageBox.No
+        )
+        if answer == QMessageBox.No:
+            return
+    # export
+    export_func(self, dic, str(filepath))
+    logger.debug(f"Saved as {filepath}")
