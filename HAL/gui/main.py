@@ -14,7 +14,7 @@ import logging
 import time
 
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QKeySequence, QFont, QIcon
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QShortcut, QMessageBox, QAction, QMenu
 from pathlib import Path
 from collections import OrderedDict
@@ -36,7 +36,6 @@ from . import (
 )
 
 from .MainUI import Ui_mainWindow
-from ..classes.dummy import Dummy
 from ..classes.settings import Settings
 from ..gui import local_folder
 
@@ -293,8 +292,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.live_display_subplots = []
 
         # -- Other initializations
-        self.dummy = Dummy()
         self.current_folder = None
+        self.current_export_folder = None
         self.current_fig = None
         self.dark_theme = False
         self.default_palette = self.palette()
