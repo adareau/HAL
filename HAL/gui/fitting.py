@@ -259,8 +259,8 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     name = self._name
     version = self._version
     url = self._url
-    com_str = "Generated with %s v%s (need help? check %s)"
-    fit_dic["__comment__"] = com_str % (name, version, url)
+    com_str = f"Generated with {name} v{version} (need help? check {url})"
+    fit_dic["__comment__"] = com_str
     fit_dic["__program__"] = name
     fit_dic["__version__"] = version
     fit_dic["__url__"] = url
