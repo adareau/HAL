@@ -57,7 +57,7 @@ $> source halenv/bin/activate
 Now that we work in halenv (as indicated in the terminal) install all the required packages, either running this command:
 
 ```bash
-(halenv) $> pip3 install jsbeautifier pyqt5 numpy scipy matplotlib pyqtgraph pyautogui opencv-python-headless
+(halenv) $> pip3 install jsbeautifier pyqt5 numpy scipy matplotlib pyqtgraph pyautogui opencv-python-headless h5py
 ```
 
 Or using the `requirements_pip.txt` file (in the root of the git repository):

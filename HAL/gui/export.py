@@ -10,6 +10,7 @@ Comments : (low-level) functions handling export of data / figures for HAL
 
 # -- global
 import logging
+import h5py
 import numpy as np
 from pathlib import Path
 from datetime import datetime
@@ -73,6 +74,23 @@ def _exportDataDictAsCSV(self, dic, file_out):
     np.savetxt(file_out, array_out, header=header, comments="# ", fmt=" ".join(fmt))
 
 
+def _exportDataDictAsHDF5(self, dic, file_out):
+    with h5py.File(str(file_out), "w") as f:
+        # set global attributes
+        f.attrs["software name"] = self._name
+        f.attrs["software version"] = self._version
+        f.attrs["software url"] = self._url
+        f.attrs["created on"] = f"{datetime.now():%Y-%m-%d %H:%M:%S}"
+        # store data for each dataset
+        for dataset, meta_dic in dic.items():
+            group = f.create_group(dataset)
+            for name, value in meta_dic.items():
+                dset = group.create_dataset(name, data=value["val"])
+                for k, v in value["info"].items():
+                    if k in ["unit", "comment", "name"]:
+                        dset.attrs[k] = v
+
+
 # == HIGH LEVEL
 
 
@@ -81,6 +99,7 @@ def exportDataDictAs(self, dic):
     # -- prepare available formats
     export_list = {}
     export_list["csv file (*.csv)"] = (_exportDataDictAsCSV, ".csv")
+    export_list["hdf5 file (*.hdf5)"] = (_exportDataDictAsHDF5, ".hdf5")
     # -- select output file
     folder = self.current_export_folder
     folder = str(folder) if folder is not None else folder
