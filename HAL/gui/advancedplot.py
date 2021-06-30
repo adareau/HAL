@@ -529,6 +529,7 @@ def exportDataButtonClicked(self):
     # init dic
     output = {}
     # loop on all datasets
+    n_values = 0
     for setname, metadata_dic in metadata.items():
         output[setname] = {}
         mapped_variables = mapVariables(self, metadata_dic)
@@ -540,11 +541,13 @@ def exportDataButtonClicked(self):
             info_key = "_%s_info" % name
             info = mapped_variables.get(info_key, {})
             # prepare unit and name
-            # unit = info.get("unit", "")
-            # real_name = info.get("name", "")
+            n_values += len(values)
             output[setname][name] = {"val": values, "info": info}
     # -- save
-    export.exportDataDictAs(self, output)
+    if n_values:
+        export.exportDataDictAs(self, output)
+    else:
+        logger.warning("no metadata found for current selection")
 
 
 def advancedStatButtonClicked(self):
