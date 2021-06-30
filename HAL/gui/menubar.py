@@ -13,8 +13,9 @@ import logging
 import pyautogui
 import time
 import webbrowser
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMenu, QActionGroup
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QMessageBox
 
 # -- local
 from .misc import open_file
@@ -71,9 +72,14 @@ def setupUi(self):
     # add "HELP"
     onlineHelpAction = QAction("Online Help", menuAbout)
     onlineHelpAction.setToolTip("Find help online")
-    onlineHelpAction.setShortcut(QKeySequence("CTRL+H"))
+    onlineHelpAction.setShortcut(QKeySequence("CTRL+SHIFT+H"))
     menuAbout.addAction(onlineHelpAction)
     self.menuAboutOnlineHelpAction = onlineHelpAction
+    # add "Show keyboard shortcuts"
+    displayShortcutsAction = QAction("Display keyboard shorcuts", menuAbout)
+    displayShortcutsAction.setShortcut(QKeySequence("CTRL+H"))
+    menuAbout.addAction(displayShortcutsAction)
+    self.menuAboutdisplayShortcutsAction = displayShortcutsAction
 
 
 # %% SETUP SUBROUTINES
@@ -158,3 +164,23 @@ def openDataFolder(self):
         return
     logger.debug(f"open current data folder : {folder.expanduser()} ")
     open_file(str(folder.expanduser()))
+
+
+def displayShortcuts(self):
+    # -- prepare list
+    n_max = 20
+    shortcut_list = self.keyboard_shortcuts_lists
+    help_str = ""
+    base_fmt = " ◉ {1:{0}s} \t ▶▶  {2} \n"
+    for shortcut in shortcut_list:
+        sequence, _, description = shortcut
+        if description:
+            help_str += base_fmt.format(n_max, sequence, description)
+
+    # -- display window
+    msgBox = QMessageBox(self)
+    msgBox.setBaseSize(300, 500)
+    msgBox.setText("༼ HAL KEYBOARD SHORTCUTS LIST ༽")
+    msgBox.setInformativeText(help_str)
+    msgBox.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
+    msgBox.exec()

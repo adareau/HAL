@@ -190,10 +190,24 @@ CALLBACK_LIST = [
     ("openScriptFolderMenuAction", "triggered", "_openUserScriptFolder"),
     ("openModuleFolderAction", "triggered", "_openUserModuleFolder"),
     ("menuDataOpenDataFolderAction", "triggered", "_openDataFolder"),
+    ("menuAboutdisplayShortcutsAction", "triggered", "_displayShortcuts"),
 
 ]
 # fmt: on
 
+# Format for keyboard shorcut = ("shortcut", "callback", "description for help")
+# is description is empty ==> do not appear in help
+KEYBOARD_SHORTCUTS = [
+    ("F5", "_refreshRunListButtonClicked", "refresh run list"),
+    ("Shift+F5", "_refreshMetadataCachebuttonClicked", "refresh metadata cache"),
+    ("Ctrl+B", "_ctrlB", "add background"),
+    ("Ctrl+D", "_DEBUG", ""),
+    ("Ctrl+F", "_fitButtonClicked", "fit current selection"),
+    ("Ctrl+P", "_ctrlP", "show command palette"),
+    ("Ctrl+R", "_addRoiButtonClicked", "add ROI"),
+    ("Ctrl+Shift+R", "_resetRoiButtonClicked", "reset all ROIs"),
+    ("Ctrl+-", "_ctrlMinus", ""),
+]
 
 # %% DEFINE GUI CLASS
 
@@ -262,6 +276,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.connectActions()
         # setup palette
         commandpalette.setupPaletteList(self)
+        # setup keyboard shortcuts
+        self.setupKeyboardShortcuts()
 
         # -- Metadata cache
         # cache
@@ -284,24 +300,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.default_palette = self.palette()
 
         # -- Keyboard shortcuts
-        self.ctrlB = QShortcut(QKeySequence("Ctrl+B"), self)
-        self.ctrlB.activated.connect(self._ctrlB)
-        self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
-        self.ctrlD.activated.connect(self._DEBUG)
-        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
-        self.ctrlF.activated.connect(self._fitButtonClicked)
-        self.ctrlP = QShortcut(QKeySequence("Ctrl+P"), self)
-        self.ctrlP.activated.connect(self._ctrlP)
-        self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
-        self.ctrlR.activated.connect(self._addRoiButtonClicked)
-        self.ctrlShiftR = QShortcut(QKeySequence("Ctrl+shift+R"), self)
-        self.ctrlShiftR.activated.connect(self._resetRoiButtonClicked)
-        self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
-        self.ctrlMinus.activated.connect(self._ctrlMinus)
-        self.F5 = QShortcut(QKeySequence("F5"), self)
-        self.F5.activated.connect(self._refreshRunListButtonClicked)
-        self.ctrlF5 = QShortcut(QKeySequence("shift+F5"), self)
-        self.ctrlF5.activated.connect(self._refreshMetadataCachebuttonClicked)
 
     def setupElements(self):
         submodule_list = [
@@ -326,7 +324,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             signal = getattr(widget, signal_name)
             callback = getattr(self, callback_name)
             signal.connect(callback)
-        return
+
+    def setupKeyboardShortcuts(self):
+        # automatic definition of keyboard shortcuts
+        # from the KEYBOARD_SHORTCUTS list, defined at the top of this file !
+        global KEYBOARD_SHORTCUTS
+        # save for later acces
+        self.keyboard_shortcuts_lists = KEYBOARD_SHORTCUTS
+        # assign shortcuts
+        for shortcut in KEYBOARD_SHORTCUTS:
+            sequence, callback_name, tooltip = shortcut
+            qshortcut = QShortcut(sequence, self)
+            callback = getattr(self, callback_name)
+            qshortcut.activated.connect(callback)
 
     # == CALLBACKS
 
@@ -616,6 +626,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _openDataFolder(self, *args, **kwargs):
         menubar.openDataFolder(self)
+
+    def _displayShortcuts(self, *args, **kwargs):
+        menubar.displayShortcuts(self)
 
     # -- DEBUG
 
