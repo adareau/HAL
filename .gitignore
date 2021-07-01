@@ -4,6 +4,7 @@ README.html
 
 # test folder
 tests/
+data/
 
 # sublime tex files
 *.sublime-*
