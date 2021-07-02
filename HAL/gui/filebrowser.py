@@ -49,33 +49,39 @@ class EmptyIconProvider(QtWidgets.QFileIconProvider):
 def validateDateFormat(date_string, date_format):
     try:
         # temporary switch of time locale
-        stored_locale = locale.getlocale(locale.LC_TIME)
-        locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
+        if DEFAULT_LOCALE in locale.locale_alias.values():
+            stored_locale = locale.getlocale(locale.LC_TIME)
+            locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
+
         # if this fails, then format is bad
         date_object = datetime.strptime(date_string, date_format)
         # string back
         date_string_back = date_object.strftime(date_format)
         # restore
-        locale.setlocale(locale.LC_TIME, stored_locale)
+        if DEFAULT_LOCALE in locale.locale_alias.values():
+            locale.setlocale(locale.LC_TIME, stored_locale)
         # this is to ensuire zero paddings
         if date_string != date_string_back:
             raise ValueError
         return True
     except ValueError:
-        locale.setlocale(locale.LC_TIME, stored_locale)
+        if DEFAULT_LOCALE in locale.locale_alias.values():
+            locale.setlocale(locale.LC_TIME, stored_locale)
         return False
 
 
 def convertDateFormat(date_string, date_format_in, date_format_out):
     # temporary switch of time locale
-    stored_locale = locale.getlocale(locale.LC_TIME)
-    locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
+    if DEFAULT_LOCALE in locale.locale_alias.values():
+        stored_locale = locale.getlocale(locale.LC_TIME)
+        locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
     # convert to date object
     date_object = datetime.strptime(date_string, date_format_in)
     # convert back to string
     date_string_out = date_object.strftime(date_format_out)
     # restore
-    locale.setlocale(locale.LC_TIME, stored_locale)
+    if DEFAULT_LOCALE in locale.locale_alias.values():
+        locale.setlocale(locale.LC_TIME, stored_locale)
     return date_string_out
 
 
