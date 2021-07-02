@@ -144,7 +144,16 @@ def exploreDayFolder(folder, data_class=None):
             # otherwise, append
             subdir_list.append(content)
         elif content.is_file():
-            file_list.append(content)
+            # if no data class is provided : take all !
+            if data_class is None:
+                good_file = True
+            # otherwise, use the filter() method
+            else:
+                data = data_class(path=content)
+                good_file = data.filter()
+            # append
+            if good_file:
+                file_list.append(content)
     # sort
     file_list.sort(reverse=True)
     subdir_list.sort(reverse=True)
