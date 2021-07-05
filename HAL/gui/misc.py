@@ -7,12 +7,59 @@ Comments : miscellaneous functions, that would not fit anywhere else
 """
 
 # %% IMPORTS
+import os
+import platform
+import subprocess
 import logging
 import time
 import webbrowser
 import pyautogui
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QStyleFactory
+from PyQt5.QtGui import QPalette, QColor
+
+# %% UTILITY
+
+
+def open_file(path):
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
+
+
+# %% THEME
+
+
+def toggle_dark_theme(self):
+    if not self.dark_theme:
+        dark_palette = QPalette()
+        dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.WindowText, Qt.white)
+        dark_palette.setColor(QPalette.Base, QColor(35, 35, 35))
+        dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ToolTipBase, QColor(25, 25, 25))
+        dark_palette.setColor(QPalette.ToolTipText, Qt.white)
+        dark_palette.setColor(QPalette.Text, Qt.white)
+        dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ButtonText, Qt.white)
+        dark_palette.setColor(QPalette.BrightText, Qt.red)
+        dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.HighlightedText, QColor(35, 35, 35))
+        dark_palette.setColor(QPalette.Active, QPalette.Button, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.Disabled, QPalette.ButtonText, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.WindowText, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.Text, Qt.darkGray)
+        dark_palette.setColor(QPalette.Disabled, QPalette.Light, QColor(53, 53, 53))
+        self.setPalette(dark_palette)
+        self.dark_theme = True
+    else:
+        self.setPalette(self.default_palette)
+        self.dark_theme = False
 
 
 # %% TEXT WRAPPING
@@ -51,7 +98,7 @@ def dialog(self, title="error detected"):
     ]
 
     for h, d in zip(HAL_lines, Dave_lines):
-        box = QMessageBox()
+        box = QMessageBox(self)
         box.setIcon(QMessageBox.Question)
         box.setWindowTitle(title)
         box.setText(h)

@@ -48,7 +48,7 @@ def _isnumber(x):
 # %% SETUP FUNCTIONS
 
 
-def setupQuickPlot(self):
+def setupUi(self):
     # -- data selection in quickplot
     # - X
     # define menu and selection group
@@ -80,6 +80,54 @@ def setupQuickPlot(self):
     self.quickPlotYLabel.setText("no selection")
     self.quickPlotYToolButton.label = self.quickPlotYLabel
 
+    # - FIT
+    # define menu and selection group
+    menuFit = QMenu()
+    actionGroupFit = QActionGroup(menuFit)
+    actionGroupFit.setExclusive(True)
+    # populate menu
+    submenu_dic = {}
+    default_cat_name = "other"
+    checked = True
+    for fitClass in self.fit_classes_1D:
+        # get fit category
+        category = fitClass().category
+        fitname = fitClass().short_name
+        if category is None:
+            category = default_cat_name
+        # get or create submenu
+        if category in submenu_dic:
+            submenu = submenu_dic[category]
+        else:
+            submenu = menuFit.addMenu(category)
+            submenu_dic[category] = submenu
+        # add the corresponding action
+        action = QAction(
+            fitname,
+            menuFit,
+            checkable=True,
+            checked=checked,
+        )
+        checked = False
+        action.setData((category, fitname, fitClass))
+        submenu.addAction(action)
+        actionGroupFit.addAction(action)
+    # update label
+    current_action = actionGroupFit.checkedAction()
+    if current_action is None:
+        self.quickPlotFitLabel.setText("no selection")
+    else:
+        cat, name, _ = current_action.data()
+        self.quickPlotFitLabel.setText(f"{cat} ⏵ {name}")
+    # store for future access
+    self.quickPlotFitToolButtonActionGroup = actionGroupFit
+    self.quickPlotFitToolButton.actionGroup = actionGroupFit
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotFitToolButton.setMenu(menuFit)
+    self.quickPlotFitToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.quickPlotFitToolButton.label = self.quickPlotFitLabel
+
 
 # %% CALLBACKS
 
@@ -97,7 +145,22 @@ def quickPlotSelectionChanged(self):
             button.label.setText("no selection")
         else:
             name, par_name = current_action.data()
-            button.label.setText("%s ⏵ %s" % (name, par_name))
+            button.label.setText(f"{name} ⏵ {par_name}")
+
+
+def quickPlotFitSelectionChanged(self):
+    """Called when the quickPlotFitToolButton selection is changed"""
+    # -- refresh string
+    button = self.quickPlotFitToolButton
+    # get action group
+    actionGroup = button.actionGroup
+    # currently checked action
+    current_action = actionGroup.checkedAction()
+    if current_action is None:
+        button.label.setText("no selection")
+    else:
+        cat, name, _ = current_action.data()
+        button.label.setText(f"{cat} ⏵ {name}")
 
 
 def refreshMetaDataList(self):
@@ -170,7 +233,6 @@ def plotData(self):
     # in the form (meta_data_name, parameter_name)
     x_data_name = checkedDataX.data()
     y_data_name = checkedDataY.data()
-    data_list = [x_data_name, y_data_name]
 
     # load metadata
     metadata = dataexplorer.getSelectionMetaDataFromCache(self)
@@ -192,6 +254,7 @@ def plotData(self):
 
     # - loop on sets
     x_timestamp = False
+    fit_results = {}
     for set, data in metadata.items():
         # - filter data
         # get data
@@ -228,7 +291,47 @@ def plotData(self):
                 x_timestamp = True
 
         # - plot
-        ax.plot(x_filtered, y_filtered, ":o", label=set)
+        if self.quickPlotEnableFitBox.isChecked():
+            fmt = "o"
+        else:
+            fmt = ":o"
+        (line,) = ax.plot(x_filtered, y_filtered, fmt, label=set)
+
+        # - fit
+        if self.quickPlotEnableFitBox.isChecked():
+            # get current fit class
+            current_action = self.quickPlotFitToolButtonActionGroup.checkedAction()
+            if current_action is not None:
+                # init the fit object
+                _, _, FitClass = current_action.data()
+                fit = FitClass(x=x_filtered, z=y_filtered)
+                # do the fit
+                fit.do_guess()
+                fit.do_fit()
+                # prepare to plot
+                xfit = np.linspace(x_filtered.min(), x_filtered.max(), 500)
+                yfit = fit.eval(xfit)
+                color = line.get_color()
+                # plot
+                ax.plot(xfit, yfit, color=color, label=None)
+                # get x information
+                x_meta, x_name = x_data_name
+                x_info = data[x_meta].get("_%s_info" % x_name, None)
+                if x_info is not None:
+                    unit = x_info.get("unit", "")
+                    fit.x_unit = unit
+
+                # get y information
+                y_meta, y_name = y_data_name
+                y_info = data[y_meta].get("_%s_info" % y_name, None)
+                if y_info is not None:
+                    unit = y_info.get("unit", "")
+                    fit.z_unit = unit
+
+                # store results
+                fit.compute_values()
+                fit_results[set] = fit.values
+                fit_results["__fit__"] = fit
 
     # - figure setup
     # x label
@@ -262,3 +365,6 @@ def plotData(self):
     # show
     fig.canvas.draw()
     plt.show()
+
+    # -- print fit results
+    dataexplorer.display1DFitResults(self, fit_results)

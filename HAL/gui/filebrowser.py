@@ -193,7 +193,7 @@ def exploreDayFolder(folder, data_class=None):
 # %% SETUP FUNCTIONS
 
 
-def setupFileListBrowser(self):
+def setupUi(self):
     """Setup the file list browser (year, month, day)"""
 
     # -- definitions : setup root

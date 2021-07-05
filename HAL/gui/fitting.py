@@ -11,6 +11,7 @@ Comments : Functions related to data fitting
 # -- global
 import logging
 import json
+import time
 import jsbeautifier as jsb
 from datetime import datetime
 from pathlib import Path
@@ -42,7 +43,7 @@ def updateFit(self, *args, **kwargs):
 # %% SETUP FUNCTIONS
 
 
-def setupFitting(self):
+def setupUi(self):
     # -- setup fit selection combo box
     for fit_class in self.fit_classes:
         fit_name = fit_class().name
@@ -258,8 +259,8 @@ def _generate_fit_result_dic(self, roi_collection, fit, data_object):
     name = self._name
     version = self._version
     url = self._url
-    com_str = "Generated with %s v%s (need help? check %s)"
-    fit_dic["__comment__"] = com_str % (name, version, url)
+    com_str = f"Generated with {name} v{version} (need help? check {url})"
+    fit_dic["__comment__"] = com_str
     fit_dic["__program__"] = name
     fit_dic["__version__"] = version
     fit_dic["__url__"] = url
@@ -462,7 +463,7 @@ def load_saved_fit(self, data_path=None):
 # == high level fit function
 
 
-def fit_data(self):
+def fitData(self):
     """high level function for data fitting. Loop on all defined ROIs,
     fit the data, and save results"""
 
@@ -512,6 +513,32 @@ def fit_data(self):
 
     # - save as json
     _save_fit_result_as_json(self, fit_dic, data_object)
+
+
+def batchFitData(self):
+    """Implements batch fitting. This function is now called when asking for a fit
+    via the gui _fitButtonClicked feedback function, instead of fitData. It will loop
+    on all selected runs and perform a fit for each of them"""
+    # -- get the list of selected runs
+    selected_runs = self.runList.selectedItems()
+    n_runs = len(selected_runs)
+    # -- loop
+    self.progressBar.setRange(1, n_runs + 1)
+    self.progressBar.setFormat("fitting run %v / %m")
+    self.progressBar.setTextVisible(True)
+    for i_run, item in enumerate(selected_runs):
+        self.progressBar.setValue(i_run + 1)
+        # skip "folders"
+        if item.data(Qt.UserRole) is None:
+            continue
+        # select data and fit
+        self.runList.setCurrentItem(item)
+        fitData(self)
+
+    # done
+    self.progressBar.setFormat("DONE")
+    self.progressBar.setRange(0, 100)
+    self.progressBar.setValue(100)
 
 
 # == saved fit management

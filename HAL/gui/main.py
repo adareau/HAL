@@ -12,16 +12,16 @@ Comments :
 # -- global
 import logging
 import time
-import inspect
 
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QKeySequence, QFont
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QShortcut, QMessageBox, QAction, QMenu
 from pathlib import Path
 from collections import OrderedDict
 from functools import wraps
 
 # -- local
+from .. import loader
 from . import (
     filebrowser,
     display,
@@ -32,21 +32,21 @@ from . import (
     misc,
     menubar,
     advancedplot,
+    commandpalette,
 )
 
 from .MainUI import Ui_mainWindow
-from ..classes.dummy import Dummy
 from ..classes.settings import Settings
+from ..gui import local_folder
 
-# -- user modules
-# - abstract classes
-from ..classes.metadata.abstract import AbstractMetaData
-from ..classes.fit.abstract import Abstract2DFit
-from ..classes.data.abstract import AbstractData
-from ..classes.display.abstract import AbstractDisplay
 
-# - user-defined modules
-from .. import modules
+# %% TOOLS
+def _isnumber(x):
+    try:
+        float(x)
+        return True
+    except (TypeError, ValueError):
+        return False
 
 
 # %% DECORATOR FOR DEBUGGING
@@ -147,6 +147,7 @@ CALLBACK_LIST = [
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlotFitToolButtonActionGroup", "triggered", "_quickPlotFitSelectionChanged"),
 
     # -- ADVANCED DATA ANALYSIS / PLOT
     ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
@@ -178,17 +179,34 @@ CALLBACK_LIST = [
 
     # fit buttons
     ("fitButton", "clicked", "_fitButtonClicked"),
-    ("fitBrowserButton", "clicked", "_fitButtonClicked"),
     ("deleteFitButton", "clicked", "_deleteFitButtonClicked"),
 
     # -- MENU BAR --
     ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
     ("menuAboutOnlineHelpAction", "triggered", "_getOnlineHelp"),
     ("menuPreferencesEditSettingsAction", "triggered", "_editSettings"),
+    ("menuScriptsActionGroup", "triggered", "_playScript"),
+    ("openScriptFolderMenuAction", "triggered", "_openUserScriptFolder"),
+    ("openModuleFolderAction", "triggered", "_openUserModuleFolder"),
+    ("menuDataOpenDataFolderAction", "triggered", "_openDataFolder"),
+    ("menuAboutdisplayShortcutsAction", "triggered", "_displayShortcuts"),
 
 ]
 # fmt: on
 
+# Format for keyboard shorcut = ("shortcut", "callback", "description for help")
+# is description is empty ==> do not appear in help
+KEYBOARD_SHORTCUTS = [
+    ("F5", "_refreshRunListButtonClicked", "refresh run list"),
+    ("Shift+F5", "_refreshMetadataCachebuttonClicked", "refresh metadata cache"),
+    ("Ctrl+B", "_ctrlB", "add background"),
+    ("Ctrl+D", "_DEBUG", ""),
+    ("Ctrl+F", "_fitButtonClicked", "fit current selection"),
+    ("Ctrl+P", "_ctrlP", "show command palette"),
+    ("Ctrl+R", "_addRoiButtonClicked", "add ROI"),
+    ("Ctrl+Shift+R", "_resetRoiButtonClicked", "reset all ROIs"),
+    ("Ctrl+-", "_ctrlMinus", ""),
+]
 
 # %% DEFINE GUI CLASS
 
@@ -209,22 +227,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.logger.debug("HAL started")
 
         # -- Hidden
-        self._version = "0.0"
+        self._version = "beta0.1"
         self._name = "HAL"
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
+        self._user_modules_folder = self._settings_folder / "user_modules"
+        self._user_scripts_folder = self._settings_folder / "user_scripts"
         self._kl = []
         self._t0 = 0
 
         # -- FIRST
         # create HAL settings folder
         self._settings_folder.mkdir(exist_ok=True)
+        self._user_modules_folder.mkdir(exist_ok=True)
+        self._user_scripts_folder.mkdir(exist_ok=True)
         # load settings
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
 
-        # -- USER MODULES
-        self.loadUserModules()
+        # -- configure window
+        # icon
+        icon_file = Path(local_folder) / "icon.png"
+        if icon_file.is_file():
+            icon = QIcon(str(icon_file))
+            self.setWindowIcon(icon)
+        else:
+            self.logger.warning(f"icon file '{icon_file}' not found")
+
+        # -- USER MODULES AND SCRIPTS
+        loader.modules.load(self)
+        loader.scripts.load(self)
 
         # -- Set font size and Family
         font_family = self.settings.config["gui"]["font family"]
@@ -241,6 +273,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.setupElements()
         # connect callbacks
         self.connectActions()
+        # setup palette
+        commandpalette.setupPaletteList(self)
+        # setup keyboard shortcuts
+        self.setupKeyboardShortcuts()
 
         # -- Metadata cache
         # cache
@@ -256,108 +292,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.live_display_subplots = []
 
         # -- Other initializations
-        self.dummy = Dummy()
         self.current_folder = None
+        self.current_export_folder = None
         self.current_fig = None
+        self.dark_theme = False
+        self.default_palette = self.palette()
 
         # -- Keyboard shortcuts
-        self.ctrlF = QShortcut(QKeySequence("Ctrl+F"), self)
-        self.ctrlF.activated.connect(self._ctrlF)
-        self.ctrlD = QShortcut(QKeySequence("Ctrl+D"), self)
-        self.ctrlD.activated.connect(self._ctrlD)
-        self.ctrlR = QShortcut(QKeySequence("Ctrl+R"), self)
-        self.ctrlR.activated.connect(self._ctrlR)
-        self.ctrlShiftR = QShortcut(QKeySequence("Ctrl+shift+R"), self)
-        self.ctrlShiftR.activated.connect(self._refreshMetadataCachebuttonClicked)
-        self.ctrlMinus = QShortcut(QKeySequence("Ctrl+-"), self)
-        self.ctrlMinus.activated.connect(self._ctrlMinus)
-
-    def loadUserModules(self):
-
-        # -- init lists / dict
-        # implemented data classes
-        self.data_classes = []
-        # implemented metadata classes
-        self.metadata_classes = []
-        # implemented fit classes
-        self.fit_classes = []
-        # implemented display classes
-        self.display_classes = []
-
-        # -- generate list of ignored packages
-        ignored = self.settings.config["global"]["ignored modules list"]
-        ignored = ignored.split(",")
-        ignored = [name.replace(" ", "") for name in ignored]
-        self.logger.debug(f"ignored packages : {', '.join(ignored)}")
-        # -- parse the content of ..module and append to lists
-        for module, name in zip(modules.loaded_modules, modules.loaded_modules_names):
-            self.logger.debug(f"parsing user module {name}")
-            # check that the module has a 'user_module' list implemented
-            # this should be already checked in the __init__.py of ..modules
-            # but ¯\_(ツ)_/¯ why not check again ?
-            if "user_modules" not in module.__dict__.keys():
-                msg = f"user module '{name}' has no 'user_module' list defined"
-                self.logger.warning(msg)
-                continue
-            # parse the user modules
-            for usermod in module.user_modules:
-                # if it is not a class: we do not want it
-                if not inspect.isclass(usermod):
-                    self.logger.debug("skipped one 'non-class' object.. strange..")
-                    continue
-                # is it ignored ?
-                if usermod.__name__ in ignored:
-                    self.logger.debug(f"ignored package '{usermod.__name__}'")
-                    continue
-                # if it is a child of AbstractMetaData >> to self.metadata_classes !
-                if issubclass(usermod, AbstractMetaData):
-                    self.logger.debug(f"found one metadata class '{usermod.__name__}'")
-                    self.metadata_classes.append(usermod)
-                # if it is a child of Abstract2DFit >> to self.fit_classes !
-                elif issubclass(usermod, Abstract2DFit):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.fit_classes.append(usermod)
-                # if it is a child of AbstractData >> to self.data_classes !
-                elif issubclass(usermod, AbstractData):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.data_classes.append(usermod)
-                # if it is a child of AbstractDisplay >> to self.display_classes !
-                elif issubclass(usermod, AbstractDisplay):
-                    self.logger.debug(f"found one fit class '{usermod.__name__}'")
-                    self.display_classes.append(usermod)
-                # otherwise raise warning
-                else:
-                    msg = f"Unknown class type for user module '{usermod.__name__}'"
-                    self.logger.warning(msg)
-
-        # -- generate a list of implemented fit names
-        # this will be useful for loading fit
-        self.fit_classes_dic = {}
-        for fit_class in self.fit_classes:
-            name = fit_class().name
-            if name in self.fit_classes_dic:
-                msg = f"fit name '{name}' was already taken... it will be overriden "
-                msg += "in the fit dictionnary. This might cause bugs when loading "
-                msg += "saved fit. You should rename your fits so that they have "
-                msg += "unique names !"
-                self.logger.warning(msg)
-            self.fit_classes_dic[name] = fit_class
 
     def setupElements(self):
-        # -- File Browser
-        filebrowser.setupFileListBrowser(self)
-        # -- Data Visualization
-        display.setupDisplay(self)
-        # -- Meta data
-        dataexplorer.setupDataExplorer(self)
-        # -- Quick Plot
-        quickplot.setupQuickPlot(self)
-        # -- Advanced Plot
-        advancedplot.setupAdvancedPlot(self)
-        # -- Fitting
-        fitting.setupFitting(self)
-        # -- Menu Bar
-        menubar.setupMenubar(self)
+        submodule_list = [
+            filebrowser,
+            display,
+            dataexplorer,
+            quickplot,
+            advancedplot,
+            fitting,
+            menubar,
+        ]
+        for submodule in submodule_list:
+            submodule.setupUi(self)
 
     def connectActions(self):
         # automatic definition of callbacks
@@ -370,7 +324,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             callback = getattr(self, callback_name)
             signal.connect(callback)
 
-        return
+    def setupKeyboardShortcuts(self):
+        # automatic definition of keyboard shortcuts
+        # from the KEYBOARD_SHORTCUTS list, defined at the top of this file !
+        global KEYBOARD_SHORTCUTS
+        # save for later acces
+        self.keyboard_shortcuts_lists = KEYBOARD_SHORTCUTS
+        # assign shortcuts
+        for shortcut in KEYBOARD_SHORTCUTS:
+            sequence, callback_name, tooltip = shortcut
+            qshortcut = QShortcut(sequence, self)
+            callback = getattr(self, callback_name)
+            qshortcut.activated.connect(callback)
 
     # == CALLBACKS
 
@@ -468,7 +433,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
 
-    def _todayButtonClicked(self, checked):
+    def _todayButtonClicked(self, checked=False):
         filebrowser.todayButtonClicked(self)
         dataexplorer.refreshDataSetList(self)
 
@@ -489,14 +454,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _scaleMaxEditChanged(self, *args, **kwargs):
         new_max = self.scaleMaxEdit.text()
-        if not new_max.isnumeric():
-            self.scaleMaxEdit.setText("65535")
+        if not _isnumber(new_max):
+            data_class = self.dataTypeComboBox.currentData()
+            _, sc_max = data_class().default_display_scale
+            self.scaleMaxEdit.setText(str(sc_max))
         display.plotSelectedData(self, update_fit=False)
 
     def _scaleMinEditChanged(self, *args, **kwargs):
         new_min = self.scaleMinEdit.text()
-        if not new_min.isnumeric():
-            self.scaleMinEdit.setText("0")
+        if not _isnumber(new_min):
+            data_class = self.dataTypeComboBox.currentData()
+            sc_min, _ = data_class().default_display_scale
+            self.scaleMinEdit.setText(str(sc_min))
         display.plotSelectedData(self, update_fit=False)
 
     def _displaySelectionChanged(self, action):
@@ -535,6 +504,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotSelectionChanged(self)
+
+    def _quickPlotFitSelectionChanged(self, *args, **kwargs):
+        quickplot.quickPlotFitSelectionChanged(self)
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 
@@ -602,7 +574,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _fitButtonClicked(self, *args, **kwargs):
         # fit
-        fitting.fit_data(self)
+        fitting.batchFitData(self)
         # refresh
         filebrowser.refreshCurrentFolder(self)
         dataexplorer.refreshDataSetList(self)
@@ -636,12 +608,33 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             msg = "New user settings loaded. You might have to restart HAL now."
             QMessageBox.warning(self, "I am afraid Dave", msg)
 
+    def _playScript(self, action, *args, **kwargs):
+        """runs the selected script"""
+        # get script info from action data
+        cat, name, func = action.data()
+        # play
+        sname = cat + ":" + name if cat else name
+        self.logger.debug(f"running script {sname}")
+        func(self)
+
+    def _openUserScriptFolder(self, *args, **kwargs):
+        menubar.openUserScriptFolder(self)
+
+    def _openUserModuleFolder(self, *args, **kwargs):
+        menubar.openUserModuleFolder(self)
+
+    def _openDataFolder(self, *args, **kwargs):
+        menubar.openDataFolder(self)
+
+    def _displayShortcuts(self, *args, **kwargs):
+        menubar.displayShortcuts(self)
+
     # -- DEBUG
 
     def _DEBUG(self, *args, **kwargs):
         # self.autoScaleCheckBox.setChecked(True)
-        # testing.open_image_and_fit(self)
         testing.open_image(self)
+        # testing.open_image_and_fit(self)
         # testing.declare_variables(self)
         # testing.select_livemetadata_display(self)
         # self._editSettings()
@@ -659,17 +652,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     # == KEYBOARD SHORTCUTS
 
-    def _ctrlF(self, *args, **kwargs):
-        """called when 'Ctrl+F' is pressed"""
-        self._fitButtonClicked()
+    def _ctrlB(self, *args, **kwargs):
+        """called when 'Ctrl+B' is pressed"""
+        self.backgroundCheckBox.toggle()
 
-    def _ctrlD(self, *args, **kwargs):
-        """called when 'Ctrl+D' is pressed"""
-        self._DEBUG()
-
-    def _ctrlR(self, *args, **kwargs):
-        """called when 'Ctrl+R' is pressed"""
-        self._refreshRunListButtonClicked()
+    def _ctrlP(self, *args, **kwargs):
+        """called when 'Ctrl+P' is pressed"""
+        commandpalette.showPalette(self)
 
     def _ctrlMinus(self, *args, **kwargs):
         """called when 'Ctrl+-' is pressed"""

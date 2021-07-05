@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mainWindow(object):
     def setupUi(self, mainWindow):
         mainWindow.setObjectName("mainWindow")
-        mainWindow.resize(1335, 823)
+        mainWindow.resize(1550, 900)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding
         )
@@ -286,26 +286,10 @@ class Ui_mainWindow(object):
         self.verticalLayout_2.addWidget(self.refreshRunListButton)
         self.browserButtonsLayout = QtWidgets.QHBoxLayout()
         self.browserButtonsLayout.setObjectName("browserButtonsLayout")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.fitBrowserButton = QtWidgets.QPushButton(self.runBrowserBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.fitBrowserButton.sizePolicy().hasHeightForWidth()
-        )
-        self.fitBrowserButton.setSizePolicy(sizePolicy)
-        self.fitBrowserButton.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.fitBrowserButton.setObjectName("fitBrowserButton")
-        self.horizontalLayout_5.addWidget(self.fitBrowserButton)
         self.deleteFitButton = QtWidgets.QPushButton(self.runBrowserBox)
         self.deleteFitButton.setMaximumSize(QtCore.QSize(60, 16777215))
         self.deleteFitButton.setObjectName("deleteFitButton")
-        self.horizontalLayout_5.addWidget(self.deleteFitButton)
-        self.browserButtonsLayout.addLayout(self.horizontalLayout_5)
+        self.browserButtonsLayout.addWidget(self.deleteFitButton)
         spacerItem = QtWidgets.QSpacerItem(
             40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
         )
@@ -344,13 +328,13 @@ class Ui_mainWindow(object):
         self.quickAnalysisTab = QtWidgets.QWidget()
         self.quickAnalysisTab.setObjectName("quickAnalysisTab")
         self.quickPlotButton = QtWidgets.QPushButton(self.quickAnalysisTab)
-        self.quickPlotButton.setGeometry(QtCore.QRect(230, 20, 61, 51))
+        self.quickPlotButton.setGeometry(QtCore.QRect(230, 20, 61, 41))
         self.quickPlotButton.setObjectName("quickPlotButton")
         self.quickStatsButton = QtWidgets.QPushButton(self.quickAnalysisTab)
-        self.quickStatsButton.setGeometry(QtCore.QRect(300, 20, 61, 51))
+        self.quickStatsButton.setGeometry(QtCore.QRect(300, 20, 61, 41))
         self.quickStatsButton.setObjectName("quickStatsButton")
         self.formLayoutWidget = QtWidgets.QWidget(self.quickAnalysisTab)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(20, 20, 191, 55))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(20, 20, 191, 81))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -361,21 +345,34 @@ class Ui_mainWindow(object):
         self.formLayout.setWidget(
             0, QtWidgets.QFormLayout.LabelRole, self.quickPlotXToolButton
         )
-        self.quickPlotYToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
-        self.quickPlotYToolButton.setObjectName("quickPlotYToolButton")
-        self.formLayout.setWidget(
-            1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton
-        )
         self.quickPlotXLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotXLabel.setObjectName("quickPlotXLabel")
         self.formLayout.setWidget(
             0, QtWidgets.QFormLayout.FieldRole, self.quickPlotXLabel
+        )
+        self.quickPlotYToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
+        self.quickPlotYToolButton.setObjectName("quickPlotYToolButton")
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.quickPlotYToolButton
         )
         self.quickPlotYLabel = QtWidgets.QLabel(self.formLayoutWidget)
         self.quickPlotYLabel.setObjectName("quickPlotYLabel")
         self.formLayout.setWidget(
             1, QtWidgets.QFormLayout.FieldRole, self.quickPlotYLabel
         )
+        self.quickPlotFitToolButton = QtWidgets.QToolButton(self.formLayoutWidget)
+        self.quickPlotFitToolButton.setObjectName("quickPlotFitToolButton")
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.quickPlotFitToolButton
+        )
+        self.quickPlotFitLabel = QtWidgets.QLabel(self.formLayoutWidget)
+        self.quickPlotFitLabel.setObjectName("quickPlotFitLabel")
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.quickPlotFitLabel
+        )
+        self.quickPlotEnableFitBox = QtWidgets.QCheckBox(self.quickAnalysisTab)
+        self.quickPlotEnableFitBox.setGeometry(QtCore.QRect(230, 80, 111, 16))
+        self.quickPlotEnableFitBox.setObjectName("quickPlotEnableFitBox")
         self.dataAnalysisTabWidget.addTab(self.quickAnalysisTab, "")
         self.advancedAnalysisTab = QtWidgets.QWidget()
         self.advancedAnalysisTab.setObjectName("advancedAnalysisTab")
@@ -420,7 +417,7 @@ class Ui_mainWindow(object):
         self.advancedPlotDeleteButton.setObjectName("advancedPlotDeleteButton")
         self.horizontalLayout_2.addWidget(self.advancedPlotDeleteButton)
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.advancedAnalysisTab)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(500, 0, 272, 31))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(490, 0, 272, 31))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -502,7 +499,7 @@ class Ui_mainWindow(object):
         self.horizontalLayout.addLayout(self.metaColumn)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1335, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1550, 20))
         self.menubar.setObjectName("menubar")
         self.menuDataDisplay = QtWidgets.QMenu(self.menubar)
         self.menuDataDisplay.setObjectName("menuDataDisplay")
@@ -520,7 +517,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(0)
+        self.dataAnalysisTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -553,15 +550,17 @@ class Ui_mainWindow(object):
         self.label_6.setText(_translate("mainWindow", "sets"))
         self.label_4.setText(_translate("mainWindow", "sequences"))
         self.refreshRunListButton.setText(_translate("mainWindow", "Refresh"))
-        self.fitBrowserButton.setText(_translate("mainWindow", "FIT"))
         self.deleteFitButton.setText(_translate("mainWindow", "Del. Fit"))
         self.dataSetToolButton.setText(_translate("mainWindow", "manage sets"))
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))
         self.quickStatsButton.setText(_translate("mainWindow", "STATS"))
         self.quickPlotXToolButton.setText(_translate("mainWindow", "X"))
-        self.quickPlotYToolButton.setText(_translate("mainWindow", "Y"))
         self.quickPlotXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
+        self.quickPlotYToolButton.setText(_translate("mainWindow", "Y"))
         self.quickPlotYLabel.setText(_translate("mainWindow", "quickPlotYLabel"))
+        self.quickPlotFitToolButton.setText(_translate("mainWindow", "fit"))
+        self.quickPlotFitLabel.setText(_translate("mainWindow", "fit type"))
+        self.quickPlotEnableFitBox.setText(_translate("mainWindow", "fit data"))
         self.dataAnalysisTabWidget.setTabText(
             self.dataAnalysisTabWidget.indexOf(self.quickAnalysisTab),
             _translate("mainWindow", "Quick Analysis"),
