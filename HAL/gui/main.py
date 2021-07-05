@@ -227,7 +227,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.logger.debug("HAL started")
 
         # -- Hidden
-        self._version = "0.1α"
+        self._version = "beta0.1"
         self._name = "HAL"
         self._url = "https://github.com/adareau/HAL"
         self._settings_folder = Path().home() / ".HAL"
