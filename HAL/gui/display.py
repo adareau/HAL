@@ -304,6 +304,7 @@ def createRemoteScreen(self):
     self.remoteWindow.exec()
     # -- update
     self.mainScreen.clear()
+    self.mainScreen.setVisible(False)
     displaySelectionChanged(self)
 
 
@@ -311,4 +312,5 @@ def deleteRemoteScreen(self):
     """deletes the remote screen"""
     self.remoteScreen = None
     self.remoteWindow = None
+    self.mainScreen.setVisible(True)
     displaySelectionChanged(self)
