@@ -11,6 +11,8 @@ Comments : Functions related to data visualization
 # -- global
 import logging
 import numpy as np
+import pyqtgraph as pg
+
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QActionGroup
@@ -112,6 +114,12 @@ def setupUi(self):
     displaySelectionGroup.setExclusive(True)
     self.displaySelectionGroup = displaySelectionGroup
 
+    # remote Screen action
+    action = QAction("remote screen", checkable=True, checked=False)
+    menu.addSeparator()
+    menu.addAction(action)
+    self.remoteScreenAction = action
+
     # - setup display
     # if we did not find the default display name, use the first one in the list
     if default_display is None:
@@ -128,15 +136,24 @@ def setupUi(self):
 # %% DISPLAY FUNCTIONS
 
 
-def displaySelectionChanged(self, action):
+def displaySelectionChanged(self, action=None):
     """
     triggered when the display type selection is changed
     """
     # get the new requested display class
-    display_class = action.data()
+    if action is not None:
+        display_class = action.data()
+    else:
+        display_class = type(self.display)
+
+    # chose screen
+    if self.remoteScreen is None:
+        currentScreen = self.mainScreen
+    else:
+        currentScreen = self.remoteScreen
 
     # setup display
-    self.display = display_class(screen=self.mainScreen)
+    self.display = display_class(screen=currentScreen)
     self.display.setup()
 
     # setup ROIs
@@ -271,3 +288,27 @@ def updateFitForSelectedData(self):
     fit_dic = {roi_name: res["fit"] for roi_name, res in fit_collection.items()}
     self.display.updateFit(fit_dic, selected_roi)
     self.selectRoiComboBox.blockSignals(False)
+
+
+def createRemoteScreen(self):
+    """generates a PyQtGraph GrahpicsLayoutWidget in a new window,
+    and use it in replacement of the gui screen"""
+    # -- create the new app
+    self.remoteWindow = pg.mkQApp("Plotting Example")
+    # -- add the screen
+    remoteScreen = pg.GraphicsLayoutWidget(show=True, title="Basic plotting examples")
+    remoteScreen.resize(1000, 600)
+    remoteScreen.setWindowTitle("pyqtgraph example: Plotting")
+    self.remoteScreen = remoteScreen
+    # -- show
+    self.remoteWindow.exec()
+    # -- update
+    self.mainScreen.clear()
+    displaySelectionChanged(self)
+
+
+def deleteRemoteScreen(self):
+    """deletes the remote screen"""
+    self.remoteScreen = None
+    self.remoteWindow = None
+    displaySelectionChanged(self)

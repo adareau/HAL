@@ -130,6 +130,8 @@ CALLBACK_LIST = [
     ("autoScaleCheckBox", "stateChanged", "_autoScaleCheckBoxChanged"),
     # display type selector
     ("displaySelectionGroup", "triggered", "_displaySelectionChanged"),
+    # remote screen
+    ("remoteScreenAction", "triggered", "_toggleRemoteScreen"),
 
     # -- DATA EXPLORER --
     # meta data management
@@ -297,6 +299,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self.current_fig = None
         self.dark_theme = False
         self.default_palette = self.palette()
+        self.remoteScreen = None
+        self.remoteWindow = None
 
         # -- Keyboard shortcuts
 
@@ -473,6 +477,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _autoScaleCheckBoxChanged(self, *args, **kwargs):
         display.plotSelectedData(self, update_fit=False)
+
+    def _toggleRemoteScreen(self, checked, *args, **kwargs):
+        if checked:
+            display.createRemoteScreen(self)
+        else:
+            display.deleteRemoteScreen(self)
 
     # -- DATA EXPLORER
 

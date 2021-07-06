@@ -562,7 +562,10 @@ def updateSubplotLayout(self):
         return
 
     # -- reset current layout
-    screen = self.mainScreen
+    if self.remoteScreen is None:
+        screen = self.mainScreen
+    else:
+        screen = self.remoteScreen
     screen.clear()
     self.live_display_subplots = []
 
