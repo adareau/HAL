@@ -14,8 +14,8 @@ import pyautogui
 import time
 import webbrowser
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QAction, QMenu, QActionGroup
-from PyQt5.QtGui import QKeySequence, QMessageBox
+from PyQt5.QtWidgets import QAction, QMenu, QActionGroup, QMessageBox
+from PyQt5.QtGui import QKeySequence
 
 # -- local
 from .misc import open_file

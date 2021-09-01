@@ -11,8 +11,8 @@ Comments : Functions related to the command palette
 # -- global
 import logging
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QKeySequence, QDialog, QVBoxLayout, QLineEdit
-from PyQt5.QtWidgets import QShortcut, QCompleter
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut, QCompleter, QDialog, QVBoxLayout, QLineEdit
 
 # -- local
 from ..gui import misc
