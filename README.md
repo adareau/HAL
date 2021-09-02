@@ -2,9 +2,14 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+
+![HAL screenshot](HAL.png)
+
+
 ## 🚨🚨🚨 DISCLAIMER 🚨🚨🚨
 
 **2021-06-24 : The user-module structure was modified. User scripts, that used to be located in `HAL.modules` should now be put in the user configuration folder, i.e. in `~/.HAL/user_modules`. Refer to the section 3 of this README file "Install user modules"**
+
 
 
 ## 👍 Start with HAL without problems
