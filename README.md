@@ -37,7 +37,7 @@ $> git clone https://github.com/adareau/HAL.git
 
 We strongly suggest that you use HAL in a dedicated virtual environment. This can be done using the python `venv` module (https://docs.python.org/3/library/venv.html) or, if you use the anaconda python distribution, with the builtin `conda create --name envname` command.
 
-This environment should contain all the required packages. We try to provide an up-to-date list of requirements in a [pip-compatible](https://github.com/adareau/HAL/blob/testing/requirements_pip.txt) (`requirements_conda.txt`) and a [pip-compatible](https://github.com/adareau/HAL/blob/testing/requirements_conda.txt) formats in the repository.
+This environment should contain all the required packages. We try to provide an up-to-date list of requirements in a [pip-compatible](https://github.com/adareau/HAL/blob/testing/requirements_pip.txt) (`requirements_pip.txt`) and a [conda-compatible](https://github.com/adareau/HAL/blob/testing/requirements_conda.txt)(`requirements_conda.txt`) formats in the repository.
 
 ##### long version (python3-venv)
 
@@ -71,11 +71,45 @@ Or using the `requirements_pip.txt` file (in the root of the git repository):
 (halenv) $> pip3 install -r requirements_pip.txt
 ```
 
+##### long version (python3.9-venv)
+I described below, we recommand you to use HAL within a python3.9 environnement. We will describe below the procedure to install both python3.9 and HAL in an environnemnt called `halenv` on your computer. First, download python3.9  on your computer with the following command lines :
+
+```bash
+$> sudo apt update
+$> sudo apt install software-properties-common
+$> sudo add-apt-repository ppa:deadsnakes/ppa
+$> sudo apt install python3.9
+```
+
+Now you have access to python3.9. To use it, enter python3.9 instead of python3 in your shell. We do not recommand to set that python3 is python3.9 since it could dammage your system. However, we will use python3.9 in our environnement: we need therefore the package `python3.9-venv`. If you do not already have it, install it:
+
+```bash
+$> sudo apt-get install python3.9-venv
+```
+
+Now create a dedicated environment (we call it `halenv`):
+
+```bash
+$> python3.9 -m venv halenv
+```
+
+Activate it:
+
+```bash
+$> source halenv/bin/activate
+```
+
+Now that we work in halenv (as indicated in the terminal) install all the required packagesusing the `requirements_pip.txt` file (in the root of the git repository):
+
+```bash
+(halenv) $> pip3 install -r root/to/your/HAL/folder/requirements_pip.txt
+```
+
 ##### long version (anaconda)
 
 Alternatively, you can use conda to create the virtual environment, with a one-line command:
 
-```bash
+```bashconda
 $> conda create --name halenv --file requirements_conda.txt  # create the env
 $> conda activate halenv  # activate it
 ```
