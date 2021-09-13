@@ -215,7 +215,10 @@ def _fit_2D_data(self, Z, XY, data_object):
     fit.pixel_size_y_unit = unit_y
     # guess / fit / compute values
     fit.do_guess()
-    fit.do_fit()
+    try:
+        fit.do_fit()
+    except:
+        return
     fit.compute_values()
 
     return fit
