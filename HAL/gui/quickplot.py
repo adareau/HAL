@@ -11,7 +11,9 @@ Comments : Functions related to quick data analysis
 # -- global
 import logging
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
+import pandas as pd
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QColor
@@ -433,9 +435,9 @@ def plotData2D(self):
     """
     # -- load metadata
     # get selected metadata fields
-    checkedDataX = self.quickPlotXToolButton.actionGroup.checkedAction()
-    checkedDataY = self.quickPlotYToolButton.actionGroup.checkedAction()
-    checkedDataZ = self.quickPlotZToolButton.actionGroup.checkedAction()
+    checkedDataX = self.quickPlot2DXToolButton.actionGroup.checkedAction()
+    checkedDataY = self.quickPlot2DYToolButton.actionGroup.checkedAction()
+    checkedDataZ = self.quickPlot2DZToolButton.actionGroup.checkedAction()
     if None in [checkedDataX, checkedDataY, checkedDataZ]:
         logger.debug("plotData() : data selection missing")
         return
@@ -454,20 +456,10 @@ def plotData2D(self):
         return
 
     # -- PLOT
-    # - prepare figure
-    # FIXME : allow for new figure / hold on control via GUI
-    if self.current_fig is None:
-        fig, ax = plt.subplots(1, 1)
-        self.current_fig = (fig, ax)
-    else:
-        fig, ax = self.current_fig
-        if not plt.fignum_exists(fig.number):
-            fig, ax = plt.subplots(1, 1)
-            self.current_fig = (fig, ax)
 
     # - loop on sets
     x_timestamp = False
-    fit_results = {}
+
     for set, data in metadata.items():
         # - filter data
         # get data
@@ -503,37 +495,86 @@ def plotData2D(self):
                 x_timestamp = True
 
         # - plot
-        (line,) = ax.plot(x_filtered, y_filtered, label=set)
+        df_raw = pd.DataFrame()
 
-    # - figure setup
-    # x label
-    x_meta, x_name = x_data_name
-    x_label = "%s - %s" % x_data_name
-    x_info = data[x_meta].get("_%s_info" % x_name, None)
-    if x_info is not None:
-        unit = x_info.get("unit", "")
-        if unit:
-            x_label += " (%s)" % unit
-    ax.set_xlabel(x_label)
+        x_meta, x_name = x_data_name
+        xlabel = f"{x_meta} - {x_name}"
+        x_info = data[x_meta].get(f"_{x_name}_info", None)
+        if x_info is not None:
+            unit = x_info.get("unit", "")
+            if unit:
+                xlabel += f" ({unit})"
 
-    # y label
-    y_meta, y_name = y_data_name
-    y_label = "%s - %s" % y_data_name
-    y_info = data[y_meta].get("_%s_info" % y_name, None)
-    if y_info is not None:
-        unit = y_info.get("unit", "")
-        if unit:
-            y_label += " (%s)" % unit
-    ax.set_ylabel(y_label)
+        y_meta, y_name = y_data_name
+        ylabel = f"{y_meta} - {y_name}"
+        y_info = data[y_meta].get(f"_{y_name}_info", None)
+        if y_info is not None:
+            unit = y_info.get("unit", "")
+            if unit:
+                ylabel += f" ({unit})"
 
-    # timestamps ?
-    if x_timestamp:
-        fig.autofmt_xdate()
+        z_meta, z_name = z_data_name
+        zlabel = f"{z_meta} - {z_name}"
+        z_info = data[z_meta].get(f"_{z_name}_info", None)
+        if z_info is not None:
+            unit = z_info.get("unit", "")
+            if unit:
+                zlabel += f" ({unit})"
 
-    # grid and legend
-    plt.grid()
-    plt.legend()
+        df_raw[xlabel] = x_filtered
+        df_raw[ylabel] = y_filtered
+        df_raw[zlabel] = z_filtered
+        datasize = len(df_raw)
 
-    # show
-    fig.canvas.draw()
+        data_stacked = df_raw.groupby([xlabel, ylabel], as_index=False).mean()
+        data_stacked["std"] = (
+            df_raw.groupby([xlabel, ylabel], as_index=False).std()[zlabel]
+            / data_stacked[zlabel]
+        )
+        data_stacked["size"] = df_raw.groupby([xlabel, ylabel], as_index=False).size()[
+            "size"
+        ]
+        data_stacked["fmt"] = data_stacked["std"].combine(
+            data_stacked["size"], lambda std, num: f"{round(100*std,1)} ({num})"
+        )
+        data_stacked = data_stacked.round(3)
+
+        data_avg_pivotted = data_stacked.pivot(xlabel, ylabel, zlabel)
+        data_std_pivotted = data_stacked.pivot(xlabel, ylabel, "std")
+        data_fmt_pivotted = data_stacked.pivot(xlabel, ylabel, "fmt")
+
+    print(len(data_stacked.groupby(xlabel)))
+    print(len(data_stacked.groupby(ylabel)))
+    if len(data_stacked.groupby(xlabel)) <= len(data_stacked.groupby(ylabel)):
+        fig, axs = plt.subplots(2, 1)
+    else:
+        fig, axs = plt.subplots(1, 2)
+
+    sns.heatmap(
+        data_avg_pivotted,
+        cmap="mako",
+        annot=True,
+        linewidths=0.5,
+        cbar=False,
+        ax=axs[0],
+    )
+    sns.heatmap(
+        data_std_pivotted,
+        cmap="mako",
+        annot=data_fmt_pivotted,
+        fmt="",
+        linewidths=0.5,
+        cbar=False,
+        ax=axs[1],
+    )
+
+    axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
+    axs[1].set_title(
+        data_stacked["std"].name + " in % (number of occurences)",
+        fontweight="bold",
+    )
+
+    fig.suptitle(f"Statistics over {datasize} runs", fontweight="bold")
+
+    plt.tight_layout()
     plt.show()
