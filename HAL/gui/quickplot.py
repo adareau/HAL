@@ -542,9 +542,7 @@ def plotData2D(self):
         data_avg_pivotted = data_stacked.pivot(xlabel, ylabel, zlabel)
         data_std_pivotted = data_stacked.pivot(xlabel, ylabel, "std")
         data_fmt_pivotted = data_stacked.pivot(xlabel, ylabel, "fmt")
-
-    print(len(data_stacked.groupby(xlabel)))
-    print(len(data_stacked.groupby(ylabel)))
+        
     if len(data_stacked.groupby(xlabel)) <= len(data_stacked.groupby(ylabel)):
         fig, axs = plt.subplots(2, 1)
     else:
