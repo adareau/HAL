@@ -577,9 +577,9 @@
          <widget class="QGroupBox" name="groupBox">
           <property name="geometry">
            <rect>
-            <x>20</x>
+            <x>10</x>
             <y>20</y>
-            <width>351</width>
+            <width>361</width>
             <height>141</height>
            </rect>
           </property>
@@ -693,9 +693,9 @@
          <widget class="QGroupBox" name="groupBox_2">
           <property name="geometry">
            <rect>
-            <x>420</x>
+            <x>380</x>
             <y>20</y>
-            <width>331</width>
+            <width>411</width>
             <height>141</height>
            </rect>
           </property>
@@ -715,7 +715,7 @@
              <x>10</x>
              <y>30</y>
              <width>205</width>
-             <height>91</height>
+             <height>93</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -780,6 +780,22 @@
            </property>
            <property name="text">
             <string>PLOT</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="quickPlot2DEnableStdBox">
+           <property name="geometry">
+            <rect>
+             <x>220</x>
+             <y>100</y>
+             <width>181</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>plot standard dev.</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>
@@ -877,7 +893,7 @@
            <rect>
             <x>490</x>
             <y>0</y>
-            <width>279</width>
+            <width>300</width>
             <height>31</height>
            </rect>
           </property>
@@ -911,7 +927,7 @@
             <x>280</x>
             <y>130</y>
             <width>191</width>
-            <height>61</height>
+            <height>64</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1037,7 +1053,7 @@
      <x>0</x>
      <y>0</y>
      <width>1550</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataDisplay">

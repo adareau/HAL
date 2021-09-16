@@ -542,37 +542,53 @@ def plotData2D(self):
         data_avg_pivotted = data_stacked.pivot(xlabel, ylabel, zlabel)
         data_std_pivotted = data_stacked.pivot(xlabel, ylabel, "std")
         data_fmt_pivotted = data_stacked.pivot(xlabel, ylabel, "fmt")
-        
-    if len(data_stacked.groupby(xlabel)) <= len(data_stacked.groupby(ylabel)):
-        fig, axs = plt.subplots(2, 1)
+
+    if self.quickPlot2DEnableStdBox.isChecked():
+        # probably exists a cleaner way to manage the 1 subplot / 2 subplots cases
+        if len(data_stacked.groupby(xlabel)) <= len(data_stacked.groupby(ylabel)):
+            fig, axs = plt.subplots(2, 1)
+        else:
+            fig, axs = plt.subplots(1, 2)
+        sns.heatmap(
+            data_avg_pivotted,
+            cmap="mako",
+            annot=True,
+            linewidths=0.5,
+            cbar=False,
+            ax=axs[0],
+        )
+        axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
+
+        sns.heatmap(
+            data_std_pivotted,
+            cmap="mako",
+            annot=data_fmt_pivotted,
+            fmt="",
+            linewidths=0.5,
+            cbar=False,
+            ax=axs[1],
+        )
+        axs[1].set_title(
+            data_stacked["std"].name + " in % (number of occurences)",
+            fontweight="bold",
+        )
+
     else:
-        fig, axs = plt.subplots(1, 2)
+        fig, ax = plt.subplots()
+        sns.heatmap(
+            data_avg_pivotted,
+            cmap="mako",
+            annot=True,
+            linewidths=0.5,
+            cbar=False,
+            ax=ax,
+        )
+        ax.set_title(data_stacked[zlabel].name, fontweight="bold")
 
-    sns.heatmap(
-        data_avg_pivotted,
-        cmap="mako",
-        annot=True,
-        linewidths=0.5,
-        cbar=False,
-        ax=axs[0],
-    )
-    sns.heatmap(
-        data_std_pivotted,
-        cmap="mako",
-        annot=data_fmt_pivotted,
-        fmt="",
-        linewidths=0.5,
-        cbar=False,
-        ax=axs[1],
-    )
-
-    axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
-    axs[1].set_title(
-        data_stacked["std"].name + " in % (number of occurences)",
+    fig.suptitle(
+        f"Dataset: {datasize} runs | Average data/cell: {round(datasize/data_stacked.notna()[zlabel].sum(),2)}",
         fontweight="bold",
     )
-
-    fig.suptitle(f"Statistics over {datasize} runs", fontweight="bold")
 
     plt.tight_layout()
     plt.show()
