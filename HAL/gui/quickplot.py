@@ -534,18 +534,20 @@ def plotData2D(self):
         data_stacked["size"] = df_raw.groupby([xlabel, ylabel], as_index=False).size()[
             "size"
         ]
-        data_stacked["fmt"] = data_stacked["std"].combine(
-            data_stacked["size"], lambda std, num: f"{round(100*std,1)} ({num})"
+        data_stacked["fmt_std"] = data_stacked["std"].combine(
+            data_stacked["size"],
+            lambda std, num: f"{round(100*std,1)} ({num})",
         )
         data_stacked = data_stacked.round(3)
 
-        data_avg_pivotted = data_stacked.pivot(xlabel, ylabel, zlabel)
-        data_std_pivotted = data_stacked.pivot(xlabel, ylabel, "std")
-        data_fmt_pivotted = data_stacked.pivot(xlabel, ylabel, "fmt")
+        data_avg_pivotted = data_stacked.pivot(ylabel, xlabel, zlabel)
+
+        data_std_pivotted = data_stacked.pivot(ylabel, xlabel, "std")
+        data_fmt_std_pivotted = data_stacked.pivot(ylabel, xlabel, "fmt_std")
 
     if self.quickPlot2DEnableStdBox.isChecked():
         # probably exists a cleaner way to manage the 1 subplot / 2 subplots cases
-        if len(data_stacked.groupby(xlabel)) <= len(data_stacked.groupby(ylabel)):
+        if len(data_stacked.groupby(xlabel)) >= len(data_stacked.groupby(ylabel)):
             fig, axs = plt.subplots(2, 1)
         else:
             fig, axs = plt.subplots(1, 2)
@@ -562,23 +564,36 @@ def plotData2D(self):
         sns.heatmap(
             data_std_pivotted,
             cmap="mako",
-            annot=data_fmt_pivotted,
+            annot=data_fmt_std_pivotted,
             fmt="",
             linewidths=0.5,
             cbar=False,
             ax=axs[1],
         )
         axs[1].set_title(
-            data_stacked["std"].name + " in % (number of occurences)",
+            data_stacked["std"].name + " in % (sample size)",
             fontweight="bold",
         )
 
     else:
+
+        def formater(avg, std):
+            if not np.isnan(std):
+                return format(avg, ".2E") + f" ({round(100*std,1)}%)"
+            else:
+                return format(avg, ".2E")
+
+        data_stacked["fmt_avg"] = data_stacked[zlabel].combine(
+            data_stacked["std"],
+            formater,
+        )
+        data_fmt_avg_pivotted = data_stacked.pivot(ylabel, xlabel, "fmt_avg")
         fig, ax = plt.subplots()
         sns.heatmap(
             data_avg_pivotted,
             cmap="mako",
-            annot=True,
+            annot=data_fmt_avg_pivotted,
+            fmt="",
             linewidths=0.5,
             cbar=False,
             ax=ax,
