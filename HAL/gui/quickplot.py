@@ -444,6 +444,19 @@ def plotData2D(self):
     """
     # parameters loaded from the options window
     cmap = self.quickplotOptionsWindow.cmapComboBox.currentText()
+    RBFI_kwargs = {
+        "kernel": self.quickplotOptionsWindow.radialFunctionsBasisComboBox.currentText(),
+    }
+    try:
+        RBFI_kwargs["epsilon"] = float(
+            self.quickplotOptionsWindow.epsilonValueLineEdit.text()
+        )
+    except:
+        pass
+    try:
+        RBFI_kwargs["degree"] = int(self.quickplotOptionsWindow.degreeLineEdit.text())
+    except:
+        pass
 
     # -- load metadata
     # get selected metadata fields
@@ -617,7 +630,7 @@ def plotData2D(self):
 
         xy_obs = data_stacked[[xlabel, ylabel]].to_numpy()
         z_obs = data_stacked[[zlabel]].to_numpy()
-        interpolation_func = interpolate.RBFInterpolator(xy_obs, z_obs)
+        interpolation_func = interpolate.RBFInterpolator(xy_obs, z_obs, **RBFI_kwargs)
 
         xmin = float(data_stacked[[xlabel]].min())
         xmax = float(data_stacked[[xlabel]].max())
@@ -633,14 +646,17 @@ def plotData2D(self):
 
         if self.quickplotOptionsWindow.showStdDevCheckBox.isChecked():
             std_obs = data_stacked[["std"]].to_numpy()
-            interpolation_std_func = interpolate.RBFInterpolator(xy_obs, std_obs)
+            interpolation_std_func = interpolate.RBFInterpolator(
+                xy_obs, std_obs, **RBFI_kwargs
+            )
             std_flat = interpolation_std_func(xy_flat)
             std_grid = std_flat.reshape(100, 100)
 
             fig, axs = plt.subplots(1, 2)
 
             im_avg = axs[0].pcolormesh(*xy_grid, z_grid, shading="gouraud", cmap=cmap)
-            p_avg = axs[0].scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
+            if self.quickplotOptionsWindow.showNodesCheckBox.isChecked():
+                p_avg = axs[0].scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
             plt.colorbar(im_avg, ax=axs[0], orientation="horizontal")
 
             axs[0].set_xlabel(data_stacked[xlabel].name)
@@ -648,20 +664,22 @@ def plotData2D(self):
             axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
 
             im_std = axs[1].pcolormesh(*xy_grid, std_grid, shading="gouraud", cmap=cmap)
-            p_std = axs[1].scatter(*xy_obs.T, c=std_obs, s=20, ec="k")
+            if self.quickplotOptionsWindow.showNodesCheckBox.isChecked():
+                p_std = axs[1].scatter(*xy_obs.T, c=std_obs, s=20, ec="k")
             plt.colorbar(im_std, ax=axs[1], orientation="horizontal")
 
             axs[1].set_xlabel(data_stacked[xlabel].name)
             axs[1].set_ylabel(data_stacked[ylabel].name)
             axs[1].set_title(
-                data_stacked["std"].name + " in % (sample size)",
+                data_stacked["std"].name,
                 fontweight="bold",
             )
 
         else:
             fig, ax = plt.subplots()
             im = ax.pcolormesh(*xy_grid, z_grid, shading="gouraud", cmap=cmap)
-            p = ax.scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
+            if self.quickplotOptionsWindow.showNodesCheckBox.isChecked():
+                p = ax.scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
             fig.colorbar(im)
             ax.set_xlabel(data_stacked[xlabel].name)
             ax.set_ylabel(data_stacked[ylabel].name)
