@@ -152,6 +152,7 @@ CALLBACK_LIST = [
     ("quickPlot2DXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlot2DZToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotFitToolButtonActionGroup", "triggered", "_quickPlotFitSelectionChanged"),
+    ("plottingOptionsButton", "clicked", "_quickplotShowOptions"),
 
     # -- ADVANCED DATA ANALYSIS / PLOT
     ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
@@ -273,6 +274,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
         self.setupUi(self)
+        self.quickplotOptionsWindow = quickplot.PlottingOptionsWindow()
         # setup UI (define here)
         self.setupElements()
         # connect callbacks
@@ -514,6 +516,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotFitSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotFitSelectionChanged(self)
+
+    def _quickplotShowOptions(self, *args, **kwargs):
+        self.quickplotOptionsWindow.show()
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 

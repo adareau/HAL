@@ -7,17 +7,19 @@ Comments : Functions related to quick data analysis
 """
 
 # %% IMPORTS
-
 # -- global
+import typing
 import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+from scipy import interpolate
 from datetime import datetime
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import (
+    QMainWindow,
     QInputDialog,
     QAbstractItemView,
     QStyle,
@@ -27,10 +29,12 @@ from PyQt5.QtWidgets import (
     QAction,
     QActionGroup,
     QToolButton,
+    QWidget,
 )
 
 # -- local
 from . import dataexplorer
+from .PlottingOptionsUI import Ui_plottingOptionsWindow
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -48,6 +52,11 @@ def _isnumber(x):
 
 
 # %% SETUP FUNCTIONS
+class PlottingOptionsWindow(QMainWindow, Ui_plottingOptionsWindow):
+    def __init__(self) -> None:
+        super(PlottingOptionsWindow, self).__init__()
+
+        self.setupUi(self)
 
 
 def setupUi(self):
@@ -433,6 +442,9 @@ def plotData2D(self):
     """
     PLACEHOLDER : Plotting the selected metadata
     """
+    # parameters loaded from the options window
+    cmap = self.quickplotOptionsWindow.cmapComboBox.currentText()
+
     # -- load metadata
     # get selected metadata fields
     checkedDataX = self.quickPlot2DXToolButton.actionGroup.checkedAction()
@@ -540,65 +552,120 @@ def plotData2D(self):
         )
         data_stacked = data_stacked.round(3)
 
-        data_avg_pivotted = data_stacked.pivot(ylabel, xlabel, zlabel)
+    if not self.quickplotOptionsWindow.interpolationEnabledCheckBox.isChecked():
 
+        data_avg_pivotted = data_stacked.pivot(ylabel, xlabel, zlabel)
         data_std_pivotted = data_stacked.pivot(ylabel, xlabel, "std")
         data_fmt_std_pivotted = data_stacked.pivot(ylabel, xlabel, "fmt_std")
 
-    if self.quickPlot2DEnableStdBox.isChecked():
-        # probably exists a cleaner way to manage the 1 subplot / 2 subplots cases
-        if len(data_stacked.groupby(xlabel)) >= len(data_stacked.groupby(ylabel)):
-            fig, axs = plt.subplots(2, 1)
-        else:
-            fig, axs = plt.subplots(1, 2)
-        sns.heatmap(
-            data_avg_pivotted,
-            cmap="mako",
-            annot=True,
-            linewidths=0.5,
-            cbar=False,
-            ax=axs[0],
-        )
-        axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
+        if self.quickplotOptionsWindow.showStdDevCheckBox.isChecked():
+            # probably exists a cleaner way to manage the 1 subplot / 2 subplots cases
+            if len(data_stacked.groupby(xlabel)) >= len(data_stacked.groupby(ylabel)):
+                fig, axs = plt.subplots(2, 1)
+            else:
+                fig, axs = plt.subplots(1, 2)
+            sns.heatmap(
+                data_avg_pivotted,
+                cmap=cmap,
+                annot=True,
+                linewidths=0.5,
+                cbar=False,
+                ax=axs[0],
+            )
+            axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
 
-        sns.heatmap(
-            data_std_pivotted,
-            cmap="mako",
-            annot=data_fmt_std_pivotted,
-            fmt="",
-            linewidths=0.5,
-            cbar=False,
-            ax=axs[1],
-        )
-        axs[1].set_title(
-            data_stacked["std"].name + " in % (sample size)",
-            fontweight="bold",
-        )
+            sns.heatmap(
+                data_std_pivotted,
+                cmap=cmap,
+                annot=data_fmt_std_pivotted,
+                fmt="",
+                linewidths=0.5,
+                cbar=False,
+                ax=axs[1],
+            )
+            axs[1].set_title(
+                data_stacked["std"].name + " in % (sample size)",
+                fontweight="bold",
+            )
+
+        else:
+
+            def formater(avg, std):
+                if not np.isnan(std):
+                    return format(avg, ".2E") + f" ({round(100*std,1)}%)"
+                else:
+                    return format(avg, ".2E")
+
+            data_stacked["fmt_avg"] = data_stacked[zlabel].combine(
+                data_stacked["std"],
+                formater,
+            )
+            data_fmt_avg_pivotted = data_stacked.pivot(ylabel, xlabel, "fmt_avg")
+            fig, ax = plt.subplots()
+            sns.heatmap(
+                data_avg_pivotted,
+                cmap=cmap,
+                annot=data_fmt_avg_pivotted,
+                fmt="",
+                linewidths=0.5,
+                cbar=False,
+                ax=ax,
+            )
+            ax.set_title(data_stacked[zlabel].name, fontweight="bold")
 
     else:
 
-        def formater(avg, std):
-            if not np.isnan(std):
-                return format(avg, ".2E") + f" ({round(100*std,1)}%)"
-            else:
-                return format(avg, ".2E")
+        xy_obs = data_stacked[[xlabel, ylabel]].to_numpy()
+        z_obs = data_stacked[[zlabel]].to_numpy()
+        interpolation_func = interpolate.RBFInterpolator(xy_obs, z_obs)
 
-        data_stacked["fmt_avg"] = data_stacked[zlabel].combine(
-            data_stacked["std"],
-            formater,
-        )
-        data_fmt_avg_pivotted = data_stacked.pivot(ylabel, xlabel, "fmt_avg")
-        fig, ax = plt.subplots()
-        sns.heatmap(
-            data_avg_pivotted,
-            cmap="mako",
-            annot=data_fmt_avg_pivotted,
-            fmt="",
-            linewidths=0.5,
-            cbar=False,
-            ax=ax,
-        )
-        ax.set_title(data_stacked[zlabel].name, fontweight="bold")
+        xmin = float(data_stacked[[xlabel]].min())
+        xmax = float(data_stacked[[xlabel]].max())
+        ymin = float(data_stacked[[ylabel]].min())
+        ymax = float(data_stacked[[ylabel]].max())
+
+        xy_grid = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+
+        xy_flat = xy_grid.reshape(2, -1).T
+
+        z_flat = interpolation_func(xy_flat)
+        z_grid = z_flat.reshape(100, 100)
+
+        if self.quickplotOptionsWindow.showStdDevCheckBox.isChecked():
+            std_obs = data_stacked[["std"]].to_numpy()
+            interpolation_std_func = interpolate.RBFInterpolator(xy_obs, std_obs)
+            std_flat = interpolation_std_func(xy_flat)
+            std_grid = std_flat.reshape(100, 100)
+
+            fig, axs = plt.subplots(1, 2)
+
+            im_avg = axs[0].pcolormesh(*xy_grid, z_grid, shading="gouraud", cmap=cmap)
+            p_avg = axs[0].scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
+            plt.colorbar(im_avg, ax=axs[0], orientation="horizontal")
+
+            axs[0].set_xlabel(data_stacked[xlabel].name)
+            axs[0].set_ylabel(data_stacked[ylabel].name)
+            axs[0].set_title(data_stacked[zlabel].name, fontweight="bold")
+
+            im_std = axs[1].pcolormesh(*xy_grid, std_grid, shading="gouraud", cmap=cmap)
+            p_std = axs[1].scatter(*xy_obs.T, c=std_obs, s=20, ec="k")
+            plt.colorbar(im_std, ax=axs[1], orientation="horizontal")
+
+            axs[1].set_xlabel(data_stacked[xlabel].name)
+            axs[1].set_ylabel(data_stacked[ylabel].name)
+            axs[1].set_title(
+                data_stacked["std"].name + " in % (sample size)",
+                fontweight="bold",
+            )
+
+        else:
+            fig, ax = plt.subplots()
+            im = ax.pcolormesh(*xy_grid, z_grid, shading="gouraud", cmap=cmap)
+            p = ax.scatter(*xy_obs.T, c=z_obs, s=20, ec="k")
+            fig.colorbar(im)
+            ax.set_xlabel(data_stacked[xlabel].name)
+            ax.set_ylabel(data_stacked[ylabel].name)
+            ax.set_title(data_stacked[zlabel].name, fontweight="bold")
 
     fig.suptitle(
         f"Dataset: {datasize} runs | Average data/cell: {round(datasize/data_stacked.notna()[zlabel].sum(),2)}",
