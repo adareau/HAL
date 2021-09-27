@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1550</width>
-    <height>900</height>
+    <height>871</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -568,7 +568,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -743,20 +743,17 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="2">
-             <widget class="QCheckBox" name="quickPlot2DEnableStdBox">
-              <property name="text">
-               <string>plot standard dev.</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="2">
              <widget class="QPushButton" name="quickPlot2DButton">
               <property name="text">
                <string>PLOT</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QPushButton" name="plottingOptionsButton">
+              <property name="text">
+               <string>OPTIONS</string>
               </property>
              </widget>
             </item>
@@ -1103,7 +1100,7 @@
      <x>0</x>
      <y>0</y>
      <width>1550</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataDisplay">
