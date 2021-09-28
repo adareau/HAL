@@ -278,7 +278,7 @@ def refreshMetaDataList(self):
             button.label.setText("no selection")
         else:
             name, par_name = current_action.data()
-            button.label.setText("%s ⏵ %s" % (name, par_name))
+            button.label.setText(f"{name} ⏵ {par_name}")
 
 
 # %% PLOT FUNCTIONS
@@ -637,7 +637,13 @@ def plotData2D(self):
         ymin = float(data_stacked[[ylabel]].min())
         ymax = float(data_stacked[[ylabel]].max())
 
-        xy_grid = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+        xmargin = 0.05 * (xmax - xmin)
+        ymargin = 0.05 * (ymax - ymin)
+
+        xy_grid = np.mgrid[
+            xmin - xmargin : xmax + xmargin : 100j,
+            ymin - ymargin : ymax + ymargin : 100j,
+        ]
 
         xy_flat = xy_grid.reshape(2, -1).T
 
@@ -671,7 +677,7 @@ def plotData2D(self):
             axs[1].set_xlabel(data_stacked[xlabel].name)
             axs[1].set_ylabel(data_stacked[ylabel].name)
             axs[1].set_title(
-                data_stacked["std"].name,
+                "standart deviation",
                 fontweight="bold",
             )
 

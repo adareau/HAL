@@ -67,12 +67,12 @@
            </property>
            <item>
             <property name="text">
-             <string>jet</string>
+             <string>mako</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>mako</string>
+             <string>jet</string>
             </property>
            </item>
            <item>
@@ -302,7 +302,11 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QCheckBox" name="interpolationEnabledCheckBox"/>
+          <widget class="QCheckBox" name="interpolationEnabledCheckBox">
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="showNodesLabel">
@@ -312,7 +316,11 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QCheckBox" name="showNodesCheckBox"/>
+          <widget class="QCheckBox" name="showNodesCheckBox">
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="radialFunctionsBasisLabel">

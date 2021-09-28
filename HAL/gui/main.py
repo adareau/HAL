@@ -27,6 +27,7 @@ from . import (
     display,
     dataexplorer,
     quickplot,
+    correlations,
     fitting,
     testing,
     misc,
@@ -172,6 +173,9 @@ CALLBACK_LIST = [
     ("advancedStatButton", "clicked", "_advancedStatButtonClicked"),
     ("advancedPlotResetButton", "clicked", "_advancedPlotResetButtonClicked"),
 
+    # correlations plots
+    ("correlationsPlotButton", "clicked", "_plotCorrelations"),
+
     # -- FITTING --
     # ROI
     ("addRoiButton", "clicked", "_addRoiButtonClicked"),
@@ -274,6 +278,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
         self.setupUi(self)
+        # creates the plotting options window, wrt the quickplot tab
         self.quickplotOptionsWindow = quickplot.PlottingOptionsWindow()
         # setup UI (define here)
         self.setupElements()
@@ -312,6 +317,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             display,
             dataexplorer,
             quickplot,
+            correlations,
             advancedplot,
             fitting,
             menubar,
@@ -557,6 +563,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _advancedPlotResetButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotResetButtonClicked(self)
+
+    # correlations plots
+    def _plotCorrelations(self, *args, **kwargs):
+        correlations.plotCorrelations(self)
 
     # -- FITTING
 
