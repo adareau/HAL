@@ -568,7 +568,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -1009,28 +1009,90 @@
              <x>9</x>
              <y>29</y>
              <width>301</width>
-             <height>131</height>
+             <height>145</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_3">
             <item row="0" column="0">
-             <widget class="QToolButton" name="correlationsKindToolButton">
+             <widget class="QLabel" name="label_9">
               <property name="text">
-               <string>kind</string>
+               <string>Kind</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="correlationsKindLabel">
+             <widget class="QComboBox" name="correlationsKindComboBox">
+              <item>
+               <property name="text">
+                <string>scatter</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>kde</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>hist</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>reg</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_12">
               <property name="text">
-               <string>correlationsKindLabel</string>
+               <string>Diagonal kind</string>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
+             <widget class="QComboBox" name="correlationsDiagKindComboBox">
+              <item>
+               <property name="text">
+                <string>auto</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>hist</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>kde</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>None</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="1">
              <widget class="QCheckBox" name="correlationsHueCheckBox">
               <property name="text">
-               <string>hue by cloud type</string>
+               <string>hue enabled</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QToolButton" name="correlationsHueToolButton">
+              <property name="text">
+               <string>Hue group</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="correlationsHueLabel">
+              <property name="text">
+               <string>correlationsHueLabel</string>
               </property>
              </widget>
             </item>

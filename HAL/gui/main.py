@@ -175,6 +175,7 @@ CALLBACK_LIST = [
 
     # correlations plots
     ("correlationsPlotButton", "clicked", "_plotCorrelations"),
+    ("correlationsHueToolButtonActionGroup", "triggered", "_correlationsSelectionChanged"),
 
     # -- FITTING --
     # ROI
@@ -567,6 +568,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     # correlations plots
     def _plotCorrelations(self, *args, **kwargs):
         correlations.plotCorrelations(self)
+
+    def _correlationsSelectionChanged(self, *args, **kwargs):
+        correlations.correlationsSelectionChanged(self)
 
     # -- FITTING
 

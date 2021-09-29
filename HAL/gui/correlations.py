@@ -35,6 +35,39 @@ def setupUi(self):
     self.correlationsVarsList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     self.correlationsVarsList.setSortingEnabled(True)
 
+    # -- hue selection in correlations
+    # define menu and selection group
+    menuHue = QMenu()
+    actionGroupHue = QActionGroup(menuHue)
+    actionGroupHue.setExclusive(True)
+    # store for future access
+    self.correlationsHueToolButtonActionGroup = actionGroupHue
+    self.correlationsHueToolButton.actionGroup = actionGroupHue
+    # associate the menu with the corresponding toolbutton
+    self.correlationsHueToolButton.setMenu(menuHue)
+    self.correlationsHueToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.correlationsHueLabel.setText("no selection")
+    self.correlationsHueToolButton.label = self.correlationsHueLabel
+
+
+def correlationsSelectionChanged(self):
+    """Called when the quickPlot ToolButtons selection is changed"""
+    # -- refresh string
+    tool_buttons = [
+        self.correlationsHueToolButton,
+    ]
+    for button in tool_buttons:
+        # get action group
+        actionGroup = button.actionGroup
+        # currently checked action
+        current_action = actionGroup.checkedAction()
+        if current_action is None:
+            button.label.setText("no selection")
+        else:
+            name, par_name = current_action.data()
+            button.label.setText(f"{name} ⏵ {par_name}")
+
 
 def refreshMetaDataList(self):
     """
@@ -42,6 +75,52 @@ def refreshMetaDataList(self):
     """
     # -- get data
     metadata_list = self.available_numeric_metadata
+
+    # -- tool buttons
+    tool_buttons = [
+        self.correlationsHueToolButton,
+    ]
+    for button in tool_buttons:
+        # get action group
+        actionGroup = button.actionGroup
+        # currently checked action
+        current_action = actionGroup.checkedAction()
+        if current_action is not None:
+            current_data = current_action.data()
+        else:
+            current_data = ("", "")
+        # get menu and clear
+        menu = button.menu()
+        menu.clear()
+        # remove all actions
+        for action in actionGroup.actions():
+            actionGroup.removeAction(action)
+        # populate
+        for name, param_list in metadata_list.items():
+            # if empty list : stop
+            if not param_list:
+                continue
+            # add submenu, and populate
+            submenu = menu.addMenu(name)
+            for par_name in sorted(param_list):
+                action = QAction(
+                    par_name,
+                    menu,
+                    checkable=True,
+                    checked=current_data == (name, par_name),
+                )
+                action.setData((name, par_name))
+                submenu.addAction(action)
+                actionGroup.addAction(action)
+        # update label
+        current_action = actionGroup.checkedAction()
+        if current_action is None:
+            button.label.setText("no selection")
+        else:
+            name, par_name = current_action.data()
+            button.label.setText(f"{name} ⏵ {par_name}")
+
+    # list of available variables
     self.correlationsVarsList.clear()
     for name, param_list in metadata_list.items():
 
@@ -56,6 +135,12 @@ def refreshMetaDataList(self):
 
 
 def plotCorrelations(self):
+
+    kind = self.correlationsKindComboBox.currentText()
+    diag_kind = self.correlationsDiagKindComboBox.currentText()
+    hue = None
+    if self.correlationsHueCheckBox.isChecked():
+        pass
 
     selection = self.correlationsVarsList.selectedItems()
     if not selection:
@@ -74,9 +159,5 @@ def plotCorrelations(self):
             data_name = par.data(Qt.UserRole)
             df[f"{data_name[0]} - {data_name[1]}"] = data[data_name[0]][data_name[1]]
 
-    print(df)
-
-    sns.pairplot(df, diag_kind="kde")
+    sns.pairplot(df, hue=hue, kind=kind, diag_kind=diag_kind)
     plt.show()
-
-    # for set, data in metadata.items():
