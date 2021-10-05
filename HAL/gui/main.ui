@@ -568,7 +568,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -606,7 +606,7 @@
             <x>20</x>
             <y>20</y>
             <width>191</width>
-            <height>81</height>
+            <height>84</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout">
@@ -862,6 +862,37 @@
           </layout>
          </widget>
         </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Picoscope Analysis</string>
+         </attribute>
+         <widget class="QPushButton" name="pushButton">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>50</y>
+            <width>89</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Plot</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>50</y>
+            <width>89</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Stats</string>
+          </property>
+         </widget>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -924,7 +955,7 @@
      <x>0</x>
      <y>0</y>
      <width>1550</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataDisplay">
