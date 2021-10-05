@@ -496,6 +496,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="plotPicoButton">
+             <property name="text">
+              <string>Plot pico</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="browserHorizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -568,7 +575,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -860,37 +867,6 @@
             </layout>
            </item>
           </layout>
-         </widget>
-        </widget>
-        <widget class="QWidget" name="tab">
-         <attribute name="title">
-          <string>Picoscope Analysis</string>
-         </attribute>
-         <widget class="QPushButton" name="pushButton">
-          <property name="geometry">
-           <rect>
-            <x>80</x>
-            <y>50</y>
-            <width>89</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Plot</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="geometry">
-           <rect>
-            <x>180</x>
-            <y>50</y>
-            <width>89</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Stats</string>
-          </property>
          </widget>
         </widget>
        </widget>
