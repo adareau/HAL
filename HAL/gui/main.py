@@ -33,6 +33,7 @@ from . import (
     menubar,
     advancedplot,
     commandpalette,
+    picoscope,
 )
 
 from .MainUI import Ui_mainWindow
@@ -180,6 +181,10 @@ CALLBACK_LIST = [
     # fit buttons
     ("fitButton", "clicked", "_fitButtonClicked"),
     ("deleteFitButton", "clicked", "_deleteFitButtonClicked"),
+
+    #picoscope
+    ("plotPicoButton", "clicked", "_plotPicoButtonClicked"),
+    ("statsPicoButton", "clicked", "_statsPicoButtonClicked"),
 
     # -- MENU BAR --
     ("menuAboutGotoGithubAction", "triggered", "_gotoGithub"),
@@ -507,6 +512,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickPlotFitSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotFitSelectionChanged(self)
+
+    def _plotPicoButtonClicked(self,*args,**kwargs):
+        picoscope.plotpico(self)
+
+    def _statsPicoButtonClicked(self,*args,**kwargs):
+        picoscope.statspico(self)
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 

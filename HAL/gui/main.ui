@@ -503,6 +503,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="statsPicoButton">
+             <property name="text">
+              <string>Stats pico</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="browserHorizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
