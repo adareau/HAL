@@ -27,6 +27,7 @@ from . import (
     display,
     dataexplorer,
     quickplot,
+    correlations,
     fitting,
     testing,
     misc,
@@ -145,9 +146,14 @@ CALLBACK_LIST = [
 
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
+    ("quickPlot2DButton", "clicked", "_quickPlot2DButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlot2DYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlot2DXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
+    ("quickPlot2DZToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotFitToolButtonActionGroup", "triggered", "_quickPlotFitSelectionChanged"),
+    ("plottingOptionsButton", "clicked", "_quickplotShowOptions"),
 
     # -- ADVANCED DATA ANALYSIS / PLOT
     ("variableDeclarationTable", "itemChanged", "_variableDeclarationChanged"),
@@ -166,6 +172,10 @@ CALLBACK_LIST = [
     ("exportDataButton", "clicked", "_exportDataButtonClicked"),
     ("advancedStatButton", "clicked", "_advancedStatButtonClicked"),
     ("advancedPlotResetButton", "clicked", "_advancedPlotResetButtonClicked"),
+
+    # correlations plots
+    ("correlationsPlotButton", "clicked", "_plotCorrelations"),
+    ("correlationsHueToolButtonActionGroup", "triggered", "_correlationsSelectionChanged"),
 
     # -- FITTING --
     # ROI
@@ -269,6 +279,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         # -- GUI related initializations
         # setup UI (as defined in HAL.gui.MainUI)
         self.setupUi(self)
+        # creates the plotting options window, wrt the quickplot tab
+        self.quickplotOptionsWindow = quickplot.PlottingOptionsWindow()
         # setup UI (define here)
         self.setupElements()
         # connect callbacks
@@ -306,6 +318,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             display,
             dataexplorer,
             quickplot,
+            correlations,
             advancedplot,
             fitting,
             menubar,
@@ -502,11 +515,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _quickPlotButtonClicked(self, *args, **kwargs):
         quickplot.plotData(self)
 
+    def _quickPlot2DButtonClicked(self, *args, **kwargs):
+        quickplot.plotData2D(self)
+
     def _quickPlotSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotSelectionChanged(self)
 
     def _quickPlotFitSelectionChanged(self, *args, **kwargs):
         quickplot.quickPlotFitSelectionChanged(self)
+
+    def _quickplotShowOptions(self, *args, **kwargs):
+        self.quickplotOptionsWindow.show()
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 
@@ -545,6 +564,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _advancedPlotResetButtonClicked(self, *args, **kwargs):
         advancedplot.advancedPlotResetButtonClicked(self)
+
+    # correlations plots
+    def _plotCorrelations(self, *args, **kwargs):
+        correlations.plotCorrelations(self)
+
+    def _correlationsSelectionChanged(self, *args, **kwargs):
+        correlations.correlationsSelectionChanged(self)
 
     # -- FITTING
 

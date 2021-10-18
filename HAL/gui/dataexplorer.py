@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import (
 )
 
 # -- local
-from . import quickplot, advancedplot, quotes
+from . import quickplot, advancedplot, correlations, quotes
 from .misc import wrap_text, dialog
 
 # -- logger
@@ -203,6 +203,7 @@ def updateMetadataCache(self, reset_cache=False):
     quickplot.refreshMetaDataList(self)
     advancedplot.refreshMetaDataList(self)
     advancedplot.refreshMetadataLivePlot(self)
+    correlations.refreshMetaDataList(self)
 
 
 def _generateMetadaListFromCache(self, path_list):

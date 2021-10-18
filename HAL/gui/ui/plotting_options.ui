@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>plottingOptionsWindow</class>
+ <widget class="QMainWindow" name="plottingOptionsWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>887</width>
+    <height>437</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>871</width>
+      <height>401</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QGroupBox" name="options2DgroupBox">
+       <property name="title">
+        <string>1D plotting options</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="option1DgroupBox">
+       <property name="title">
+        <string>2D plotting options</string>
+       </property>
+       <widget class="QWidget" name="formLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>411</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="showStdDevCheckBox">
+           <property name="text">
+            <string>show standart deviation</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>color map</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="cmapComboBox">
+           <property name="editable">
+            <bool>false</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>mako</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>jet</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>viridis</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>plasma</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>inferno</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>magma</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>crest</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>flare</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>cividis</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Spectral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Spectral_r</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>coolwarm</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>bwr</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>seismic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>cubehelix</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>rocket</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>rocket_r</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Greys</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Purples</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Blues</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Greens</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Oranges</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Reds</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>YlOrBr</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>YlOrRd</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>OrRd</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PuRd</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RdPu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>BuPu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>GnBu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PuBu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>YlGnBu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PuBuGn</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>BuGn</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>YlGn</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PiYG</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PRGn</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>BrBG</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PuOr</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RdGy</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RdBu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RdYlBu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RdYlGn</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="formLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>210</y>
+          <width>415</width>
+          <height>150</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="interpolationEnabledLabel">
+           <property name="text">
+            <string>enabled</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="interpolationEnabledCheckBox">
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="showNodesLabel">
+           <property name="text">
+            <string>show nodes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="showNodesCheckBox">
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="radialFunctionsBasisLabel">
+           <property name="text">
+            <string>radial functions basis</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="radialFunctionsBasisComboBox">
+           <item>
+            <property name="text">
+             <string>thin_plate_spline</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>linear</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>cubic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>quintic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>multiquadric</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>inverse_multiquadric</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>inverse_quadratic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>gaussian</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="epsilonValueLabel">
+           <property name="text">
+            <string>epsilon value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="epsilonValueLineEdit">
+           <property name="text">
+            <string>1.0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="degreeLabel">
+           <property name="text">
+            <string>degree</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="degreeLineEdit">
+           <property name="text">
+            <string>None</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>180</y>
+          <width>201</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Smooth interpolation</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
