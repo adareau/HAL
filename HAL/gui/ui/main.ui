@@ -568,7 +568,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -652,17 +652,17 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="quickStatsButton">
-              <property name="text">
-               <string>STATS</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="2">
              <widget class="QCheckBox" name="quickPlotEnableFitBox">
               <property name="text">
                <string>fit data</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QCheckBox" name="quickPlotPlotBySeqBox">
+              <property name="text">
+               <string>plot by seq</string>
               </property>
              </widget>
             </item>
@@ -1162,7 +1162,7 @@
      <x>0</x>
      <y>0</y>
      <width>1550</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataDisplay">

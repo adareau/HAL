@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'HAL/gui/ui/main.ui'
+# Form implementation generated from reading ui file 'ui/main.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -317,12 +317,12 @@ class Ui_mainWindow(object):
         self.quickPlotButton = QtWidgets.QPushButton(self.gridLayoutWidget_2)
         self.quickPlotButton.setObjectName("quickPlotButton")
         self.gridLayout_5.addWidget(self.quickPlotButton, 0, 2, 1, 1)
-        self.quickStatsButton = QtWidgets.QPushButton(self.gridLayoutWidget_2)
-        self.quickStatsButton.setObjectName("quickStatsButton")
-        self.gridLayout_5.addWidget(self.quickStatsButton, 1, 2, 1, 1)
         self.quickPlotEnableFitBox = QtWidgets.QCheckBox(self.gridLayoutWidget_2)
         self.quickPlotEnableFitBox.setObjectName("quickPlotEnableFitBox")
         self.gridLayout_5.addWidget(self.quickPlotEnableFitBox, 2, 2, 1, 1)
+        self.quickPlotPlotBySeqBox = QtWidgets.QCheckBox(self.gridLayoutWidget_2)
+        self.quickPlotPlotBySeqBox.setObjectName("quickPlotPlotBySeqBox")
+        self.gridLayout_5.addWidget(self.quickPlotPlotBySeqBox, 1, 2, 1, 1)
         self.groupBox_2 = QtWidgets.QGroupBox(self.quickAnalysisTab)
         self.groupBox_2.setGeometry(QtCore.QRect(380, 10, 411, 171))
         font = QtGui.QFont()
@@ -532,7 +532,7 @@ class Ui_mainWindow(object):
         self.horizontalLayout.addLayout(self.metaColumn)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1550, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1550, 22))
         self.menubar.setObjectName("menubar")
         self.menuDataDisplay = QtWidgets.QMenu(self.menubar)
         self.menuDataDisplay.setObjectName("menuDataDisplay")
@@ -550,7 +550,7 @@ class Ui_mainWindow(object):
 
         self.retranslateUi(mainWindow)
         self.settingsTabWidget.setCurrentIndex(0)
-        self.dataAnalysisTabWidget.setCurrentIndex(2)
+        self.dataAnalysisTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
@@ -587,8 +587,8 @@ class Ui_mainWindow(object):
         self.quickPlotXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
         self.quickPlotXToolButton.setText(_translate("mainWindow", "X"))
         self.quickPlotButton.setText(_translate("mainWindow", "PLOT"))
-        self.quickStatsButton.setText(_translate("mainWindow", "STATS"))
         self.quickPlotEnableFitBox.setText(_translate("mainWindow", "fit data"))
+        self.quickPlotPlotBySeqBox.setText(_translate("mainWindow", "plot by seq"))
         self.groupBox_2.setTitle(_translate("mainWindow", "2D density plot"))
         self.quickPlot2DXLabel.setText(_translate("mainWindow", "quickPlotXLabel"))
         self.quickPlot2DYLabel.setText(_translate("mainWindow", "quickPlotYLabel"))

@@ -324,11 +324,15 @@ def plotData(self):
     x_timestamp = False
     fit_results = {}
 
-    plot_by_seq=True
+
+    if self.quickPlotPlotBySeqBox.isChecked():
+        plot_by_seq=True
+    else:
+        plot_by_seq=False
+        
     sequences_list=np.unique(metadata["current selection"]["file"]["parent"])
     number_of_sequences = len(sequences_list)
-    #print("sequences list:"+str(sequences_list))
-    #print("number_of_sequences"+str(number_of_sequences))
+
     for set, data in metadata.items():
         # - filter data
         # get data
@@ -342,7 +346,6 @@ def plotData(self):
                 x_raw[k]=np.array(data[x_data_name[0]][x_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
                 y_raw[k]=np.array(data[y_data_name[0]][y_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
             pass
-            print(x_raw)
 
         # remove non numeric values
         x_filtered=[[]]*len(x_raw)
