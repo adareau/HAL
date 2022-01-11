@@ -323,31 +323,53 @@ def plotData(self):
     # - loop on sets
     x_timestamp = False
     fit_results = {}
+
+    plot_by_seq=True
+    sequences_list=np.unique(metadata["current selection"]["file"]["parent"])
+    number_of_sequences = len(sequences_list)
+    #print("sequences list:"+str(sequences_list))
+    #print("number_of_sequences"+str(number_of_sequences))
     for set, data in metadata.items():
         # - filter data
         # get data
-        x_raw = data[x_data_name[0]][x_data_name[1]]
-        y_raw = data[y_data_name[0]][y_data_name[1]]
+        if plot_by_seq is False:
+            x_raw = [data[x_data_name[0]][x_data_name[1]]]
+            y_raw = [data[y_data_name[0]][y_data_name[1]]]
+        elif plot_by_seq is True:
+            x_raw=[[]]*number_of_sequences
+            y_raw=[[]]*number_of_sequences
+            for k in range(number_of_sequences):
+                x_raw[k]=np.array(data[x_data_name[0]][x_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
+                y_raw[k]=np.array(data[y_data_name[0]][y_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
+            pass
+            print(x_raw)
+
         # remove non numeric values
-        x_filtered = []
-        y_filtered = []
-        for i, (x, y) in enumerate(zip(x_raw, y_raw)):
-            if not _isnumber(x) or not _isnumber(y):
-                continue
-            x_filtered.append(float(x))
-            y_filtered.append(float(y))
+        x_filtered=[[]]*len(x_raw)
+        y_filtered=[[]]*len(x_raw)
+        for k in range(len(x_raw)):
+            x_filtered[k] = []
+            y_filtered[k] = []
+
+            for i, (x, y) in enumerate(zip(x_raw[k], y_raw[k])):
+                if not _isnumber(x) or not _isnumber(y):
+                    continue
+                x_filtered[k].append(float(x))
+                y_filtered[k].append(float(y))
+
 
         # if empty : continue
-        if not x_filtered:
-            continue
-
-        x_filtered = np.array(x_filtered)
-        y_filtered = np.array(y_filtered)
+        isort=[[]]*len(x_raw)
+        for k in range(len(x_raw)):
+            if not x_filtered[k]:
+                continue
+            x_filtered[k] = np.array(x_filtered[k])
+            y_filtered[k] = np.array(y_filtered[k])
 
         # sort
-        isort = np.argsort(x_filtered)
-        x_filtered = x_filtered[isort]
-        y_filtered = y_filtered[isort]
+            isort[k] = np.argsort(x_filtered[k])
+            x_filtered[k] = x_filtered[k][isort[k]]
+            y_filtered[k] = y_filtered[k][isort[k]]
 
         # - is x a timestamp ?
         x_meta, x_name = x_data_name
@@ -355,7 +377,8 @@ def plotData(self):
         if x_info is not None:
             special = x_info.get("special", None)
             if special == "timestamp":
-                x_filtered = [datetime.fromtimestamp(t) for t in x_filtered]
+                for k in range(len(x_raw)):
+                    x_filtered[k] = [datetime.fromtimestamp(t) for t in x_filtered[k]]
                 x_timestamp = True
 
         # - plot
@@ -363,7 +386,12 @@ def plotData(self):
             fmt = "o"
         else:
             fmt = ":o"
-        (line,) = ax.plot(x_filtered, y_filtered, fmt, label=set)
+        for k in range(len(x_raw)):
+            if plot_by_seq is False:
+                plot_label=set
+            elif plot_by_seq is True:
+                plot_label="seq "+str(sequences_list[k])
+            (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
 
         # - fit
         if self.quickPlotEnableFitBox.isChecked():
