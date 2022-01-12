@@ -91,6 +91,21 @@ def setupUi(self):
     self.quickPlotYLabel.setText("no selection")
     self.quickPlotYToolButton.label = self.quickPlotYLabel
 
+    # - Plotby
+    # define menu and selection group
+    menuPlotby = QMenu()
+    actionGroupPlotby = QActionGroup(menuPlotby)
+    actionGroupPlotby.setExclusive(True)
+    # store for future access
+    self.quickPlotPlotbyToolButtonActionGroup = actionGroupPlotby
+    self.quickPlotPlotbyToolButton.actionGroup = actionGroupPlotby
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotPlotbyToolButton.setMenu(menuPlotby)
+    self.quickPlotPlotbyToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.quickPlotPlotbyLabel.setText("no selection")
+    self.quickPlotPlotbyToolButton.label = self.quickPlotPlotbyLabel
+
     # - 2D X
     # define menu and selection group
     menu2DX = QMenu()
@@ -194,6 +209,7 @@ def quickPlotSelectionChanged(self):
     tool_buttons = [
         self.quickPlotXToolButton,
         self.quickPlotYToolButton,
+        self.quickPlotPlotbyToolButton,
         self.quickPlot2DXToolButton,
         self.quickPlot2DYToolButton,
         self.quickPlot2DZToolButton,
@@ -236,6 +252,7 @@ def refreshMetaDataList(self):
     tool_buttons = [
         self.quickPlotXToolButton,
         self.quickPlotYToolButton,
+        self.quickPlotPlotbyToolButton,
         self.quickPlot2DXToolButton,
         self.quickPlot2DYToolButton,
         self.quickPlot2DZToolButton,

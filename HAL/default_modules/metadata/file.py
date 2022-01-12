@@ -98,7 +98,7 @@ class FileData(AbstractMetaData):
             "comment": "size in mega bytes",
         }
         data.append(param)
-
+        print(data)
         #  store
         self.data = data
 
