@@ -420,7 +420,7 @@ def plotData(self):
             if plot_by_seq is False:
                 plot_label = set
             elif plot_by_seq is True:
-                plot_label = str(subsets_values[k])
+                plot_label = str(variable) + " " + str(subsets_values[k])
             (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
 
         # - fit
