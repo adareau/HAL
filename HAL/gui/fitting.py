@@ -361,7 +361,7 @@ def _save_fit_result_as_json(self, fit_dic, data_object):
     fit_folder = fit_file.parent
     fit_folder.mkdir(exist_ok=True)
     # write
-    fit_file.write_text(json_str)
+    fit_file.write_text(json_str, encoding="utf8")
 
 
 def _gen_saved_fit_path(self, data_path):
@@ -416,7 +416,7 @@ def load_saved_fit(self, data_path=None):
         return None, None
 
     # load
-    fit_json = json.loads(fit_file.read_text())
+    fit_json = json.loads(fit_file.read_text())  # encoding="utf8" ?
 
     # -- analyze fit
     # get fit info
