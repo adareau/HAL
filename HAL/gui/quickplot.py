@@ -309,6 +309,7 @@ def plotData(self):
     # get selected metadata fields
     checkedDataX = self.quickPlotXToolButton.actionGroup.checkedAction()
     checkedDataY = self.quickPlotYToolButton.actionGroup.checkedAction()
+
     if None in [checkedDataX, checkedDataY]:
         logger.debug("plotData() : data selection missing")
         return
@@ -343,11 +344,18 @@ def plotData(self):
 
     if self.quickPlotPlotBySeqBox.isChecked():
         plot_by_seq = True
+        checkedDataPlotBy = self.quickPlotPlotbyToolButton.actionGroup.checkedAction()
+        if checkedDataPlotBy is None:
+            logger.warning("plotData() : data selection missing")
+            return
+        (category, variable) = checkedDataPlotBy.data()
+        subsets_values = np.unique(metadata["current selection"][category][variable])
+        number_of_subsets = len(subsets_values)
     else:
         plot_by_seq = False
 
-    sequences_list = np.unique(metadata["current selection"]["file"]["parent"])
-    number_of_sequences = len(sequences_list)
+    # sequences_list = np.unique(metadata["current selection"]["file"]["parent"])
+    # number_of_sequences = len(sequences_list)
 
     for set, data in metadata.items():
         # - filter data
@@ -356,14 +364,14 @@ def plotData(self):
             x_raw = [data[x_data_name[0]][x_data_name[1]]]
             y_raw = [data[y_data_name[0]][y_data_name[1]]]
         elif plot_by_seq is True:
-            x_raw = [[]] * number_of_sequences
-            y_raw = [[]] * number_of_sequences
-            for k in range(number_of_sequences):
+            x_raw = [[]] * number_of_subsets
+            y_raw = [[]] * number_of_subsets
+            for k in range(number_of_subsets):
                 x_raw[k] = np.array(data[x_data_name[0]][x_data_name[1]])[
-                    np.array(data["file"]["parent"]) == sequences_list[k]
+                    np.array(data[category][variable]) == subsets_values[k]
                 ]
                 y_raw[k] = np.array(data[y_data_name[0]][y_data_name[1]])[
-                    np.array(data["file"]["parent"]) == sequences_list[k]
+                    np.array(data[category][variable]) == subsets_values[k]
                 ]
             pass
 
@@ -412,7 +420,7 @@ def plotData(self):
             if plot_by_seq is False:
                 plot_label = set
             elif plot_by_seq is True:
-                plot_label = "seq " + str(sequences_list[k])
+                plot_label = str(subsets_values[k])
             (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
 
         # - fit
