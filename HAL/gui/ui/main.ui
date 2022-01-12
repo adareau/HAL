@@ -577,7 +577,7 @@
          <widget class="QGroupBox" name="groupBox">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>90</x>
             <y>10</y>
             <width>361</width>
             <height>171</height>
@@ -672,9 +672,9 @@
          <widget class="QGroupBox" name="groupBox_2">
           <property name="geometry">
            <rect>
-            <x>380</x>
+            <x>460</x>
             <y>10</y>
-            <width>411</width>
+            <width>331</width>
             <height>171</height>
            </rect>
           </property>
@@ -693,7 +693,7 @@
             <rect>
              <x>9</x>
              <y>29</y>
-             <width>391</width>
+             <width>311</width>
              <height>131</height>
             </rect>
            </property>
@@ -745,6 +745,12 @@
             </item>
             <item row="1" column="2">
              <widget class="QPushButton" name="quickPlot2DButton">
+              <property name="maximumSize">
+               <size>
+                <width>136</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="text">
                <string>PLOT</string>
               </property>
@@ -759,6 +765,19 @@
             </item>
            </layout>
           </widget>
+         </widget>
+         <widget class="QPushButton" name="quickStatsButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>80</y>
+            <width>71</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>STATS</string>
+          </property>
          </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">
