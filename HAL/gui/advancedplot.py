@@ -273,6 +273,9 @@ def mapVariables(self, metadata_dic):
 
     # -- loop on all rows
     mapped_variables = {}
+
+    if table.item(0, 0).text() == "":
+        logger.warning("Configure stats in the advanced analysis tab")
     for row in range(n_row):
         # get variable names
         name = table.item(row, 0).text()
@@ -552,6 +555,12 @@ def exportDataButtonClicked(self):
 
 def advancedStatButtonClicked(self):
     """Placeholder. TODO : implement"""
+    displayStats(self)
+
+
+def quickStatsButtonClicked(self):
+    """Placeholder. TODO : implement"""
+    # logger.warning("Please configure stats in the advanced plot section")
     displayStats(self)
 
 

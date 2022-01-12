@@ -146,6 +146,7 @@ CALLBACK_LIST = [
 
     # quickplot
     ("quickPlotButton", "clicked", "_quickPlotButtonClicked"),
+    ("quickStatsButton", "clicked", "_quickStatsButtonClicked"),
     ("quickPlot2DButton", "clicked", "_quickPlot2DButtonClicked"),
     ("quickPlotYToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
     ("quickPlotXToolButtonActionGroup", "triggered", "_quickPlotSelectionChanged"),
@@ -526,6 +527,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
 
     def _quickplotShowOptions(self, *args, **kwargs):
         self.quickplotOptionsWindow.show()
+
+    def _quickStatsButtonClicked(self, *args, **kwargs):
+        advancedplot.quickStatsButtonClicked(self)
 
     # -- ADVANCED DATA ANALYSIS / PLOT
 

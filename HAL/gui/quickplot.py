@@ -324,13 +324,12 @@ def plotData(self):
     x_timestamp = False
     fit_results = {}
 
-
     if self.quickPlotPlotBySeqBox.isChecked():
-        plot_by_seq=True
+        plot_by_seq = True
     else:
-        plot_by_seq=False
+        plot_by_seq = False
 
-    sequences_list=np.unique(metadata["current selection"]["file"]["parent"])
+    sequences_list = np.unique(metadata["current selection"]["file"]["parent"])
     number_of_sequences = len(sequences_list)
 
     for set, data in metadata.items():
@@ -340,16 +339,20 @@ def plotData(self):
             x_raw = [data[x_data_name[0]][x_data_name[1]]]
             y_raw = [data[y_data_name[0]][y_data_name[1]]]
         elif plot_by_seq is True:
-            x_raw=[[]]*number_of_sequences
-            y_raw=[[]]*number_of_sequences
+            x_raw = [[]] * number_of_sequences
+            y_raw = [[]] * number_of_sequences
             for k in range(number_of_sequences):
-                x_raw[k]=np.array(data[x_data_name[0]][x_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
-                y_raw[k]=np.array(data[y_data_name[0]][y_data_name[1]])[np.array(data["file"]["parent"])==sequences_list[k]]
+                x_raw[k] = np.array(data[x_data_name[0]][x_data_name[1]])[
+                    np.array(data["file"]["parent"]) == sequences_list[k]
+                ]
+                y_raw[k] = np.array(data[y_data_name[0]][y_data_name[1]])[
+                    np.array(data["file"]["parent"]) == sequences_list[k]
+                ]
             pass
 
         # remove non numeric values
-        x_filtered=[[]]*len(x_raw)
-        y_filtered=[[]]*len(x_raw)
+        x_filtered = [[]] * len(x_raw)
+        y_filtered = [[]] * len(x_raw)
         for k in range(len(x_raw)):
             x_filtered[k] = []
             y_filtered[k] = []
@@ -360,16 +363,15 @@ def plotData(self):
                 x_filtered[k].append(float(x))
                 y_filtered[k].append(float(y))
 
-
         # if empty : continue
-        isort=[[]]*len(x_raw)
+        isort = [[]] * len(x_raw)
         for k in range(len(x_raw)):
             if not x_filtered[k]:
                 continue
             x_filtered[k] = np.array(x_filtered[k])
             y_filtered[k] = np.array(y_filtered[k])
 
-        # sort
+            # sort
             isort[k] = np.argsort(x_filtered[k])
             x_filtered[k] = x_filtered[k][isort[k]]
             y_filtered[k] = y_filtered[k][isort[k]]
@@ -391,9 +393,9 @@ def plotData(self):
             fmt = ":o"
         for k in range(len(x_raw)):
             if plot_by_seq is False:
-                plot_label=set
+                plot_label = set
             elif plot_by_seq is True:
-                plot_label="seq "+str(sequences_list[k])
+                plot_label = "seq " + str(sequences_list[k])
             (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
 
         # - fit
@@ -401,10 +403,10 @@ def plotData(self):
             # get current fit class
             current_action = self.quickPlotFitToolButtonActionGroup.checkedAction()
 
-            if len(x_raw)==1:
-                x_filtered=x_filtered[0]
-                y_filtered=y_filtered[0]
-            elif len(x_raw)!=1:
+            if len(x_raw) == 1:
+                x_filtered = x_filtered[0]
+                y_filtered = y_filtered[0]
+            elif len(x_raw) != 1:
                 logger.warning("Select one sequence or disable plot by seq")
                 return
 
