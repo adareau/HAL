@@ -48,6 +48,7 @@ DATA_DEFAULTS = {
 
 METADATA_DEFAULTS = {
     "autorefresh cache": True,
+    "do not display": "com_x, com_y"
 }
 
 FIT_DEFAULTS = {

@@ -96,12 +96,12 @@ class HALFitData(AbstractMetaData):
         # - get values
         fit_collection = json_data["collection"]
         for roi, fitres in fit_collection.items():
-            #do_not_display = self.settings.config["metadata"]["do not display"].split(", ")
+            do_not_display = self.settings.config["metadata"]["do not display"].split(", ")
             #print(do_not_display)
             for value in fitres["result"]["values"]:
                 param = {k: v for k, v in value.items()}
                 #print(self.settings.config["metadata"]["do not display"])
-                do_not_display = ["com_x", "com_y"]
+                #do_not_display = ["com_x", "com_y"]
                 if param["name"] in do_not_display:
                     pass
                 else:
