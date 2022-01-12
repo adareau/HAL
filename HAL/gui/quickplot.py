@@ -329,7 +329,7 @@ def plotData(self):
         plot_by_seq=True
     else:
         plot_by_seq=False
-        
+
     sequences_list=np.unique(metadata["current selection"]["file"]["parent"])
     number_of_sequences = len(sequences_list)
 
@@ -400,6 +400,14 @@ def plotData(self):
         if self.quickPlotEnableFitBox.isChecked():
             # get current fit class
             current_action = self.quickPlotFitToolButtonActionGroup.checkedAction()
+
+            if len(x_raw)==1:
+                x_filtered=x_filtered[0]
+                y_filtered=y_filtered[0]
+            elif len(x_raw)!=1:
+                logger.warning("Select one sequence or disable plot by seq")
+                return
+
             if current_action is not None:
                 # init the fit object
                 _, _, FitClass = current_action.data()
