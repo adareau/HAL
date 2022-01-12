@@ -12,6 +12,7 @@ Comments : Imports fit information, as saved by HAL
 import json
 from pathlib import Path
 from ...classes.settings import Settings
+
 # -- local
 from HAL.classes.metadata.abstract import AbstractMetaData
 
@@ -33,7 +34,6 @@ class HALFitData(AbstractMetaData):
         self._settings_folder = Path().home() / ".HAL"
         global_config_path = self._settings_folder / "global.conf"
         self.settings = Settings(path=global_config_path)
-
 
     def analyze(self):
         # - init / reset data
@@ -96,7 +96,9 @@ class HALFitData(AbstractMetaData):
         # - get values
         fit_collection = json_data["collection"]
         for roi, fitres in fit_collection.items():
-            do_not_display = self.settings.config["metadata"]["do not display"].split(", ")
+            do_not_display = self.settings.config["metadata"]["do not display"].split(
+                ", "
+            )
             for value in fitres["result"]["values"]:
                 param = {k: v for k, v in value.items()}
                 if param["name"] in do_not_display:
