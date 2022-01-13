@@ -91,6 +91,21 @@ def setupUi(self):
     self.quickPlotYLabel.setText("no selection")
     self.quickPlotYToolButton.label = self.quickPlotYLabel
 
+    # - Plotby
+    # define menu and selection group
+    menuPlotby = QMenu()
+    actionGroupPlotby = QActionGroup(menuPlotby)
+    actionGroupPlotby.setExclusive(True)
+    # store for future access
+    self.quickPlotPlotbyToolButtonActionGroup = actionGroupPlotby
+    self.quickPlotPlotbyToolButton.actionGroup = actionGroupPlotby
+    # associate the menu with the corresponding toolbutton
+    self.quickPlotPlotbyToolButton.setMenu(menuPlotby)
+    self.quickPlotPlotbyToolButton.setPopupMode(QToolButton.InstantPopup)
+    # link label
+    self.quickPlotPlotbyLabel.setText("no selection")
+    self.quickPlotPlotbyToolButton.label = self.quickPlotPlotbyLabel
+
     # - 2D X
     # define menu and selection group
     menu2DX = QMenu()
@@ -194,6 +209,7 @@ def quickPlotSelectionChanged(self):
     tool_buttons = [
         self.quickPlotXToolButton,
         self.quickPlotYToolButton,
+        self.quickPlotPlotbyToolButton,
         self.quickPlot2DXToolButton,
         self.quickPlot2DYToolButton,
         self.quickPlot2DZToolButton,
@@ -236,6 +252,7 @@ def refreshMetaDataList(self):
     tool_buttons = [
         self.quickPlotXToolButton,
         self.quickPlotYToolButton,
+        self.quickPlotPlotbyToolButton,
         self.quickPlot2DXToolButton,
         self.quickPlot2DYToolButton,
         self.quickPlot2DZToolButton,
@@ -292,6 +309,7 @@ def plotData(self):
     # get selected metadata fields
     checkedDataX = self.quickPlotXToolButton.actionGroup.checkedAction()
     checkedDataY = self.quickPlotYToolButton.actionGroup.checkedAction()
+
     if None in [checkedDataX, checkedDataY]:
         logger.debug("plotData() : data selection missing")
         return
@@ -323,31 +341,65 @@ def plotData(self):
     # - loop on sets
     x_timestamp = False
     fit_results = {}
+
+    if self.quickPlotPlotByBox.isChecked():
+        plot_by = True
+        checkedDataPlotBy = self.quickPlotPlotbyToolButton.actionGroup.checkedAction()
+        if checkedDataPlotBy is None:
+            logger.warning("plotData() : data selection missing")
+            return
+        (category, variable) = checkedDataPlotBy.data()
+        subsets_values = np.unique(metadata["current selection"][category][variable])
+        number_of_subsets = len(subsets_values)
+    else:
+        plot_by = False
+
+    # sequences_list = np.unique(metadata["current selection"]["file"]["parent"])
+    # number_of_sequences = len(sequences_list)
+
     for set, data in metadata.items():
         # - filter data
         # get data
-        x_raw = data[x_data_name[0]][x_data_name[1]]
-        y_raw = data[y_data_name[0]][y_data_name[1]]
+        if plot_by is False:
+            x_raw = [data[x_data_name[0]][x_data_name[1]]]
+            y_raw = [data[y_data_name[0]][y_data_name[1]]]
+        elif plot_by is True:
+            x_raw = [[]] * number_of_subsets
+            y_raw = [[]] * number_of_subsets
+            for k in range(number_of_subsets):
+                x_raw[k] = np.array(data[x_data_name[0]][x_data_name[1]])[
+                    np.array(data[category][variable]) == subsets_values[k]
+                ]
+                y_raw[k] = np.array(data[y_data_name[0]][y_data_name[1]])[
+                    np.array(data[category][variable]) == subsets_values[k]
+                ]
+            pass
+
         # remove non numeric values
-        x_filtered = []
-        y_filtered = []
-        for i, (x, y) in enumerate(zip(x_raw, y_raw)):
-            if not _isnumber(x) or not _isnumber(y):
-                continue
-            x_filtered.append(float(x))
-            y_filtered.append(float(y))
+        x_filtered = [[]] * len(x_raw)
+        y_filtered = [[]] * len(x_raw)
+        for k in range(len(x_raw)):
+            x_filtered[k] = []
+            y_filtered[k] = []
+
+            for i, (x, y) in enumerate(zip(x_raw[k], y_raw[k])):
+                if not _isnumber(x) or not _isnumber(y):
+                    continue
+                x_filtered[k].append(float(x))
+                y_filtered[k].append(float(y))
 
         # if empty : continue
-        if not x_filtered:
-            continue
+        isort = [[]] * len(x_raw)
+        for k in range(len(x_raw)):
+            if not x_filtered[k]:
+                continue
+            x_filtered[k] = np.array(x_filtered[k])
+            y_filtered[k] = np.array(y_filtered[k])
 
-        x_filtered = np.array(x_filtered)
-        y_filtered = np.array(y_filtered)
-
-        # sort
-        isort = np.argsort(x_filtered)
-        x_filtered = x_filtered[isort]
-        y_filtered = y_filtered[isort]
+            # sort
+            isort[k] = np.argsort(x_filtered[k])
+            x_filtered[k] = x_filtered[k][isort[k]]
+            y_filtered[k] = y_filtered[k][isort[k]]
 
         # - is x a timestamp ?
         x_meta, x_name = x_data_name
@@ -355,7 +407,8 @@ def plotData(self):
         if x_info is not None:
             special = x_info.get("special", None)
             if special == "timestamp":
-                x_filtered = [datetime.fromtimestamp(t) for t in x_filtered]
+                for k in range(len(x_raw)):
+                    x_filtered[k] = [datetime.fromtimestamp(t) for t in x_filtered[k]]
                 x_timestamp = True
 
         # - plot
@@ -363,12 +416,25 @@ def plotData(self):
             fmt = "o"
         else:
             fmt = ":o"
-        (line,) = ax.plot(x_filtered, y_filtered, fmt, label=set)
+        for k in range(len(x_raw)):
+            if plot_by is False:
+                plot_label = set
+            elif plot_by is True:
+                plot_label = str(variable) + " " + str(subsets_values[k])
+            (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
 
         # - fit
         if self.quickPlotEnableFitBox.isChecked():
             # get current fit class
             current_action = self.quickPlotFitToolButtonActionGroup.checkedAction()
+
+            if len(x_raw) == 1:
+                x_filtered = x_filtered[0]
+                y_filtered = y_filtered[0]
+            elif len(x_raw) != 1:
+                logger.warning("Select one sequence or disable plot by seq")
+                return
+
             if current_action is not None:
                 # init the fit object
                 _, _, FitClass = current_action.data()

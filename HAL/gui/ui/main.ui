@@ -568,7 +568,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="quickAnalysisTab">
          <attribute name="title">
@@ -577,9 +577,9 @@
          <widget class="QGroupBox" name="groupBox">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>90</x>
             <y>10</y>
-            <width>361</width>
+            <width>381</width>
             <height>171</height>
            </rect>
           </property>
@@ -598,39 +598,11 @@
             <rect>
              <x>10</x>
              <y>30</y>
-             <width>341</width>
-             <height>131</height>
+             <width>361</width>
+             <height>146</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_5">
-            <item row="1" column="1">
-             <widget class="QLabel" name="quickPlotYLabel">
-              <property name="text">
-               <string>quickPlotYLabel</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QToolButton" name="quickPlotYToolButton">
-              <property name="text">
-               <string>Y</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QToolButton" name="quickPlotFitToolButton">
-              <property name="text">
-               <string>fit</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="quickPlotFitLabel">
-              <property name="text">
-               <string>fit type</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QLabel" name="quickPlotXLabel">
               <property name="text">
@@ -638,7 +610,7 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
+            <item row="0" column="0" alignment="Qt::AlignHCenter">
              <widget class="QToolButton" name="quickPlotXToolButton">
               <property name="text">
                <string>X</string>
@@ -652,17 +624,65 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="quickStatsButton">
+            <item row="2" column="2">
+             <widget class="QLabel" name="quickPlotPlotbyLabel">
               <property name="text">
-               <string>STATS</string>
+               <string>PlotbyLabel</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="2">
+            <item row="3" column="2">
              <widget class="QCheckBox" name="quickPlotEnableFitBox">
               <property name="text">
                <string>fit data</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="quickPlotYLabel">
+              <property name="text">
+               <string>quickPlotYLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" alignment="Qt::AlignHCenter">
+             <widget class="QCheckBox" name="quickPlotPlotByBox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>plot by</string>
+              </property>
+              <property name="tristate">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="quickPlotFitLabel">
+              <property name="text">
+               <string>fit type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" alignment="Qt::AlignHCenter">
+             <widget class="QToolButton" name="quickPlotFitToolButton">
+              <property name="text">
+               <string>fit</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" alignment="Qt::AlignHCenter">
+             <widget class="QToolButton" name="quickPlotYToolButton">
+              <property name="text">
+               <string>Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" alignment="Qt::AlignHCenter">
+             <widget class="QToolButton" name="quickPlotPlotbyToolButton">
+              <property name="text">
+               <string>select</string>
               </property>
              </widget>
             </item>
@@ -672,9 +692,9 @@
          <widget class="QGroupBox" name="groupBox_2">
           <property name="geometry">
            <rect>
-            <x>380</x>
+            <x>480</x>
             <y>10</y>
-            <width>411</width>
+            <width>311</width>
             <height>171</height>
            </rect>
           </property>
@@ -691,13 +711,13 @@
           <widget class="QWidget" name="gridLayoutWidget">
            <property name="geometry">
             <rect>
-             <x>9</x>
-             <y>29</y>
-             <width>391</width>
+             <x>10</x>
+             <y>30</y>
+             <width>291</width>
              <height>131</height>
             </rect>
            </property>
-           <layout class="QGridLayout" name="gridLayout_4">
+           <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,0,0" columnstretch="2,1,0">
             <item row="0" column="1">
              <widget class="QLabel" name="quickPlot2DXLabel">
               <property name="text">
@@ -745,6 +765,12 @@
             </item>
             <item row="1" column="2">
              <widget class="QPushButton" name="quickPlot2DButton">
+              <property name="maximumSize">
+               <size>
+                <width>136</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="text">
                <string>PLOT</string>
               </property>
@@ -759,6 +785,19 @@
             </item>
            </layout>
           </widget>
+         </widget>
+         <widget class="QPushButton" name="quickStatsButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>80</y>
+            <width>71</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>STATS</string>
+          </property>
          </widget>
         </widget>
         <widget class="QWidget" name="advancedAnalysisTab">
@@ -1162,7 +1201,7 @@
      <x>0</x>
      <y>0</y>
      <width>1550</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataDisplay">

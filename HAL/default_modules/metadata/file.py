@@ -52,6 +52,33 @@ class FileData(AbstractMetaData):
         }
         data.append(param)
 
+        # sequence
+        param = {
+            "name": "sequence",
+            "value": int(self.path.parent.name),
+            "display": "%s",
+            "unit": "",
+            "comment": "sequence number",
+        }
+        data.append(param)
+
+        # cycle
+        name = self.path.name
+        start = name.find(self.path.parent.name + "_") + len(
+            self.path.parent.name + "_"
+        )
+        end = name.find(".png")
+        substring = name[start:end]
+
+        param = {
+            "name": "cycle",
+            "value": int(substring),
+            "display": "%s",
+            "unit": "",
+            "comment": "cycle",
+        }
+        data.append(param)
+
         # -- modification time
         tmstp = self.path.stat().st_mtime
 
@@ -98,7 +125,6 @@ class FileData(AbstractMetaData):
             "comment": "size in mega bytes",
         }
         data.append(param)
-
         #  store
         self.data = data
 
