@@ -67,7 +67,7 @@ class FileData(AbstractMetaData):
         start = name.find(self.path.parent.name + "_") + len(
             self.path.parent.name + "_"
         )
-        end = name.find(".png")
+        end = name.find(str(self.path.suffix))
         substring = name[start:end]
 
         param = {
