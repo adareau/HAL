@@ -276,7 +276,7 @@ def getSelectionMetaDataFromCache(self, update_cache=False):
 
     # add the current selection
     selected_runs = [item.data(Qt.UserRole) for item in self.runList.selectedItems()]
-    if len(selected_runs) > 1:
+    if len(selected_runs) >= 1:
         dataset_list["current selection"] = selected_runs
 
     # -- generate metadata lists from cache
