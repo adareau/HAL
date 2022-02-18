@@ -133,7 +133,7 @@ class Gauss1DFit(Abstract1DFit):
             "name": "center",
             "value": center,
             "error": center_err,
-            "display": "%.3g",
+            "display": "%.4f",
             "unit": self.x_unit,
             "comment": "gaussian center",
         }
