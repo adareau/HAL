@@ -495,7 +495,7 @@ def displayStats(self):
             # mean / min / max
             for meas in ["mean", "min", "max"]:
                 x = eval("np.%s(v)" % meas, {"np": np, "v": values})
-                new_line = " %s : %.3g %s" % (meas, x, unit)
+                new_line = " %s : %.2f %s" % (meas, x, unit)
                 disp += PREFIX_CORE + new_line + "\n"
             # std
             std = np.std(values)
