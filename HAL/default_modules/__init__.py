@@ -19,6 +19,7 @@ from .fit.thomasfermi2D import ThomasFermi2DFit
 # -- fit (1D)
 from .fit.gauss1D import Gauss1DFit
 from .fit.dampedoscillations import DampedOscillation1DFit
+from .fit.hyperbolictangent1D import Hyperbolictangent1DFit
 from .fit.polynomial1D import polyfit_generator
 
 # -- data
@@ -47,6 +48,7 @@ user_modules = [
     # fits (1D)
     Gauss1DFit,
     DampedOscillation1DFit,
+    Hyperbolictangent1DFit,
 ]
 
 # - add poly fit
