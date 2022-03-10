@@ -110,7 +110,7 @@ class Polynomial1D(Abstract1DFit):
                 "name": f"p{i}",
                 "value": val,
                 "error": err,
-                "display": "%.3g",
+                "display": "%.2f",
                 "unit": unit,
                 "comment": f"polynomial {i} power coefficient",
             }
