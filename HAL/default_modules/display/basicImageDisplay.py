@@ -177,6 +177,8 @@ class BasicImageDisplay(AbstractImageDisplay):
         x = X[:, 0]
         y = Y[0, :]
 
+        if Zfit == []:
+            return
         # get argmax
         i, j = np.unravel_index(Zfit.argmax(), Zfit.shape)
 

@@ -43,5 +43,16 @@ class StatsOnly2D(Abstract2DBellShaped):
         # see Abstract2DFit Class
         values = self._get_spatial_stats(Z_offset=0)
 
+        conv_factor = self.count_conversion_factor
+        # Nint
+        Nint = np.sum(self.z) * conv_factor
+        param = {
+            "name": "Nint",
+            "value": Nint,
+            "display": "%.3g",
+            "unit": self.converted_count_unit,
+            "comment": "counts, from integrated raw data, restricted to ROI",
+        }
+        values.insert(0, param)
         # -- store
         self.values = values
