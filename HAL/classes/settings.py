@@ -46,14 +46,9 @@ DATA_DEFAULTS = {
     "year folder": "%Y",
 }
 
-METADATA_DEFAULTS = {
-    "autorefresh cache": True,
-    "do not display": "com_x, com_y"
-}
+METADATA_DEFAULTS = {"autorefresh cache": True, "do not display": "com_x, com_y"}
 
-FIT_DEFAULTS = {
-    "fit folder name": ".HAL_fits",
-}
+FIT_DEFAULTS = {"fit folder name": ".HAL_fits", "custom guess": "false"}
 
 GUI_DEFAULT = {
     "font family": "Sans Serif",

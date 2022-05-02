@@ -35,6 +35,7 @@ from PyQt5.QtWidgets import (
 # -- local
 from . import dataexplorer
 from .PlottingOptionsUI import Ui_plottingOptionsWindow
+from .GuessOptionsUI import Ui_GuessOptionsWindow
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -55,6 +56,13 @@ def _isnumber(x):
 class PlottingOptionsWindow(QMainWindow, Ui_plottingOptionsWindow):
     def __init__(self) -> None:
         super(PlottingOptionsWindow, self).__init__()
+
+        self.setupUi(self)
+
+
+class GuessOptionsWindow(QMainWindow, Ui_GuessOptionsWindow):
+    def __init__(self) -> None:
+        super(GuessOptionsWindow, self).__init__()
 
         self.setupUi(self)
 
@@ -441,6 +449,12 @@ def plotData(self):
                 fit = FitClass(x=x_filtered, z=y_filtered)
                 # do the fit
                 fit.do_guess()
+                if self.settings.config["fit"]["custom guess"] == "true":
+                    print(fit.name)
+                    print(fit.formula_help)
+                    print(fit.guess)
+                    self.GuessOptionsWindow = GuessOptionsWindow()
+                    self.GuessOptionsWindow.show()
                 fit.do_fit()
                 # prepare to plot
                 xfit = np.linspace(x_filtered.min(), x_filtered.max(), 500)
