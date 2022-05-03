@@ -31,11 +31,11 @@ from PyQt5.QtWidgets import (
     QToolButton,
     QWidget,
 )
+import PySimpleGUI as sg
 
 # -- local
 from . import dataexplorer
 from .PlottingOptionsUI import Ui_plottingOptionsWindow
-from .GuessOptionsUI import Ui_GuessOptionsWindow
 
 # -- logger
 logger = logging.getLogger(__name__)
@@ -60,11 +60,7 @@ class PlottingOptionsWindow(QMainWindow, Ui_plottingOptionsWindow):
         self.setupUi(self)
 
 
-class GuessOptionsWindow(QMainWindow, Ui_GuessOptionsWindow):
-    def __init__(self) -> None:
-        super(GuessOptionsWindow, self).__init__()
-
-        self.setupUi(self)
+sg.theme("LightGrey1")
 
 
 def setupUi(self):
@@ -450,11 +446,114 @@ def plotData(self):
                 # do the fit
                 fit.do_guess()
                 if self.settings.config["fit"]["custom guess"] == "true":
-                    print(fit.name)
-                    print(fit.formula_help)
-                    print(fit.guess)
-                    self.GuessOptionsWindow = GuessOptionsWindow()
-                    self.GuessOptionsWindow.show()
+                    p0guess = "not used"
+                    p1guess = "not used"
+                    p2guess = "not used"
+                    p3guess = "not used"
+                    p4guess = "not used"
+                    l1 = [
+                        [
+                            sg.Text("Fit name", font="Helvetica 10 bold"),
+                            sg.Text("gaussian", font="Helvetica 10", key="fit name"),
+                        ],
+                        [
+                            sg.Text("Fit formula", font="Helvetica 10 bold"),
+                            sg.Text("f(x) = 0", font="Helvetica 10", key="fit formula"),
+                        ],
+                        [
+                            sg.Text("Fit parameters", font="Helvetica 10 bold"),
+                            sg.Text(
+                                "[a,b,c]", font="Helvetica 10", key="fit parameters"
+                            ),
+                        ],
+                    ]
+
+                    l2 = [
+                        [
+                            sg.Text("p[0]"),
+                            sg.Input(size=(25, 1), default_text=p0guess, key="p0"),
+                        ],
+                        [
+                            sg.Text("p[1]"),
+                            sg.Input(size=(25, 1), default_text=p1guess, key="p1"),
+                        ],
+                        [
+                            sg.Text("p[2]"),
+                            sg.Input(size=(25, 1), default_text=p2guess, key="p2"),
+                        ],
+                        [
+                            sg.Text("p[3]"),
+                            sg.Input(size=(25, 1), default_text=p3guess, key="p3"),
+                        ],
+                        [
+                            sg.Text("p[4]"),
+                            sg.Input(size=(25, 1), default_text=p4guess, key="p4"),
+                        ],
+                    ]
+
+                    l3 = [[sg.Button("Ok"), sg.Button("Cancel")]]
+
+                    layout = [
+                        [
+                            sg.Frame(layout=l1, title="", size=(600, 100)),
+                        ],
+                        [
+                            sg.Frame(layout=l2, title="", size=(600, 200)),
+                        ],
+                        [
+                            sg.Frame(layout=l3, title="", size=(600, 50)),
+                        ],
+                    ]
+                    guess = fit.guess
+                    window = sg.Window(
+                        "Custom guess window",
+                        layout,
+                        finalize=True,
+                    )
+                    window["fit name"].update(fit.name)
+                    window["fit formula"].update(fit.formula_help)
+                    window["fit parameters"].update(fit.parameters_help)
+                    if len(guess) >= 1:
+                        p0guess = str(guess[0])
+                        window["p0"].update(p0guess)
+                    if len(guess) >= 2:
+                        p1guess = str(guess[1])
+                        window["p1"].update(p1guess)
+                    if len(guess) >= 3:
+                        p2guess = str(guess[2])
+                        window["p2"].update(p2guess)
+                    if len(guess) >= 4:
+                        p3guess = str(guess[3])
+                        window["p3"].update(p3guess)
+                    if len(guess) >= 5:
+                        p4guess = str(guess[4])
+                        window["p4"].update(p4guess)
+                    window.refresh()
+                    while True:
+                        event, values = window.read()
+                        if (
+                            event == sg.WIN_CLOSED or event == "Cancel"
+                        ):  # if user closes window or clicks cancel
+                            break
+                        if event == "Ok":
+                            new_guess = [
+                                values["p0"],
+                                values["p1"],
+                                values["p2"],
+                                values["p3"],
+                                values["p4"],
+                            ]
+                            for k in range(len(new_guess)):
+                                if new_guess[len(new_guess) - 1 - k] == "not used":
+                                    new_guess.pop()
+                                else:
+                                    new_guess[len(new_guess) - 1 - k] = float(
+                                        new_guess[len(new_guess) - 1 - k]
+                                    )
+                            fit.guess = new_guess
+                            break
+
+                    window.close()
                 fit.do_fit()
                 # prepare to plot
                 xfit = np.linspace(x_filtered.min(), x_filtered.max(), 500)

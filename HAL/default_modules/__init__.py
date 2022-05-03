@@ -18,8 +18,10 @@ from .fit.thomasfermi2D import ThomasFermi2DFit
 
 # -- fit (1D)
 from .fit.gauss1D import Gauss1DFit
+from .fit.oscillations import Oscillation1DFit
 from .fit.dampedoscillations import DampedOscillation1DFit
 from .fit.exponential1D import Exponential1DFit
+from .fit.exponential_with_offset1D import ExponentialOffset1DFit
 from .fit.hyperbolictangent1D import Hyperbolictangent1DFit
 from .fit.polynomial1D import polyfit_generator
 
@@ -48,9 +50,11 @@ user_modules = [
     FocusOnFit2D,
     # fits (1D)
     Gauss1DFit,
+    Oscillation1DFit,
     DampedOscillation1DFit,
-    Hyperbolictangent1DFit,
     Exponential1DFit,
+    ExponentialOffset1DFit,
+    Hyperbolictangent1DFit,
 ]
 
 # - add poly fit
