@@ -25,15 +25,15 @@ def Gauss1D(x, *p):
     return p[0] + p[1] * np.exp(-((x - p[3]) ** 2) / 2 / p[2] ** 2)
 
 
-def Gauss2D(xy, *p):
-    """p = [offset, amplitude, size_x, size_y, center_x, center_y]"""
+def Gauss2D_cutted(xy, *p):
+    """p = [offset, amplitude, size_x, size_y, center_x, center_y, tanh_position, slope_tanh]"""
     (x, y) = xy
-    return p[0] + p[1] * Gauss(x, 1, p[2], p[4]) * Gauss(y, 1, p[3], p[5])
+    return p[0] + p[1] * Gauss(x, 1, p[2], p[4]) * Gauss(y, 1, p[3], p[5])* 0.5 * ( 1 + tanh( (x-p[6]) / p[7] ) )
 
 
 # %% CLASS DEFINITION
-class Gauss2DFit(Abstract2DBellShaped):
-    """a 2D Gauss fit. Inherits methods from the Abstract2DBellShaped
+class Gauss2D_cuttedFit(Abstract2DBellShaped):
+    """a 2D Gauss cutted fit. Inherits methods from the Abstract2DBellShaped
     (for instance the do_guess() one)"""
 
     def __init__(self, **kwargs):
@@ -44,6 +44,7 @@ class Gauss2DFit(Abstract2DBellShaped):
         self.formula_help = "f(x) = p[0] "
         self.formula_help += "+ p[1] * exp(-(x - p[4]) ** 2 / (2 * p[2]**2))"
         self.formula_help += " * exp(-(x - p[5]) ** 2 / (2 * p[3]**2))"
+        self.formula_help += " * 0.5 * ( 1 + tanh( (x-p[6]) / p[7] ))"
         self.parameters_help = (
             "p = [offset, amplitude, size_x, size_y, center_x, center_y]"
         )
@@ -58,7 +59,10 @@ class Gauss2DFit(Abstract2DBellShaped):
 
         # guess amplitude / offset / center / size
         res = self.guess_center_size_ampl_offset()
-
+        # now we must guess parameters for the hyperbolic tangent part
+        #This is designed for Helium1 team therefore
+        guess_tanh_slope = res["sx"] / 10
+        guess_tanh_pos = res["cx"] + res["sx"]
         # adapt to the current fit function
         p0 = [
             res["offset"],
@@ -67,6 +71,8 @@ class Gauss2DFit(Abstract2DBellShaped):
             res["sy"],
             res["cx"],
             res["cy"],
+            guess_tanh_pos,
+            guess_tanh_slope
         ]
 
         # save guess
@@ -87,8 +93,8 @@ class Gauss2DFit(Abstract2DBellShaped):
         dy = np.abs(Y[0, 1] - Y[0, 0])
 
         # -- get fit results
-        offset, amplitude, sx, sy, cx, cy = self.popt
-        offset_err, amplitude_err, sx_err, sy_err, cx_err, cy_err = self.perr
+        offset, amplitude, sx, sy, cx, cy, tanh_pos, tanh_slope = self.popt
+        offset_err, amplitude_err, sx_err, sy_err, cx_err, cy_err, tanh_pos_err, tanh_slope_err = self.perr
 
         # -- init values list
         values = []
@@ -139,7 +145,7 @@ class Gauss2DFit(Abstract2DBellShaped):
                 # save value
                 param = {
                     "name": "%s%s_px" % (key, ax),
-                    "value": np.abs(v),
+                    "value": v,
                     "display": "%.3g",
                     "unit": "px",
                     "comment": "%s along %s, in pixels" % (name, ax),
@@ -168,7 +174,7 @@ class Gauss2DFit(Abstract2DBellShaped):
                 # save value
                 param = {
                     "name": "%s%s" % (key, ax),
-                    "value": np.abs(v),
+                    "value": v,
                     "display": "%.3g",
                     "unit": unit,
                     "comment": "%s along %s, in %s" % (name, ax, unit),
