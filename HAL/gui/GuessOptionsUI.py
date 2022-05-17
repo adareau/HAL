@@ -40,7 +40,9 @@ class Ui_GuessOptionsWindow(object):
         self.fixp0.setObjectName("fixp0")
         self.gridLayout_2.addWidget(self.fixp0, 0, 3, 1, 1)
         self.p1Value = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.p1Value.sizePolicy().hasHeightForWidth())
@@ -52,7 +54,9 @@ class Ui_GuessOptionsWindow(object):
         self.label.setObjectName("label")
         self.gridLayout_2.addWidget(self.label, 0, 1, 1, 1)
         self.p2Value = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.p2Value.sizePolicy().hasHeightForWidth())
@@ -60,7 +64,9 @@ class Ui_GuessOptionsWindow(object):
         self.p2Value.setObjectName("p2Value")
         self.gridLayout_2.addWidget(self.p2Value, 2, 2, 1, 1)
         self.p0Value = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.p0Value.sizePolicy().hasHeightForWidth())
@@ -79,7 +85,9 @@ class Ui_GuessOptionsWindow(object):
         self.label_4.setObjectName("label_4")
         self.gridLayout_2.addWidget(self.label_4, 3, 1, 1, 1)
         self.p3Value = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.p3Value.sizePolicy().hasHeightForWidth())
@@ -87,7 +95,9 @@ class Ui_GuessOptionsWindow(object):
         self.p3Value.setObjectName("p3Value")
         self.gridLayout_2.addWidget(self.p3Value, 3, 2, 1, 1)
         self.p4Value = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.p4Value.sizePolicy().hasHeightForWidth())
@@ -136,7 +146,9 @@ class Ui_GuessOptionsWindow(object):
 
     def retranslateUi(self, GuessOptionsWindow):
         _translate = QtCore.QCoreApplication.translate
-        GuessOptionsWindow.setWindowTitle(_translate("GuessOptionsWindow", "MainWindow"))
+        GuessOptionsWindow.setWindowTitle(
+            _translate("GuessOptionsWindow", "MainWindow")
+        )
         self.label_2.setText(_translate("GuessOptionsWindow", "p1"))
         self.label_5.setText(_translate("GuessOptionsWindow", "p4"))
         self.fixp0.setText(_translate("GuessOptionsWindow", "fix"))
