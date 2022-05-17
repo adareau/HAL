@@ -18,7 +18,7 @@ from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 
 def Gauss(x, A, sigma, c):
-    return A * np.exp(-((x - c) ** 2) / 2 / sigma ** 2)
+    return A * np.exp(-((x - c) ** 2) / 2 / sigma**2)
 
 
 def Gauss1D(x, *p):
