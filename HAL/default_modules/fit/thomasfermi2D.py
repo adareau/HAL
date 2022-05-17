@@ -16,7 +16,7 @@ from HAL.classes.fit.abstract import Abstract2DBellShaped
 
 # %% FUNCTIONS
 def TFParab(x, y, size_x, size_y, center_x, center_y):
-    return 1 - (x - center_x) ** 2 / size_x ** 2 - (y - center_y) ** 2 / size_y ** 2
+    return 1 - (x - center_x) ** 2 / size_x**2 - (y - center_y) ** 2 / size_y**2
 
 
 def ThomasFermi2D(xy, *p):

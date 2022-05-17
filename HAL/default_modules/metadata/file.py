@@ -116,7 +116,7 @@ class FileData(AbstractMetaData):
 
         # size
         size = self.path.stat().st_size
-        b_to_Mb = 1 / 1024 ** 2
+        b_to_Mb = 1 / 1024**2
         param = {
             "name": "size",
             "value": size * b_to_Mb,

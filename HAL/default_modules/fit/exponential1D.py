@@ -18,7 +18,7 @@ from HAL.classes.fit.abstract import Abstract1DFit
 
 
 def Exponential1D(x, *p):
-    return p[0] * np.exp(- (x - p[1]) / p[2])
+    return p[0] * np.exp(-(x - p[1]) / p[2])
 
 
 # %% CLASS DEFINITION
@@ -63,10 +63,9 @@ class Exponential1DFit(Abstract1DFit):
         xmax = np.max(x)
         A = zmax - zmin
 
-
         amp_guess = A
         center_guess = xmin
-        damping_rate_guess = (xmax - xmin)/2
+        damping_rate_guess = (xmax - xmin) / 2
         # -- adapt to the current fit function
         p0 = [amp_guess, center_guess, damping_rate_guess]
 
@@ -107,7 +106,6 @@ class Exponential1DFit(Abstract1DFit):
             "comment": "amplitude",
         }
         values.append(param)
-
 
         param = {
             "name": "center",

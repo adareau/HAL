@@ -36,7 +36,9 @@ class Ui_plottingOptionsWindow(object):
         self.formLayout_2.setObjectName("formLayout_2")
         self.showStdDevCheckBox = QtWidgets.QCheckBox(self.formLayoutWidget_2)
         self.showStdDevCheckBox.setObjectName("showStdDevCheckBox")
-        self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.showStdDevCheckBox)
+        self.formLayout_2.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.showStdDevCheckBox
+        )
         self.label = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.label.setObjectName("label")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label)
@@ -86,7 +88,9 @@ class Ui_plottingOptionsWindow(object):
         self.cmapComboBox.addItem("")
         self.cmapComboBox.addItem("")
         self.cmapComboBox.addItem("")
-        self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.cmapComboBox)
+        self.formLayout_2.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.cmapComboBox
+        )
         self.formLayoutWidget_3 = QtWidgets.QWidget(self.option1DgroupBox)
         self.formLayoutWidget_3.setGeometry(QtCore.QRect(10, 210, 415, 150))
         self.formLayoutWidget_3.setObjectName("formLayoutWidget_3")
@@ -95,21 +99,31 @@ class Ui_plottingOptionsWindow(object):
         self.formLayout_3.setObjectName("formLayout_3")
         self.interpolationEnabledLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.interpolationEnabledLabel.setObjectName("interpolationEnabledLabel")
-        self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.interpolationEnabledLabel)
+        self.formLayout_3.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.interpolationEnabledLabel
+        )
         self.interpolationEnabledCheckBox = QtWidgets.QCheckBox(self.formLayoutWidget_3)
         self.interpolationEnabledCheckBox.setChecked(True)
         self.interpolationEnabledCheckBox.setObjectName("interpolationEnabledCheckBox")
-        self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.interpolationEnabledCheckBox)
+        self.formLayout_3.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.interpolationEnabledCheckBox
+        )
         self.showNodesLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.showNodesLabel.setObjectName("showNodesLabel")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.showNodesLabel)
+        self.formLayout_3.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.showNodesLabel
+        )
         self.showNodesCheckBox = QtWidgets.QCheckBox(self.formLayoutWidget_3)
         self.showNodesCheckBox.setChecked(True)
         self.showNodesCheckBox.setObjectName("showNodesCheckBox")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.showNodesCheckBox)
+        self.formLayout_3.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.showNodesCheckBox
+        )
         self.radialFunctionsBasisLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.radialFunctionsBasisLabel.setObjectName("radialFunctionsBasisLabel")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.radialFunctionsBasisLabel)
+        self.formLayout_3.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.radialFunctionsBasisLabel
+        )
         self.radialFunctionsBasisComboBox = QtWidgets.QComboBox(self.formLayoutWidget_3)
         self.radialFunctionsBasisComboBox.setObjectName("radialFunctionsBasisComboBox")
         self.radialFunctionsBasisComboBox.addItem("")
@@ -120,19 +134,29 @@ class Ui_plottingOptionsWindow(object):
         self.radialFunctionsBasisComboBox.addItem("")
         self.radialFunctionsBasisComboBox.addItem("")
         self.radialFunctionsBasisComboBox.addItem("")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.radialFunctionsBasisComboBox)
+        self.formLayout_3.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.radialFunctionsBasisComboBox
+        )
         self.epsilonValueLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.epsilonValueLabel.setObjectName("epsilonValueLabel")
-        self.formLayout_3.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.epsilonValueLabel)
+        self.formLayout_3.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.epsilonValueLabel
+        )
         self.epsilonValueLineEdit = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         self.epsilonValueLineEdit.setObjectName("epsilonValueLineEdit")
-        self.formLayout_3.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.epsilonValueLineEdit)
+        self.formLayout_3.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.epsilonValueLineEdit
+        )
         self.degreeLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.degreeLabel.setObjectName("degreeLabel")
-        self.formLayout_3.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.degreeLabel)
+        self.formLayout_3.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.degreeLabel
+        )
         self.degreeLineEdit = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         self.degreeLineEdit.setObjectName("degreeLineEdit")
-        self.formLayout_3.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.degreeLineEdit)
+        self.formLayout_3.setWidget(
+            4, QtWidgets.QFormLayout.FieldRole, self.degreeLineEdit
+        )
         self.label_2 = QtWidgets.QLabel(self.option1DgroupBox)
         self.label_2.setGeometry(QtCore.QRect(20, 180, 201, 20))
         font = QtGui.QFont()
@@ -150,10 +174,18 @@ class Ui_plottingOptionsWindow(object):
 
     def retranslateUi(self, plottingOptionsWindow):
         _translate = QtCore.QCoreApplication.translate
-        plottingOptionsWindow.setWindowTitle(_translate("plottingOptionsWindow", "MainWindow"))
-        self.options2DgroupBox.setTitle(_translate("plottingOptionsWindow", "1D plotting options"))
-        self.option1DgroupBox.setTitle(_translate("plottingOptionsWindow", "2D plotting options"))
-        self.showStdDevCheckBox.setText(_translate("plottingOptionsWindow", "show standart deviation"))
+        plottingOptionsWindow.setWindowTitle(
+            _translate("plottingOptionsWindow", "MainWindow")
+        )
+        self.options2DgroupBox.setTitle(
+            _translate("plottingOptionsWindow", "1D plotting options")
+        )
+        self.option1DgroupBox.setTitle(
+            _translate("plottingOptionsWindow", "2D plotting options")
+        )
+        self.showStdDevCheckBox.setText(
+            _translate("plottingOptionsWindow", "show standart deviation")
+        )
         self.label.setText(_translate("plottingOptionsWindow", "color map"))
         self.cmapComboBox.setItemText(0, _translate("plottingOptionsWindow", "mako"))
         self.cmapComboBox.setItemText(1, _translate("plottingOptionsWindow", "jet"))
@@ -164,19 +196,35 @@ class Ui_plottingOptionsWindow(object):
         self.cmapComboBox.setItemText(6, _translate("plottingOptionsWindow", "crest"))
         self.cmapComboBox.setItemText(7, _translate("plottingOptionsWindow", "flare"))
         self.cmapComboBox.setItemText(8, _translate("plottingOptionsWindow", "cividis"))
-        self.cmapComboBox.setItemText(9, _translate("plottingOptionsWindow", "Spectral"))
-        self.cmapComboBox.setItemText(10, _translate("plottingOptionsWindow", "Spectral_r"))
-        self.cmapComboBox.setItemText(11, _translate("plottingOptionsWindow", "coolwarm"))
+        self.cmapComboBox.setItemText(
+            9, _translate("plottingOptionsWindow", "Spectral")
+        )
+        self.cmapComboBox.setItemText(
+            10, _translate("plottingOptionsWindow", "Spectral_r")
+        )
+        self.cmapComboBox.setItemText(
+            11, _translate("plottingOptionsWindow", "coolwarm")
+        )
         self.cmapComboBox.setItemText(12, _translate("plottingOptionsWindow", "bwr"))
-        self.cmapComboBox.setItemText(13, _translate("plottingOptionsWindow", "seismic"))
-        self.cmapComboBox.setItemText(14, _translate("plottingOptionsWindow", "cubehelix"))
+        self.cmapComboBox.setItemText(
+            13, _translate("plottingOptionsWindow", "seismic")
+        )
+        self.cmapComboBox.setItemText(
+            14, _translate("plottingOptionsWindow", "cubehelix")
+        )
         self.cmapComboBox.setItemText(15, _translate("plottingOptionsWindow", "rocket"))
-        self.cmapComboBox.setItemText(16, _translate("plottingOptionsWindow", "rocket_r"))
+        self.cmapComboBox.setItemText(
+            16, _translate("plottingOptionsWindow", "rocket_r")
+        )
         self.cmapComboBox.setItemText(17, _translate("plottingOptionsWindow", "Greys"))
-        self.cmapComboBox.setItemText(18, _translate("plottingOptionsWindow", "Purples"))
+        self.cmapComboBox.setItemText(
+            18, _translate("plottingOptionsWindow", "Purples")
+        )
         self.cmapComboBox.setItemText(19, _translate("plottingOptionsWindow", "Blues"))
         self.cmapComboBox.setItemText(20, _translate("plottingOptionsWindow", "Greens"))
-        self.cmapComboBox.setItemText(21, _translate("plottingOptionsWindow", "Oranges"))
+        self.cmapComboBox.setItemText(
+            21, _translate("plottingOptionsWindow", "Oranges")
+        )
         self.cmapComboBox.setItemText(22, _translate("plottingOptionsWindow", "Reds"))
         self.cmapComboBox.setItemText(23, _translate("plottingOptionsWindow", "YlOrBr"))
         self.cmapComboBox.setItemText(24, _translate("plottingOptionsWindow", "YlOrRd"))
@@ -198,19 +246,43 @@ class Ui_plottingOptionsWindow(object):
         self.cmapComboBox.setItemText(40, _translate("plottingOptionsWindow", "RdBu"))
         self.cmapComboBox.setItemText(41, _translate("plottingOptionsWindow", "RdYlBu"))
         self.cmapComboBox.setItemText(42, _translate("plottingOptionsWindow", "RdYlGn"))
-        self.interpolationEnabledLabel.setText(_translate("plottingOptionsWindow", "enabled"))
+        self.interpolationEnabledLabel.setText(
+            _translate("plottingOptionsWindow", "enabled")
+        )
         self.showNodesLabel.setText(_translate("plottingOptionsWindow", "show nodes"))
-        self.radialFunctionsBasisLabel.setText(_translate("plottingOptionsWindow", "radial functions basis"))
-        self.radialFunctionsBasisComboBox.setItemText(0, _translate("plottingOptionsWindow", "thin_plate_spline"))
-        self.radialFunctionsBasisComboBox.setItemText(1, _translate("plottingOptionsWindow", "linear"))
-        self.radialFunctionsBasisComboBox.setItemText(2, _translate("plottingOptionsWindow", "cubic"))
-        self.radialFunctionsBasisComboBox.setItemText(3, _translate("plottingOptionsWindow", "quintic"))
-        self.radialFunctionsBasisComboBox.setItemText(4, _translate("plottingOptionsWindow", "multiquadric"))
-        self.radialFunctionsBasisComboBox.setItemText(5, _translate("plottingOptionsWindow", "inverse_multiquadric"))
-        self.radialFunctionsBasisComboBox.setItemText(6, _translate("plottingOptionsWindow", "inverse_quadratic"))
-        self.radialFunctionsBasisComboBox.setItemText(7, _translate("plottingOptionsWindow", "gaussian"))
-        self.epsilonValueLabel.setText(_translate("plottingOptionsWindow", "epsilon value"))
+        self.radialFunctionsBasisLabel.setText(
+            _translate("plottingOptionsWindow", "radial functions basis")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            0, _translate("plottingOptionsWindow", "thin_plate_spline")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            1, _translate("plottingOptionsWindow", "linear")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            2, _translate("plottingOptionsWindow", "cubic")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            3, _translate("plottingOptionsWindow", "quintic")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            4, _translate("plottingOptionsWindow", "multiquadric")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            5, _translate("plottingOptionsWindow", "inverse_multiquadric")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            6, _translate("plottingOptionsWindow", "inverse_quadratic")
+        )
+        self.radialFunctionsBasisComboBox.setItemText(
+            7, _translate("plottingOptionsWindow", "gaussian")
+        )
+        self.epsilonValueLabel.setText(
+            _translate("plottingOptionsWindow", "epsilon value")
+        )
         self.epsilonValueLineEdit.setText(_translate("plottingOptionsWindow", "1.0"))
         self.degreeLabel.setText(_translate("plottingOptionsWindow", "degree"))
         self.degreeLineEdit.setText(_translate("plottingOptionsWindow", "None"))
-        self.label_2.setText(_translate("plottingOptionsWindow", "Smooth interpolation"))
+        self.label_2.setText(
+            _translate("plottingOptionsWindow", "Smooth interpolation")
+        )

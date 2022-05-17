@@ -150,7 +150,7 @@ class DampedOscillation1DFit(Abstract1DFit):
         param = {
             "name": "periode",
             "value": 1 / frequency,
-            "error": frequency_err / (frequency ** 2),
+            "error": frequency_err / (frequency**2),
             "display": "%.3g",
             "unit": self.x_unit,
             "comment": "periode",
