@@ -18,3 +18,7 @@ jobs:
         uses: actions/setup-python@v2
       - name: Black
         uses: psf/black@stable  # already includes args "--check --diff"
+        with:
+          options: "--check --verbose"
+          src: "./src"
+          version: "21.9b0"
