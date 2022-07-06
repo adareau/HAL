@@ -132,7 +132,7 @@ class ExponentialOffset1DFit(Abstract1DFit):
             "value": offset,
             "error": offset_err,
             "display": "%.3g",
-            "unit": self.y_unit,
+            "unit": self.z_unit,
             "comment": "offset",
         }
         values.append(param)
