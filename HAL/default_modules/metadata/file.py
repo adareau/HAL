@@ -66,6 +66,7 @@ class FileData(AbstractMetaData):
             "unit": "",
             "comment": "sequence number",
         }
+        data.append(param)
 
         # cycle
         param = {
@@ -75,7 +76,6 @@ class FileData(AbstractMetaData):
             "unit": "",
             "comment": "cycle",
         }
-        print(param)
         data.append(param)
 
         # -- modification time
