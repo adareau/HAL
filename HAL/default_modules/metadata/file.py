@@ -10,6 +10,7 @@ Comments : Abstract classes for data handling
 # -- global
 from pathlib import Path
 from datetime import datetime
+import re
 
 # -- local
 from HAL.classes.metadata.abstract import AbstractMetaData
@@ -52,31 +53,32 @@ class FileData(AbstractMetaData):
         }
         data.append(param)
 
+        # parsing filename with regex
+        parsed_name = [
+            int(s) for s in re.findall(r"\d+", self.path.name)
+        ]  # === [#seq number , #run num]
+
         # sequence
         param = {
             "name": "sequence",
-            "value": int(self.path.parent.name),
+            "value": parsed_name[0],
             "display": "%s",
             "unit": "",
             "comment": "sequence number",
         }
+        print(param)
+        print("\n")
         data.append(param)
 
         # cycle
-        name = self.path.name
-        start = name.find(self.path.parent.name + "_") + len(
-            self.path.parent.name + "_"
-        )
-        end = name.find(str(self.path.suffix))
-        substring = name[start:end]
-
         param = {
             "name": "cycle",
-            "value": int(substring),
+            "value": parsed_name[1],
             "display": "%s",
             "unit": "",
             "comment": "cycle",
         }
+        print(param)
         data.append(param)
 
         # -- modification time
@@ -116,7 +118,7 @@ class FileData(AbstractMetaData):
 
         # size
         size = self.path.stat().st_size
-        b_to_Mb = 1 / 1024**2
+        b_to_Mb = 1 / 1024 ** 2
         param = {
             "name": "size",
             "value": size * b_to_Mb,
