@@ -66,9 +66,6 @@ class FileData(AbstractMetaData):
             "unit": "",
             "comment": "sequence number",
         }
-        print(param)
-        print("\n")
-        data.append(param)
 
         # cycle
         param = {
