@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "hal"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyqt5 = "^5.15.7"
+numpy = "^1.23.5"
+jsbeautifier = "^1.14.7"
+scipy = "^1.9.3"
+matplotlib = "^3.6.2"
+opencv-python-headless = "^4.6.0.66"
+pyqtgraph = "^0.13.1"
+seaborn = "^0.12.1"
+pysimplegui = "^4.60.4"
+pyautogui = "^0.9.53"
+h5py = "^3.7.0"
+plotly = "^5.11.0"
+mayavi = "^4.8.1"
+tqdm = "^4.64.1"
+alive-progress = "^2.4.1"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+black = "^22.10.0"
+mypy = "^0.991"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
