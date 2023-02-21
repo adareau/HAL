@@ -423,6 +423,10 @@ def plotData(self):
         for k in range(len(x_raw)):
             if plot_by is False:
                 plot_label = set
+                if set == "current selection":
+                    y_meta, y_name = y_data_name
+                    plot_label = y_name
+
             elif plot_by is True:
                 plot_label = str(variable) + " " + str(subsets_values[k])
             (line,) = ax.plot(x_filtered[k], y_filtered[k], fmt, label=plot_label)
