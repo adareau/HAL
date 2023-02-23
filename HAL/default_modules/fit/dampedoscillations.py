@@ -70,20 +70,21 @@ class DampedOscillation1DFit(Abstract1DFit):
         offset_guess = (zmax + zmin) / 2
         amp_guess = A
         freq_guess = 3 / (xmax - xmin)
+        # frequency guess
         # If data are equally spaced, we try FFT to compute the guess
-        if len(t) > 3:
-            # check if data are well separated. If not, keep 3.
-            deltaT = t[1] - t[0]
-            vector = t[1:-1] - t[0:-2] - deltaT
+        if len(x) > 3:
+            # check if data are well separated. If not, keep the value above.
+            deltaX = x[1] - x[0]
+            vector = x[1:-1] - x[0:-2] - deltaX
             # We check if datas are equally spaced, we can guess using fft
-            if np.max(np.abs(vector)) < 0.0001:
-                ft = np.fft.fft(s)
-                N = len(s)
-                T = N * deltaT
+            if np.max(np.abs(vector)) < 0.0001*deltaX:
+                ft = np.fft.fft(z)
+                N = len(z)
                 fourier_trans = np.abs(ft[0 : int(N / 2)])
-                argu = np.argmax(fourier_trans[1:]) +1
-
-                freq_guess = argu / T
+                argu = np.argmax(fourier_trans[1:])+1
+                freq_guess = argu /(N * deltaX)
+            else:
+                print("Data are not equallys spaced : I did not use Fourier Transform to guess frequency.")
 
         phase_guess = 0
         tau_guess = xmax - xmin
