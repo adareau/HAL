@@ -2,6 +2,9 @@
 __pycache__
 README.html
 
+# poetry
+poetry.lock
+
 # test folder
 tests/
 data/
