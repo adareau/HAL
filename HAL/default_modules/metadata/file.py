@@ -52,6 +52,19 @@ class FileData(AbstractMetaData):
             "comment": "parent folder",
         }
         data.append(param)
+        parsed_name = [
+            int(s) for s in re.findall(r"\d+", self.path.parent.name)
+        ]
+        if parsed_name:
+            #sequence folder int
+            param = {
+                "name": "Seq Folder integer",
+                "value": parsed_name[0],
+                "display": "%s",
+                "unit": "",
+                "comment": "parent folder",
+            }
+            data.append(param)
 
         # parsing filename with regex
         parsed_name = [

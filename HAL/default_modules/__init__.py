@@ -18,6 +18,7 @@ from .fit.thomasfermi2D import ThomasFermi2DFit
 
 # -- fit (1D)
 from .fit.gauss1D import Gauss1DFit
+from .fit.lorentz1D import Lorentz1DFit
 from .fit.oscillations import Oscillation1DFit
 from .fit.dampedoscillations import DampedOscillation1DFit
 from .fit.exponential1D import Exponential1DFit
@@ -50,6 +51,7 @@ user_modules = [
     FocusOnFit2D,
     # fits (1D)
     Gauss1DFit,
+    Lorentz1DFit,
     Oscillation1DFit,
     DampedOscillation1DFit,
     Exponential1DFit,
