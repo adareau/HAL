@@ -128,6 +128,17 @@ class Gauss2DFit(Abstract2DBellShaped):
         }
         values.append(param)
 
+        # Phase Space density
+        PSD = Ncal / (sx ** 4) / (sy ** 2)
+        param = {
+            "name": "PSD",
+            "value": PSD,
+            "display": "%.3g",
+            "unit": "a.u.",
+            "comment": "Phase Space density, calculated from fit results, not restricted to ROI",
+        }
+        values.append(param)
+
         # -- spatial values in pixels
 
         for name, key in zip(["center", "size"], ["c", "s"]):
