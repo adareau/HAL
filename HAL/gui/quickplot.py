@@ -505,8 +505,8 @@ def plotData(self):
         fig.autofmt_xdate()
 
     # grid and legend
-    plt.grid()
-    plt.legend()
+    ax.grid(True, alpha = 0.7)
+    ax.legend()
 
     # show
     fig.canvas.draw()

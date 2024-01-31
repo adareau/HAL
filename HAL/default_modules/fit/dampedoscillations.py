@@ -142,14 +142,30 @@ class DampedOscillation1DFit(Abstract1DFit):
         }
         values.append(param)
 
-        # center
+        # size
+        param = {
+            "name": "periode",
+            "value": 1 / frequency,
+            "error": frequency_err / (frequency**2),
+            "display": "%.3g",
+            "unit": self.x_unit,
+            "comment": "periode",
+        }
+        values.append(param)
 
+        # frequency
         if self.x_unit == "ms":
-            frequency_unit = "kHz"
-        elif self.x_unit == "us":
-            frequency_unit = "MHz"
-        elif self.x_unit == "s":
             frequency_unit = "Hz"
+            frequency = frequency*1e3
+            frequency_err = frequency_err*1e3
+        elif self.x_unit == "us":
+            frequency_unit = "kHz"
+            frequency = frequency*1e3
+            frequency_err = frequency_err*1e3
+        elif self.x_unit == "s":
+            frequency_unit = "mHz"
+            frequency = frequency*1e3
+            frequency_err = frequency_err*1e3
         else:
             frequency_unit = self.x_unit + "^-1"
 
@@ -162,16 +178,7 @@ class DampedOscillation1DFit(Abstract1DFit):
             "comment": "frequency",
         }
         values.append(param)
-        # size
-        param = {
-            "name": "periode",
-            "value": 1 / frequency,
-            "error": frequency_err / (frequency**2),
-            "display": "%.3g",
-            "unit": self.x_unit,
-            "comment": "periode",
-        }
-        values.append(param)
+
         # size
         param = {
             "name": "phase",
